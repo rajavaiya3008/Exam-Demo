@@ -9,7 +9,6 @@ const initialState = {
 
 export const fetchData = createAsyncThunk('data/fetchData', async(config,{dispatch}) => {
     try{
-        
         let data = await axiosInstance(config);
         //dispatch(update(data.data))
         return data.data;

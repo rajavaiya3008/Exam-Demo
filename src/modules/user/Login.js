@@ -12,18 +12,30 @@ import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
 
+  const loginData = useSelector(state => state.user.loginData);
+  console.log('loginData', loginData);
+
+  const error = useSelector(state => state.user.error);
+  console.log('error', error);
+
   const loginField = [
     {
       type:'email',
       id:'email',
       name:'email',
-      label:'Enter Email:'
+      label:'Enter Email:',
+      data:loginData,
+      error:error,
+      updateData:handleLoginData
     },
     {
       type:'password',
       id:'password',
       name:'password',
-      label:'Enter Password:'
+      label:'Enter Password:',
+      data:loginData,
+      error:error,
+      updateData:handleLoginData
     }
   ]
 
@@ -32,11 +44,6 @@ const Login = () => {
     password:[{required:true,message:'Please Enter Password'},{length:6,message:'Password Must be 6 char'}],
   }
 
-  const loginData = useSelector(state => state.user.loginData);
-  console.log('loginData', loginData);
-
-  const error = useSelector(state => state.user.error);
-  console.log('error', error);
 
   let status = useSelector(state => state.api.status);
 
@@ -80,7 +87,7 @@ const Login = () => {
 
         <div className='border mb-5'>
           {
-            loginField.map((field,i) => <InputField fieldData={field} key={i} data={loginData} error={error} updateData={handleLoginData}/>)
+            loginField.map((field,i) => <InputField fieldData={field} key={i}/>)
           }
         </div>
 

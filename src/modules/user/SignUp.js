@@ -10,24 +10,38 @@ import { validateData } from '../../Validation/validation'
 
 const SignUp = () => {
 
+  const signupData = useSelector(state => state.user.signupData);
+  console.log('signupData', signupData)
+
+  const error = useSelector(state => state.user.error);
+
   const signupField = [
     {
       type:'text',
       id:'name',
       name:'name',
-      label:'Enter Name:'
+      label:'Enter Name:',
+      data:signupData,
+      error:error,
+      updateData:handleSignupData
     },
     {
       type:'email',
       id:'email',
       name:'email',
-      label:'Enter Email:'
+      label:'Enter Email:',
+      data:signupData,
+      error:error,
+      updateData:handleSignupData
     },
     {
       type:'password',
       id:'password',
       name:'password',
-      label:'Enter Password:'
+      label:'Enter Password:',
+      data:signupData,
+      error:error,
+      updateData:handleSignupData
     }
   ]
 
@@ -42,12 +56,9 @@ const SignUp = () => {
 
   const navigate = useNavigate();
 
-  const signupData = useSelector(state => state.user.signupData);
-  console.log('signupData', signupData)
 
   const status = useSelector(state => state.api.status);
 
-  const error = useSelector(state => state.user.error);
 
   const dispatch = useDispatch();
 
@@ -80,7 +91,7 @@ const SignUp = () => {
 
       <div>
         {
-          signupField.map((field,i) => <InputField fieldData={field} key={i} data={signupData} updateData={handleSignupData} error={error}/>)
+          signupField.map((field,i) => <InputField fieldData={field} key={i}/>)
         }
       </div>
 

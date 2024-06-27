@@ -13,6 +13,11 @@ import { Provider } from 'react-redux';
 import { store } from './redux-toolkit/store/store';
 import { ToastContainer, toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
+import AllStudent from './modules/teacher/childroutes/AllStudent';
+import VerifiedStudent from './modules/teacher/childroutes/VerifiedStudent';
+import CreateExam from './modules/teacher/childroutes/CreateExam';
+import ViewExam from './modules/teacher/childroutes/ViewExam';
+import TeacherDashbord from './modules/teacher/childroutes/TeacherDashbord';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -34,7 +39,30 @@ const router = createBrowserRouter([
         children:[
           {
             path:'/teacher',
-            element:<Teacher />
+            element:<Teacher />,
+            children:[
+              {
+                index:true,
+                element:<TeacherDashbord />
+              },
+              {
+                // index:true,
+                path:'allstudent',
+                element:<AllStudent />
+              },
+              {
+                path:'verified-student',
+                element:<VerifiedStudent />
+              },
+              {
+                path:'create-exam',
+                element:<CreateExam />
+              },
+              {
+                path:'view-exam',
+                element:<ViewExam />
+              }
+            ]
           }
         ]
       },
