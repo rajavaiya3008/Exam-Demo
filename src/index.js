@@ -18,6 +18,8 @@ import VerifiedStudent from './modules/teacher/childroutes/VerifiedStudent';
 import CreateExam from './modules/teacher/childroutes/CreateExam';
 import ViewExam from './modules/teacher/childroutes/ViewExam';
 import TeacherDashbord from './modules/teacher/childroutes/TeacherDashbord';
+import ViewStudentDetail from './modules/teacher/childroutes/ViewStudentDetail';
+import EditExam from './modules/teacher/childroutes/EditExam';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -55,12 +57,20 @@ const router = createBrowserRouter([
                 element:<VerifiedStudent />
               },
               {
+                path:'view-student-detail',
+                element:<ViewStudentDetail />
+              },
+              {
                 path:'create-exam',
                 element:<CreateExam />
               },
               {
                 path:'view-exam',
                 element:<ViewExam />
+              },
+              {
+                path:'edit-exam',
+                element:<EditExam />
               }
             ]
           }

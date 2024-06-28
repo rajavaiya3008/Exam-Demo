@@ -12,11 +12,8 @@ const initialState = {
         email:'abc@gmail.com',
         password:'222222',
         role:'student',
-      
     },
-    error:{
-
-    }
+    error:{}
 }
 
 export const userSlice = createSlice({
