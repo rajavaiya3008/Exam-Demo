@@ -28,7 +28,7 @@ const VerifiedStudent = () => {
         fetchAllStudentData();
     },[]);
 
-
+    const keys = ['name','email','status'];
 
   return (
     <div>
@@ -37,7 +37,7 @@ const VerifiedStudent = () => {
             {
                 status === 'loading' ? 
                     <span>Loading...</span> :
-                        <Pagination data={verifiedStudentData} recodesPerPage={10}/>
+                        <Pagination data={verifiedStudentData} recodesPerPage={10} keys={keys} viewPath={`/teacher/view-student-detail`}/>
 
             }
         </div>

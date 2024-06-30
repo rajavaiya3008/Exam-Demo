@@ -5,7 +5,7 @@ import { handleError, handleSignupData } from '../../redux-toolkit/slices/user'
 import DropDown from '../../components/DropDown'
 import { fetchData } from '../../redux-toolkit/slices/api'
 import { toast } from 'react-toastify'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { validateData } from '../../Validation/validation'
 
 const SignUp = () => {
@@ -75,7 +75,7 @@ const SignUp = () => {
     }
     const res = await dispatch(fetchData(config))
     console.log('res', res);
-    if(res.payload.statusCode === 500){
+    if(res?.payload?.statusCode !== 200){
       toast.error('Email Already Exist Please Login');
       return;
     }
@@ -86,24 +86,34 @@ const SignUp = () => {
 
 
   return (
-    <div>
-      <h1>SignUp here</h1>
 
-      <div>
-        {
-          signupField.map((field,i) => <InputField fieldData={field} key={i}/>)
-        }
-      </div>
+    <div className='border border-black h-[100vh] w-[100vw] flex justify-center items-center'>
+        <div className='border h-[450px] w-[350px] flex flex-col justify-center items-center gap-[15px] rounded-lg border-black'>
+            <h1 className='text-2xl mt-[10px] font-semibold'>SignUp here</h1>
 
-      <DropDown dropDownOptions={dropDownOptions} name={'role'} updateData={handleSignupData}/>
+            <div>
+              {
+                signupField.map((field,i) => <InputField fieldData={field} key={i}/>)
+              }
+            </div>
 
-      <button onClick={handleSignup}>
-          {
-            status === 'loading'? <span>Loading...</span> : <span>Sign Up</span>
-          }
-      </button>
+            <DropDown dropDownOptions={dropDownOptions} name={'Role'} updateData={handleSignupData}/>
 
+            <button 
+            onClick={handleSignup}
+            className='bg-[#7747ff] w-[270px] px-6 py-2 rounded text-white text-sm font-normal'>
+                {
+                  status === 'loading'? <span>Loading...</span> : <span>Sign Up</span>
+                }
+            </button>
+
+            <div>
+              <p>Do You have an account? <Link to='/login' className='text-[#7747ff]'>Login</Link></p>
+            </div>
+
+        </div>
     </div>
+    
   )
 }
 

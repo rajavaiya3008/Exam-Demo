@@ -26,7 +26,7 @@ const Teacher = () => {
 
   return (
     <div className='flex h-[100vh] w-[100vw]'>
-      <div className='w-[20%] border border-black'>
+      <div className='w-[20%] h-[100vh]'>
         <Navbar navItems={teacherRoutes}/>
       </div>
       <div>

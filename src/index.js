@@ -20,6 +20,10 @@ import ViewExam from './modules/teacher/childroutes/ViewExam';
 import TeacherDashbord from './modules/teacher/childroutes/TeacherDashbord';
 import ViewStudentDetail from './modules/teacher/childroutes/ViewStudentDetail';
 import EditExam from './modules/teacher/childroutes/EditExam';
+import StudentDashboard from './modules/student/childroutes/StudentDashboard';
+import AllExam from './modules/student/childroutes/AllExam';
+import GiveExam from './modules/student/childroutes/GiveExam';
+import StudentProfile from './modules/student/childroutes/StudentProfile';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -81,7 +85,25 @@ const router = createBrowserRouter([
         children:[
           {
             path:'/student',
-            element:<Student />
+            element:<Student />,
+            children:[
+              {
+                index:true,
+                element:<StudentDashboard />
+              },
+              {
+                path:'all-exam',
+                element:<AllExam />
+              },
+              {
+                path:'give-exam',
+                element:<GiveExam />
+              },
+              {
+                path:'student-profile',
+                element:<StudentProfile />
+              }
+            ]
           }
         ]
       }

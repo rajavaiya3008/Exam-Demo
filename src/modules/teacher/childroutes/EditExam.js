@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../../../redux-toolkit/slices/api';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { token } from '../../../Current User/currentUser';
 import { addNewQuestion, createExamData, handleAns, handleError, handleOptions, handleQuestion, handleSubject, initiateExam } from '../../../redux-toolkit/slices/teacher';
 import ShowExam from './ShowExam';
+import { toast } from 'react-toastify';
+
 
 const EditExam = () => {
 
@@ -13,6 +15,7 @@ const EditExam = () => {
     const [searchParams,setSearchParams] = useSearchParams();
     const examData = useSelector(state => state.teacher.createExam);
     const error = useSelector(state => state.teacher.error);
+    const navigate = useNavigate();
     const id = searchParams.get('id');
     const subjectName = searchParams.get('subject');
 
@@ -31,7 +34,7 @@ const EditExam = () => {
                 const res = await dispatch(fetchData(config));
                 console.log('res in edit exam', res)
                 editData.subjectName = subjectName;
-                editData.notes = [];
+                editData.notes = ['hello'];
                 console.log('res.data.questions', res.payload.data.questions);
                 editData.questions = res.payload.data.questions;
                 dispatch(initiateExam(editData));
@@ -84,6 +87,7 @@ const EditExam = () => {
           type:'text',
           id:'op1',
           name:'op1',
+          label:'Option 1',
           data:Options,
           updateData:handleOptions,
           currQuestion:currQuestion,
@@ -105,6 +109,7 @@ const EditExam = () => {
           type:'text',
           id:'op2',
           name:'op2',
+          label:'Option 2',
           data:Options,
           updateData:handleOptions,
           currQuestion:currQuestion,
@@ -126,6 +131,7 @@ const EditExam = () => {
           type:'text',
           id:'op3',
           name:'op3',
+          label:'Option 3',
           data:Options,
           updateData:handleOptions,
           currQuestion:currQuestion,
@@ -147,6 +153,7 @@ const EditExam = () => {
           type:'text',
           id:'op4',
           name:'op4',
+          label:'Option 4',
           data:Options,
           updateData:handleOptions,
           currQuestion:currQuestion,
@@ -166,6 +173,45 @@ const EditExam = () => {
         op4:examData.questions[currQuestion].options[3],
         answer:examData.questions[currQuestion].answer.trim(),
     }
+
+    const handleEditExam = async() => {
+      try{
+        const config = {
+          method:'put',
+          url:'dashboard/Teachers/editExam',
+          data:examData,
+          headers: { "access-token":`${token}` },
+          params:{id}
+        }
+        const res = await dispatch(fetchData(config));
+        console.log('res of edit exam', res);
+        toast.success("Exam Edited Successfully");
+        navigate('/teacher/view-exam');
+      }catch(error){
+        console.log('error', error)
+      }
+    }
+
+    const handleDeleteExam = () => {
+      try{
+         const deleteExam = async() => {
+          const config = {
+            method:'delete',
+            url:'dashboard/Teachers/deleteExam',
+            headers: { "access-token":`${token}` },
+            params:{id}
+          }
+          const res = await dispatch(fetchData(config));
+          console.log('resin delete exam', res)
+          toast.success("exam deleted successfully");
+          navigate('/teacher/view-exam');
+        }
+        deleteExam();
+        
+      }catch(error){
+        console.log('error', error)
+      }
+    }
     
     
 
@@ -180,6 +226,11 @@ const EditExam = () => {
         setCurrQuestion={setCurrQuestion} 
         currQuestion={currQuestion}
         validateExamData={validateExamData}/>
+
+        <div>
+          <button onClick={handleEditExam}>Edit</button>
+          <button onClick={handleDeleteExam}>Delete</button>
+        </div>
     </div>
   )
 }

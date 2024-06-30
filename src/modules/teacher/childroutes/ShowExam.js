@@ -9,9 +9,10 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
 
-const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateExamData}) => {
+const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateExamData,totalQue}) => {
 
-    const totalQuestion = 14;
+    const totalQuestion = totalQue || 14;
+    const sameOptionError = useSelector(state => state.teacher.error);
 
     const dispatch = useDispatch();
     
@@ -37,6 +38,9 @@ const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateE
         const error = validateData(validateExamData,validate);
         if(Object.keys(error).length !== 0){
           dispatch(handleError(error));
+          return;
+        }
+        if(Object.keys(sameOptionError).length !== 0){
           return;
         }
         if(currQuestion === totalQuestion){
