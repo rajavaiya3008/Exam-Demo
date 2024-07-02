@@ -20,7 +20,8 @@ export const validateData = (data,validate) => {
                 error[key] = field.message;
                 return true;
             }
-            if(field.match && data[key] !== data.password){
+            if(field.match && data[key] !== field.comKey){
+
                 error[key] = 'Password Do not Match';
                 return true;
             }

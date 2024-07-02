@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import InputField from '../../components/InputField'
 import { useDispatch, useSelector } from 'react-redux'
 import { handleError, handleSignupData } from '../../redux-toolkit/slices/user'
@@ -12,6 +12,7 @@ const SignUp = () => {
 
   const signupData = useSelector(state => state.user.signupData);
   console.log('signupData', signupData)
+  const [disable,setDisable] = useState(false);
 
   const error = useSelector(state => state.user.error);
 
@@ -63,24 +64,31 @@ const SignUp = () => {
   const dispatch = useDispatch();
 
   const handleSignup = async() => {
-    const error = validateData(signupData,validate);
-    if(Object.keys(error).length !== 0){
-      dispatch(handleError(error));
-      return;
+    try{
+      const error = validateData(signupData,validate);
+      if(Object.keys(error).length !== 0){
+        dispatch(handleError(error));
+        return;
+      }
+      setDisable(!disable);
+      const config = {
+        method:'post',
+        url:'users/SignUp',
+        data:signupData
+      }
+      const res = await dispatch(fetchData(config))
+      console.log('res', res);
+      if(res?.payload?.statusCode !== 200){
+        toast.error('Email Already Exist Please Login');
+        return;
+      }
+      toast.success('Signup Successful');
+      navigate('/login',{replace:true});
+    }catch(error){
+      setDisable(false);
+      console.log('error', error)
     }
-    const config = {
-      method:'post',
-      url:'users/SignUp',
-      data:signupData
-    }
-    const res = await dispatch(fetchData(config))
-    console.log('res', res);
-    if(res?.payload?.statusCode !== 200){
-      toast.error('Email Already Exist Please Login');
-      return;
-    }
-    toast.success('Signup Successful');
-    navigate('/login');
+    
 
   }
 
@@ -101,9 +109,10 @@ const SignUp = () => {
 
             <button 
             onClick={handleSignup}
-            className='bg-[#7747ff] w-[270px] px-6 py-2 rounded text-white text-sm font-normal'>
+            disabled={disable}
+            className='bg-[#7747ff] w-[270px] px-6 py-2 rounded text-white text-sm font-normal flex justify-center'>
                 {
-                  status === 'loading'? <span>Loading...</span> : <span>Sign Up</span>
+                  status === 'loading'? <div className='spinner'></div> : <span>Sign Up</span>
                 }
             </button>
 

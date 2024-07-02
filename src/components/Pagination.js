@@ -30,8 +30,8 @@ const Pagination = ({data,keys,viewPath,btn}) => {
     }
 
   return (
-    <div className="relative overflow-x-auto">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+    <div className="relative overflow-x-auto dark:bg-gray-800">
+        <table className="w-[850px] h-[620px] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
 
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
@@ -51,7 +51,7 @@ const Pagination = ({data,keys,viewPath,btn}) => {
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody className='w-[100%]'>
                 {
                     sliceData?.map((item,i) => (
                         <tr key={i} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -66,16 +66,37 @@ const Pagination = ({data,keys,viewPath,btn}) => {
                                 btn?.editBtn !== undefined ? <td className="px-6 py-3"><NavLink to={`${btn.editBtn}?id=${item._id}&subject=${item.subjectName}`}>Edit</NavLink></td> : ''
                             } 
                             {
-                                btn?.giveExamBtn !== undefined ? <td className="px-6 py-3"><NavLink to={`${btn.giveExamBtn}?id=${item._id}&subject=${item.subjectName}`}>Give</NavLink></td> : ''
+                                item?.Result?.length > 0 ? 
+                                (<td className="px-6 py-3"><NavLink to={btn.showResultBtn} state={item.Result}>Result</NavLink></td>) :
+                                (btn?.giveExamBtn !== undefined ? <td className="px-6 py-3"><NavLink to={`${btn.giveExamBtn}?id=${item._id}&subject=${item.subjectName}`}>Give</NavLink></td> : '')
                             }
                         </tr>
                     ))
                 }
-                    <tr className='text-center'>{currPage} Out of {totalPage}</tr>
+                    <tr className='text-center bg-white border-b dark:bg-gray-800 dark:border-gray-700 w-full h-[70px]'>
+                        <td className="px-6 py-3 w-[178px]">{currPage} Out of {totalPage}</td>
+                        <td className="px-6 py-3 w-[225px]">
+                        <button 
+                        onClick={handlePrevPage}
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        >{`<`}</button>
+                        </td>
+                        <td className="px-6 py-3 flex justify-center items-center w-[315px]">
+                            <span className='flex items-center mt-2'>{currPage}</span>
+                        </td>
+                        <td className="px-6 py-3">
+                        <button 
+                        onClick={handleNextPage}
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        >{`>`}</button>
+                        </td>
+                        {/* <td className="px-6 py-3"></td> */}
+                    </tr>
             </tbody>
+
         </table>
 
-        <div className='fixed left-[50%] flex'>
+        {/* <div className='fixed left-[50%] flex'>
             <button 
             onClick={handlePrevPage}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -85,7 +106,7 @@ const Pagination = ({data,keys,viewPath,btn}) => {
             onClick={handleNextPage}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >{`>`}</button>
-        </div>
+        </div> */}
     </div>
   )
 }

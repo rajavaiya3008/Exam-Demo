@@ -35,7 +35,7 @@ const InputField = ({fieldData}) => {
         id={fieldData.id}
         name={fieldData.name}
         value={fieldData?.data?.[fieldData.name]}
-        checked={fieldData?.data?.[fieldData.id] === fieldData.ans}
+        disabled={fieldData.disable}
         variant="outlined"
         onChange={(e) => {
             let data = {
@@ -75,7 +75,7 @@ const InputField = ({fieldData}) => {
         className='border-black border'
         /> */}
         {
-            fieldData?.error[fieldData.name] ? <span>{fieldData?.error[fieldData.name]}</span> : null
+            fieldData?.error[fieldData.name] ? <span className='text-red-500 text-sm'>{fieldData?.error[fieldData.name]}<sup>*</sup></span> : null
         }
     </div>
   )

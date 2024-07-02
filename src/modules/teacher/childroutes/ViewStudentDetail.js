@@ -35,12 +35,11 @@ const ViewStudentDetail = () => {
     },[])
 
   return (
-    <div>
-        <p>Student Detail</p>
+    <div className='h-[100vh] flex items-center justify-center bg-gray-500'>
         <div>
             {
                 status === 'loading' ? 
-                    <span>Loading...</span>
+                    <div className='spinner'></div> 
                         :<CurrStudentDetail currStudentDetail={currStudentDetail}/>
             }
         </div>

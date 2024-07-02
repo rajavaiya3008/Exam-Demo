@@ -29,7 +29,7 @@ const Teacher = () => {
       <div className='w-[20%] h-[100vh]'>
         <Navbar navItems={teacherRoutes}/>
       </div>
-      <div>
+      <div className='w-full'>
         <Outlet />
       </div>
     </div>

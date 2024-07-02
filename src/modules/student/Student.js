@@ -21,7 +21,7 @@ const Student = () => {
       <div className='w-[20%] h-[100vh]'>
         <Navbar navItems={studentRoutes}/>
       </div>
-      <div>
+      <div className='w-full'>
         <Outlet />
       </div>
     </div>

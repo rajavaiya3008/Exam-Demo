@@ -21,7 +21,7 @@ const AllExam = () => {
         }
         const res = await dispatch(fetchData(config));
         console.log('res in all exam for student', res)
-        dispatch(loadAllExamData(res.payload.data));
+        dispatch(loadAllExamData(res?.payload?.data));
     }
     fetchAllExam();
   },[]);
@@ -29,15 +29,27 @@ const AllExam = () => {
   const keys = ['subjectName','email'];
   const btn = {
     giveExamBtn:'/student/give-exam',
+    showResultBtn:'/student/show-result',
   }
 
+  // const btn = [
+  //   {
+  //     name:'Give Exam',
+  //     path:'/student/give-exam'
+  //   },
+  //   {
+  //     name:'Show Result',
+  //     path:'/student/show-result'
+  //   }
+  // ]
+
+
   return (
-    <div>
-        All Exam
+    <div className='h-[100vh] flex items-center justify-center bg-gray-500'>
         <div>
             {
                 status === 'loading' ?
-                    <span>Loading...</span> :
+                  <div className='spinner'></div> :
                      <Pagination data={allExamData} keys={keys} btn={btn}/>
             }
         </div>

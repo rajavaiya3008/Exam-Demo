@@ -15,23 +15,23 @@ const ViewExam = () => {
     deleteBtn:'delete',
   }
 
-  const initiateConfig = {
-    subjectName:'math',
-    questions:[
-        {
-            question:'question1',
-            answer:'ans1',
-            options:[
-                'ans1',
-                'ans2',
-                'ans3',
-                'ans4'
-            ]
-        }
-    ],
-    notes:['gffgdg']
-}
-  dispatch(initiateExam(initiateConfig));
+//   const initiateConfig = {
+//     subjectName:'math',
+//     questions:[
+//         {
+//             question:'question1',
+//             answer:'ans1',
+//             options:[
+//                 'ans1',
+//                 'ans2',
+//                 'ans3',
+//                 'ans4'
+//             ]
+//         }
+//     ],
+//     notes:['gffgdg']
+// }
+//   dispatch(initiateExam(initiateConfig));
 
   useEffect(() => {
     const fetchViewExamData = async() => {
@@ -55,13 +55,12 @@ const ViewExam = () => {
 
 
   return (
-    <div>
-      <div>View Exam</div>
-      <div>
+    <div className='h-[100vh] flex items-center justify-center bg-gray-500'>
+        <div>
             {
                 status === 'loading' ? 
-                    <span>Loading...</span> :
-                        <Pagination data={viewExam} recodesPerPage={10} keys={keys} viewPath={''} btn={btn}/>
+                  <div className='spinner'></div> :
+                        <Pagination data={viewExam} recodesPerPage={10} keys={keys} btn={btn}/>
             }
         </div>
     </div>

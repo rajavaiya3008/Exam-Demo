@@ -13,15 +13,16 @@ const CurrStudentDetail = () => {
 
 
   return (
-    <div>
-        Name: <span>{currStudentDetail.name}</span> <br />
-        Email: <span>{currStudentDetail.email}</span> <br />
+    <div className='flex flex-col text-gray-300 text-xl'>
+        <pre className='text-center'>Name: {currStudentDetail.name}</pre> <br />
+        <pre className='text-center'>Email: {currStudentDetail.email}</pre> <br />
 
         <div>
-            Result: {
+          <pre className='text-center'>Result:</pre>
+            {
                 currStudentDetail?.Result?.length > 0 ? 
-                <Pagination data={currStudentDetail.Result} keys={keys} viewPath={''}/> :
-                        <span>Result Not found</span>
+                <Pagination data={currStudentDetail.Result} keys={keys}/> :
+                        <pre className='text-center'>Result Not found</pre>
             }
         </div>
 

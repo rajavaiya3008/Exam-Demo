@@ -1,5 +1,10 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import { axiosInstance } from '../../api/api';
+import axios from 'axios';
+
+let currAbortController = null;
+// const controller = new AbortController();
+// let signal = controller.signal;
 
 const initialState = {
     data:{},
@@ -7,8 +12,20 @@ const initialState = {
     error:''
 }
 
-export const fetchData = createAsyncThunk('data/fetchData', async(config,{dispatch}) => {
+export const fetchData = createAsyncThunk('data/fetchData', async(config,{rejectWithValue}) => {
+    if(currAbortController){
+        console.log('currAbortController', currAbortController);
+        console.log('enter in cancel if')
+        currAbortController.abort();
+    }
+    // currAbortController = controller;
+    // signal = currAbortController.signal;
+    // controller.abort();
+    currAbortController = new AbortController();
+    const signal = currAbortController.signal;
+    config.signal = signal;
     try{
+        // cancelFetchData();
         let data = await axiosInstance(config);
         //dispatch(update(data.data))
         return data.data;
@@ -16,6 +33,12 @@ export const fetchData = createAsyncThunk('data/fetchData', async(config,{dispat
         throw new Error(e);
     }
 })
+
+export const cancelFetchData = () => {
+    const controller = new AbortController();
+    console.log('controller', controller)
+    controller.abort();
+};
 
 const apiSlice = createSlice({
     name:'api',

@@ -22,7 +22,7 @@ const VerifiedStudent = () => {
             }
             const res = await dispatch(fetchData(config))
             console.log('res in Verifiedstudent', res);
-            dispatch(loadVerifiedStudentData(res.payload.data));
+            dispatch(loadVerifiedStudentData(res?.payload?.data));
 
         }
         fetchAllStudentData();
@@ -31,12 +31,11 @@ const VerifiedStudent = () => {
     const keys = ['name','email','status'];
 
   return (
-    <div>
-        VeriFied Students
+    <div className='h-[100vh] flex items-center justify-center bg-gray-500'>
         <div>
             {
                 status === 'loading' ? 
-                    <span>Loading...</span> :
+                    <div className='spinner'></div> :
                         <Pagination data={verifiedStudentData} recodesPerPage={10} keys={keys} viewPath={`/teacher/view-student-detail`}/>
 
             }

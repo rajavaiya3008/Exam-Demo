@@ -24,6 +24,10 @@ import StudentDashboard from './modules/student/childroutes/StudentDashboard';
 import AllExam from './modules/student/childroutes/AllExam';
 import GiveExam from './modules/student/childroutes/GiveExam';
 import StudentProfile from './modules/student/childroutes/StudentProfile';
+import ForgetPassword from './components/ForgetPassword';
+import ResetPassword from './components/ResetPassword';
+import NewPassword from './components/NewPassword';
+import ShowResult from './modules/student/childroutes/ShowResult';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -33,18 +37,26 @@ const router = createBrowserRouter([
     element:<App />,
     children:[
       {
-        path:'/login',
+        path:'login',
         element:<Login />
       },
       {
-        path:'/signup',
+        path:'signup',
         element:<SignUp />
+      },
+      {
+        path:'forget-password',
+        element:<ForgetPassword />
+      },
+      {
+        path:'newPassword',
+        element:<NewPassword />
       },
       {
         element:<Auth role={["teacher"]}/>,
         children:[
           {
-            path:'/teacher',
+            path:'teacher',
             element:<Teacher />,
             children:[
               {
@@ -75,7 +87,11 @@ const router = createBrowserRouter([
               {
                 path:'edit-exam',
                 element:<EditExam />
-              }
+              },
+              {
+                path:'reset-password',
+                element:<ResetPassword />
+              },
             ]
           }
         ]
@@ -84,7 +100,7 @@ const router = createBrowserRouter([
         element:<Auth role={['student']}/>,
         children:[
           {
-            path:'/student',
+            path:'student',
             element:<Student />,
             children:[
               {
@@ -102,6 +118,14 @@ const router = createBrowserRouter([
               {
                 path:'student-profile',
                 element:<StudentProfile />
+              },
+              {
+                path:'reset-password',
+                element:<ResetPassword />
+              },
+              {
+                path:'show-result',
+                element:<ShowResult />
               }
             ]
           }

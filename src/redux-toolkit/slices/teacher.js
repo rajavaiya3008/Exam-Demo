@@ -66,6 +66,7 @@ export const teacherSlice = createSlice({
             state.error = action.payload;
         },
         initiateExam:(state,action) => {
+            state.error = {};
             state['createExam'] = action.payload;
         },
         loadViewExamData:(state,action) => {

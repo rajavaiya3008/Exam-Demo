@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import InputField from '../../../components/InputField';
 import { addNewQuestion, createExamData, handleAns, handleError, handleOptions, handleQuestion, handleSubject, initiateExam } from '../../../redux-toolkit/slices/teacher';
@@ -11,20 +11,44 @@ import ShowExam from './ShowExam';
 
 const CreateExam = () => {
 
+  const dispatch = useDispatch();
   const examData = useSelector(state => state.teacher.createExam)
   const error = useSelector(state => state.teacher.error);
   const [currQuestion,setCurrQuestion] = useState(0);
   const navigate = useNavigate();
+  const sameOptionError = useSelector(state => state.teacher.error);
   const totalQuestion = 14;
 
+  const initiateConfig = {
+    subjectName:'math',
+    questions:[
+        {
+            question:'question1',
+            answer:'ans1',
+            options:[
+                'ans1',
+                'ans2',
+                'ans3',
+                'ans4'
+            ]
+        }
+    ],
+    notes:['gffgdg']
+}
+
+useEffect(() => {
+  dispatch(initiateExam(initiateConfig));
+},[]);
+  //dispatch(initiateExam(initiateConfig));
+
   const validateExamData = {
-    subjectName:examData.subjectName,
-    question:examData.questions[currQuestion].question,
-    op1:examData.questions[currQuestion].options[0],
-    op2:examData.questions[currQuestion].options[1],
-    op3:examData.questions[currQuestion].options[2],
-    op4:examData.questions[currQuestion].options[3],
-    answer:examData.questions[currQuestion].answer.trim(),
+    subjectName:examData?.subjectName,
+    question:examData?.questions?.[currQuestion]?.question,
+    op1:examData?.questions?.[currQuestion]?.options[0],
+    op2:examData?.questions?.[currQuestion]?.options[1],
+    op3:examData?.questions?.[currQuestion]?.options[2],
+    op4:examData?.questions?.[currQuestion]?.options[3],
+    answer:examData?.questions?.[currQuestion]?.answer?.trim(),
   }
 
   const validate = {
@@ -37,18 +61,17 @@ const CreateExam = () => {
     answer:[{required:true,message:'Answer Required'}]
   }
 
-  const dispatch = useDispatch();
 
-  console.log('answer in create exam',examData.questions[currQuestion].answer)
+  console.log('answer in create exam',examData?.questions?.[currQuestion]?.answer)
 
   const Options = {
-    op1:examData.questions[currQuestion].options[0],
-    op2:examData.questions[currQuestion].options[1],
-    op3:examData.questions[currQuestion].options[2],
-    op4:examData.questions[currQuestion].options[3],
+    op1:examData?.questions?.[currQuestion]?.options?.[0],
+    op2:examData?.questions?.[currQuestion]?.options?.[1],
+    op3:examData?.questions?.[currQuestion]?.options?.[2],
+    op4:examData?.questions?.[currQuestion]?.options?.[3],
   }
 
-  const optionArr = examData.questions[currQuestion].options;
+  const optionArr = examData?.questions?.[currQuestion]?.options;
 
   const createExamFields = [
     {
@@ -65,7 +88,7 @@ const CreateExam = () => {
       id:'question',
       name:'question',
       label:'Question:',
-      data:examData.questions[currQuestion],
+      data:examData?.questions?.[currQuestion],
       updateData:handleQuestion,
       currQuestion:currQuestion,
       error:error
@@ -78,7 +101,7 @@ const CreateExam = () => {
       examData:examData,
       updateData:handleAns,
       currQuestion:currQuestion,
-      ans:examData.questions[currQuestion].answer,
+      ans:examData?.questions?.[currQuestion]?.answer,
       opIndex:0,
       error:error
     },
@@ -102,7 +125,7 @@ const CreateExam = () => {
       examData:examData,
       updateData:handleAns,
       currQuestion:currQuestion,
-      ans:examData.questions[currQuestion].answer,
+      ans:examData?.questions?.[currQuestion]?.answer,
       opIndex:1,
       error:error
     },
@@ -126,7 +149,7 @@ const CreateExam = () => {
       examData:examData,
       updateData:handleAns,
       currQuestion:currQuestion,
-      ans:examData.questions[currQuestion].answer,
+      ans:examData?.questions?.[currQuestion]?.answer,
       opIndex:2,
       error:error
     },
@@ -150,7 +173,7 @@ const CreateExam = () => {
       examData:examData,
       updateData:handleAns,
       currQuestion:currQuestion,
-      ans:examData.questions[currQuestion].answer,
+      ans:examData?.questions?.[currQuestion]?.answer,
       opIndex:3,
       error:error
     },
@@ -170,41 +193,49 @@ const CreateExam = () => {
 
   // const createExamData = useSelector(state => state.teacher.createExam);
   
-  const handlePrevQuestion = () => {
-    if(currQuestion === 0){
-      setCurrQuestion(totalQuestion);
-    }else{
-      setCurrQuestion(currQuestion -1)
-    }
-  }
+  // const handlePrevQuestion = () => {
+  //   if(currQuestion === 0){
+  //     setCurrQuestion(totalQuestion);
+  //   }else{
+  //     setCurrQuestion(currQuestion -1)
+  //   }
+  // }
 
-  const handleNextQuestion = () => {
+  // const handleNextQuestion = () => {
+  //   const error = validateData(validateExamData,validate);
+  //   if(Object.keys(error).length !== 0){
+  //     dispatch(handleError(error));
+  //     return;
+  //   }
+  //   if(currQuestion === totalQuestion){
+  //     setCurrQuestion(0)
+  //   }else{
+  //     const question = {
+  //         question:'',
+  //         answer:' ',
+  //         options:[
+  //           '',
+  //           '',
+  //           '',
+  //           ''
+  //         ]
+  //     }
+  //     dispatch(addNewQuestion(question));
+  //     setCurrQuestion(currQuestion+1);
+  //   }
+  // }
+
+  
+  const handleCreateExam = () => {
+
     const error = validateData(validateExamData,validate);
     if(Object.keys(error).length !== 0){
       dispatch(handleError(error));
       return;
     }
-    if(currQuestion === totalQuestion){
-      setCurrQuestion(0)
-    }else{
-      const question = {
-          question:'',
-          answer:' ',
-          options:[
-            '',
-            '',
-            '',
-            ''
-          ]
-      }
-      dispatch(addNewQuestion(question));
-      setCurrQuestion(currQuestion+1);
+    if(Object.keys(sameOptionError).length !== 0){
+      return;
     }
-  }
-
-  
-  const handleCreateExam = () => {
-
     const createExam = async() => {
       try{
         const config = {
@@ -224,14 +255,15 @@ const CreateExam = () => {
       }
     }
     createExam();
-    
-    
+  }
+  
+  const handleCancel = () => {
+    dispatch(initiateExam(initiateConfig));
+    navigate(-1);
   }
 
-
   return (
-    <div>
-      <p>Create Exam</p>
+    <div className='h-[100vh] flex items-center justify-center flex-col'>
 
       {/* <div>
         {
@@ -254,12 +286,22 @@ const CreateExam = () => {
       error={error} 
       setCurrQuestion={setCurrQuestion} 
       currQuestion={currQuestion}
-      validateExamData={validateExamData}/>
+      validateExamData={validateExamData}
+      validate={validate}/>
 
-      <div>
+      <div className='pt-2'>
         {
-          examData.questions.length === 15 ? <button onClick={handleCreateExam}>Create Exam</button> : ''
+          examData?.questions?.length === 15 ? 
+            <button 
+            onClick={handleCreateExam}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            >Create Exam</button> 
+              : ''
         }
+        <button
+        onClick={handleCancel}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2"
+        >Cancel</button>
       </div>
     </div>
   )
