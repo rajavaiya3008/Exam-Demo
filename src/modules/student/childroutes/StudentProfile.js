@@ -1,19 +1,46 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../../../redux-toolkit/slices/api';
-import { token } from '../../../Current User/currentUser';
+import { getCurrUserData} from '../../../Current User/currentUser';
 import { handleStudentError, loadStudentProfile, updateProfile } from '../../../redux-toolkit/slices/student';
 import InputField from '../../../components/InputField';
 import { toast } from 'react-toastify';
 import { validateData } from '../../../Validation/validation';
+import { useNavigate } from 'react-router';
 
 const StudentProfile = () => {
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [disable,setDisable] = useState(true);
+
+  useEffect(() => {
+    const fetchStudentDetail = async() => {
+      try{
+        const config = {
+          method:'get',
+          url:'student/getStudentDetail',
+          headers: { "access-token":getCurrUserData().token }
+        }
+        const res = await dispatch(fetchData(config));
+        console.log('res in student profile', res)
+        if(res?.payload?.statusCode === 401){
+          localStorage.removeItem('userData');
+          localStorage.setItem('login',false);
+          navigate('/login')
+          return;
+        }
+        dispatch(loadStudentProfile(res.payload.data));
+      }catch(error){
+        console.log('error', error)
+      }
+    }
+    fetchStudentDetail();
+  },[disable]);
+
   const status = useSelector(state => state.api.status);
   const studentProfile = useSelector(state => state.student.studentProfile);
   const error = useSelector(state => state.student.error);
-  const [disable,setDisable] = useState(true);
 
   const createStudentFields = [
     {
@@ -42,24 +69,6 @@ const StudentProfile = () => {
     name:[{required:true,message:'Please Enter Name'},{length:3,message:'username Must be 3 char'}],
   }
 
-  useEffect(() => {
-    const fetchStudentDetail = async() => {
-      try{
-        const config = {
-          method:'get',
-          url:'student/getStudentDetail',
-          headers: { "access-token":`${token}` }
-        }
-        const res = await dispatch(fetchData(config));
-        console.log('res in student profile', res)
-        dispatch(loadStudentProfile(res.payload.data));
-      }catch(error){
-        console.log('error', error)
-      }
-    }
-    fetchStudentDetail();
-  },[disable]);
-
   const updatedData = {
     name:studentProfile.name
   }
@@ -76,7 +85,7 @@ const StudentProfile = () => {
         method:'put',
         url:'student/studentProfile',
         data:updatedData,
-        headers: { "access-token":`${token}` }
+        headers: { "access-token":getCurrUserData().token }
     }
     const res = await dispatch(fetchData(config));
     console.log('res in student updated profile', res)

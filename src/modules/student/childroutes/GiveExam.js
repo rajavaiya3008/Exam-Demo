@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { token } from '../../../Current User/currentUser';
+import { getCurrUserData} from '../../../Current User/currentUser';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../../../redux-toolkit/slices/api';
@@ -32,11 +32,17 @@ const GiveExam = () => {
             const config = {
                 method:'get',
                 url:'student/examPaper',
-                headers: { "access-token":`${token}` },
+                headers: { "access-token":getCurrUserData().token },
                 params:{id}
             }
             const res = await dispatch(fetchData(config));
             console.log('res in exam paper', res)
+            if(res?.payload?.statusCode === 401){
+              localStorage.removeItem('userData');
+              localStorage.setItem('login',false)
+              navigate('/login')
+              return;
+            }
             examPaper.questions = res.payload.data;
             dispatch(loadExamPaper(examPaper));
         }
@@ -72,7 +78,7 @@ const GiveExam = () => {
           type:'text',
           id:'question',
           name:'question',
-          label:'Question:',
+          label:`Question ${currQuestion+1}`,
           data:examData?.questions?.[currQuestion],
           disable:true,
           currQuestion:currQuestion,
@@ -192,7 +198,7 @@ const GiveExam = () => {
               method:'post',
               url:'student/giveExam',
               data:ansArr,
-              headers: { "access-token":token },
+              headers: { "access-token":getCurrUserData().token },
               params:{id}
             }
             const res = await dispatch(fetchData(config));

@@ -10,18 +10,19 @@ const ForgetPassword = () => {
     const dispatch = useDispatch();
     const forgetPassword = useSelector(state => state.user.forgetPassword)
     const error = useSelector(state => state.user.error);
+    const login = JSON.parse(localStorage.getItem('login'));
     const fieldData = {
-        type:'text',
+        type:'email',
         id:'email',
         name:'email',
         label:'Email:',
         data:forgetPassword,
         updateData:handleForgetPassword,
         error:error
-      }
+    }
     
     const validate = {
-        email: [{required:true,message:'Please Enter Email'},{pattern:'^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$',message:'Enter Valid Email'}]
+        email: [{required:true,message:'Please Enter Email'},{pattern:/^[a-zA-Z0-9]+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/,message:'Enter Valid Email or space is not allowed'}]
     }
 
     const sendMail = async() => {
@@ -32,6 +33,7 @@ const ForgetPassword = () => {
                 dispatch(handleError(error));
                 return;
             }
+            
             const config = {
                 method:'post',
                 url:'users/ForgotPassword',
@@ -43,6 +45,10 @@ const ForgetPassword = () => {
                 toast.error('Email not Found Please SignUp');
                 return;
             }
+            if(res.payload.statusCode === 400){
+                toast.error('White space is not consider')
+                return;
+            }
             toast.success('Mail send Successful Please Check Your Email');
         }catch(error){
             console.log('error', error)
@@ -50,13 +56,18 @@ const ForgetPassword = () => {
     }
     
   return (
-    <div className='flex justify-center items-center flex-col h-[100vh]'>
-        <InputField fieldData={fieldData}/>
-        <button 
-        onClick={sendMail}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2"
-        >Verify</button>
-    </div>
+    <>
+        {
+            !login && 
+            <div className='flex justify-center items-center flex-col h-[100vh]'>
+                <InputField fieldData={fieldData}/>
+                <button 
+                onClick={sendMail}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2"
+                >Verify</button>
+            </div>
+        }
+    </>
   )
 }
 

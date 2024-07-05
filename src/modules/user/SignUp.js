@@ -7,8 +7,11 @@ import { fetchData } from '../../redux-toolkit/slices/api'
 import { toast } from 'react-toastify'
 import { Link, useNavigate } from 'react-router-dom'
 import { validateData } from '../../Validation/validation'
+import { useSignupData } from '../../form/hooks/useSignupData'
 
 const SignUp = () => {
+
+  const {signupField,validate} = useSignupData();
 
   const signupData = useSelector(state => state.user.signupData);
   console.log('signupData', signupData)
@@ -16,42 +19,42 @@ const SignUp = () => {
 
   const error = useSelector(state => state.user.error);
 
-  const signupField = [
-    {
-      type:'text',
-      id:'name',
-      name:'name',
-      label:'Enter Name:',
-      data:signupData,
-      error:error,
-      updateData:handleSignupData
-    },
-    {
-      type:'email',
-      id:'email',
-      name:'email',
-      label:'Enter Email:',
-      data:signupData,
-      error:error,
-      updateData:handleSignupData
-    },
-    {
-      type:'password',
-      id:'password',
-      name:'password',
-      label:'Enter Password:',
-      data:signupData,
-      error:error,
-      updateData:handleSignupData
-    }
-  ]
+  // const signupField = [
+  //   {
+  //     type:'text',
+  //     id:'name',
+  //     name:'name',
+  //     label:'Enter Name:',
+  //     data:signupData,
+  //     error:error,
+  //     updateData:handleSignupData
+  //   },
+  //   {
+  //     type:'email',
+  //     id:'email',
+  //     name:'email',
+  //     label:'Enter Email:',
+  //     data:signupData,
+  //     error:error,
+  //     updateData:handleSignupData
+  //   },
+  //   {
+  //     type:'password',
+  //     id:'password',
+  //     name:'password',
+  //     label:'Enter Password:',
+  //     data:signupData,
+  //     error:error,
+  //     updateData:handleSignupData
+  //   }
+  // ]
 
-  const validate = {
-    name:[{required:true,message:'Please Enter Name'},{length:3,message:'username Must be 3 char'}],
-    email: [{required:true,message:'Please Enter Email'},{pattern:'^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$',message:'Enter Valid Email'}],
-    password:[{required:true,message:'Please Enter Password'},{length:6,message:'Password Must be 6 char'}],
+  // const validate = {
+  //   name:[{required:true,message:'Please Enter Name'},{length:3,message:'username Must be 3 char'}],
+  //   email: [{required:true,message:'Please Enter Email'},{pattern:/^[a-zA-Z0-9]+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/,message:'Enter Valid Email'}],
+  //   password:[{required:true,message:'Please Enter Password'},{length:6,message:'Password Must be 6 char'}],
 
-  }
+  // }
 
   const dropDownOptions = ['student','teacher'];
 
@@ -78,6 +81,10 @@ const SignUp = () => {
       }
       const res = await dispatch(fetchData(config))
       console.log('res', res);
+      if(res.payload.statusCode === 400){
+        toast.error('White space is not consider');
+        return;
+      }
       if(res?.payload?.statusCode !== 200){
         toast.error('Email Already Exist Please Login');
         return;
@@ -105,7 +112,7 @@ const SignUp = () => {
               }
             </div>
 
-            <DropDown dropDownOptions={dropDownOptions} name={'Role'} updateData={handleSignupData}/>
+            <DropDown dropDownOptions={dropDownOptions} name={'role'} updateData={handleSignupData}/>
 
             <button 
             onClick={handleSignup}

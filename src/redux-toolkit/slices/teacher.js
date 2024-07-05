@@ -4,21 +4,22 @@ const initialState = {
     allStudentData:[],
     verifiedStudentData:[],
     createExam:{
-        subjectName:'math',
+        subjectName:'',
         questions:[
             {
-                question:'question1',
-                answer:'ans1',
+                question:'',
+                answer:'',
                 options:[
-                    'ans1',
-                    'ans2',
-                    'ans3',
-                    'ans4'
+                    '',
+                    '',
+                    '',
+                    ''
                 ]
             }
         ],
         notes:['gffgdg']
     },
+    questions:[],
     viewExam:[],
     currStudentDetail:{},
     error:{},
@@ -35,29 +36,28 @@ export const teacherSlice = createSlice({
         loadVerifiedStudentData:(state,action) => {
             state.verifiedStudentData = action.payload;
         },
-        createExamData:(state,action) => {
-
-        },
         handleSubject:(state,action) => {
+            const {name,value} = action.payload;
             state.error = {};
-            state.createExam[action.payload.name] = action.payload.value
+            state.createExam[name] = value
         },
         handleQuestion:(state,action) => {
+            const {name,value,queIndex} = action.payload;
             state.error = {};
-            state.createExam.questions[action.payload.queIndex][action.payload.name] = action.payload.value
+            state.createExam.questions[queIndex][name] = value
         },
         handleOptions:(state,action) => {
+            const {queIndex,opIndex,value} = action.payload;
             state.error = {};
-            if(state.createExam.questions[action.payload.queIndex].options[action.payload.opIndex] === state.createExam.questions[action.payload.queIndex].answer){
-                state.createExam.questions[action.payload.queIndex].answer = action.payload.value;
+            if(state.createExam.questions[queIndex].options[opIndex] === state.createExam.questions[queIndex].answer){
+                state.createExam.questions[queIndex].answer = value;
             }
-            state.createExam.questions[action.payload.queIndex].options[action.payload.opIndex] = action.payload.value;
+            state.createExam.questions[queIndex].options[opIndex] = value;
         },
         handleAns:(state,action) => {
+            const {queIndex,ans} = action.payload;
             state.error = {};
-            console.log('ans in  teacher slice', action.payload.ans);
-            // console.log('past answer', state.createExam.questions[action.payload.queIndex]['answer']);
-            state.createExam.questions[action.payload.queIndex].answer = action.payload.ans;
+            state.createExam.questions[queIndex].answer = ans;
         },
         addNewQuestion:(state,action) => {
             state.createExam.questions.push(action.payload);
@@ -74,9 +74,36 @@ export const teacherSlice = createSlice({
         },
         loadCurrStudentDetail:(state,action) => {
             state.currStudentDetail = action.payload;
+        },
+        initiateTeacherError:(state,action) => {
+            state.error = {};
+        },
+        handleSameQuestions:(state,action) => {
+            const {queIndex,question} = action.payload;
+            state.questions[queIndex] = question;
+        },
+        initiateQuestions:(state,action) => {
+            state.questions = [];
         }
     }
 })
 
-export const {loadAllStudentData,loadVerifiedStudentData,createExamData,handleSubject,handleQuestion,handleOptions,handleAns,addNewQuestion,handleError,initiateExam,loadViewExamData,loadCurrStudentDetail} = teacherSlice.actions;
+export const 
+    {
+        loadAllStudentData,
+        loadVerifiedStudentData,
+        handleSubject,
+        handleQuestion,
+        handleOptions,
+        handleAns,
+        addNewQuestion,
+        handleError,
+        initiateExam,
+        loadViewExamData,
+        loadCurrStudentDetail
+        ,initiateTeacherError,
+        handleSameQuestions,
+        initiateQuestions
+    } = teacherSlice.actions;
+
 export default teacherSlice.reducer;

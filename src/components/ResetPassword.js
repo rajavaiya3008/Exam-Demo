@@ -15,6 +15,7 @@ const ResetPassword = () => {
     const navigate = useNavigate();
 
     const resetPassword = useSelector(state => state.user.resetPassword);
+    console.log('resetPassword', resetPassword);
     const error = useSelector(state => state.user.error);
 
     const ResetPasswordFields = [
@@ -83,8 +84,11 @@ const ResetPassword = () => {
     }
 
     const handleCancel = () => {
-        dispatch(initiateResetPassword());
-        navigate(`/${currUserRole}`);
+        dispatch(initiateResetPassword({
+            oldPassword:'',
+            Password:'',
+            ConfirmPassword:''
+        }));
     }
 
   return (

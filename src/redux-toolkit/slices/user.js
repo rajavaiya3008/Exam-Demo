@@ -2,16 +2,12 @@ import { createSlice } from "@reduxjs/toolkit"
 
 
 const initialState = {
-    loginData:{
-        email:'xyz@mail.com',
-        password:'111111',
-        
-    },
+    loginData:{},
     signupData:{
-        name:'raj',
-        email:'abc@gmail.com',
-        password:'222222',
-        role:'student',
+        name:'',
+        email:'',
+        password:'',
+        role:'',
     },
     login:false,
     forgetPassword:{},
@@ -25,37 +21,58 @@ export const userSlice = createSlice({
     initialState,
     reducers:{
         handleLoginData:(state,action) => {
-            console.log('action.payload', action.payload);
+            const {name,value} = action.payload;
             state.error = {};
-            state.loginData[action.payload.name] = action.payload.value;
+            state.loginData[name] = value;
         },
         handleSignupData:(state,action) => {
+            const {name,value} = action.payload
+            console.log('name', name)
             state.error = {};
-            state.signupData[action.payload.name] = action.payload.value;
+            state.signupData[name] = value;
         },
         handleForgetPassword:(state,action) => {
+            const {name,value} = action.payload;
             state.error = {};
-            state.forgetPassword[action.payload.name] = action.payload.value;
+            state.forgetPassword[name] = value;
         },
         handleNewPassword:(state,action) => {
+            const {name,value} = action.payload;
             state.error = {};
-            state.newPassword[action.payload.name] = action.payload.value;
+            state.newPassword[name] = value;
         },
         handleResetPassword:(state,action) => {
+            const {name,value} = action.payload;
             state.error = {};
-            state.resetPassword[action.payload.name] = action.payload.value;
+            state.resetPassword[name] = value;
         },
         initiateResetPassword:(state,action) => {
-            state.resetPassword = {};
+            state.error = {};
+            state.resetPassword = action.payload;
         },
         handleError:(state,action) => {
             state.error = action.payload;
         },
         handleLogin:(state,action) => {
             state.login = action.payload;
+        },
+        initiateLoginData:(state,action) => {
+            state.loginData = {};
         }
     }
 })
 
-export const {handleLoginData,handleSignupData,handleError,handleForgetPassword,handleNewPassword,handleResetPassword,initiateResetPassword,handleLogin} = userSlice.actions;
+export const 
+    {
+        handleLoginData,
+        handleSignupData,
+        handleError,
+        handleForgetPassword,
+        handleNewPassword,
+        handleResetPassword,
+        initiateResetPassword,
+        handleLogin,
+        initiateLoginData
+    } = userSlice.actions;
+
 export default userSlice.reducer;

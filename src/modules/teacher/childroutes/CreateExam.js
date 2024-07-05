@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import InputField from '../../../components/InputField';
-import { addNewQuestion, createExamData, handleAns, handleError, handleOptions, handleQuestion, handleSubject, initiateExam } from '../../../redux-toolkit/slices/teacher';
+import { addNewQuestion, createExamData, handleAns, handleError, handleOptions, handleQuestion, handleSubject, initiateExam, initiateQuestions } from '../../../redux-toolkit/slices/teacher';
 import { validateData } from '../../../Validation/validation';
 import { fetchData } from '../../../redux-toolkit/slices/api';
-import { token } from '../../../Current User/currentUser';
+import { getCurrUserData } from '../../../Current User/currentUser';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import ShowExam from './ShowExam';
@@ -17,19 +17,20 @@ const CreateExam = () => {
   const [currQuestion,setCurrQuestion] = useState(0);
   const navigate = useNavigate();
   const sameOptionError = useSelector(state => state.teacher.error);
+  const questions = useSelector(state => state.teacher.questions);
   const totalQuestion = 14;
 
   const initiateConfig = {
-    subjectName:'math',
+    subjectName:'',
     questions:[
         {
-            question:'question1',
-            answer:'ans1',
+            question:'',
+            answer:'^',
             options:[
-                'ans1',
-                'ans2',
-                'ans3',
-                'ans4'
+                '',
+                '',
+                '',
+                ''
             ]
         }
     ],
@@ -39,7 +40,6 @@ const CreateExam = () => {
 useEffect(() => {
   dispatch(initiateExam(initiateConfig));
 },[]);
-  //dispatch(initiateExam(initiateConfig));
 
   const validateExamData = {
     subjectName:examData?.subjectName,
@@ -60,9 +60,6 @@ useEffect(() => {
     op4:[{required:true,message:'Option Required'}],
     answer:[{required:true,message:'Answer Required'}]
   }
-
-
-  console.log('answer in create exam',examData?.questions?.[currQuestion]?.answer)
 
   const Options = {
     op1:examData?.questions?.[currQuestion]?.options?.[0],
@@ -87,9 +84,12 @@ useEffect(() => {
       type:'text',
       id:'question',
       name:'question',
-      label:'Question:',
+      label:`Question ${currQuestion+1}`,
       data:examData?.questions?.[currQuestion],
       updateData:handleQuestion,
+      // validateExamData:validateExamData,
+      // validate:validate,
+      // questions:questions,
       currQuestion:currQuestion,
       error:error
     },
@@ -242,12 +242,13 @@ useEffect(() => {
           method:'post',
           url:'dashboard/Teachers/Exam',
           data:examData,
-          headers: { "access-token":token }
+          headers: { "access-token":getCurrUserData().token }
         }
         const res = await dispatch(fetchData(config))
         console.log('res', res)
         toast.success('Exam Created Successfully');
         setCurrQuestion(0);
+        dispatch(initiateQuestions());
         // dispatch(initiateExam(initiateConfig));
         navigate('/teacher/view-exam');
       }catch(e){
@@ -259,27 +260,11 @@ useEffect(() => {
   
   const handleCancel = () => {
     dispatch(initiateExam(initiateConfig));
-    navigate(-1);
+    setCurrQuestion(0);
   }
 
   return (
     <div className='h-[100vh] flex items-center justify-center flex-col'>
-
-      {/* <div>
-        {
-          createExamFields.map((field,i) => <InputField fieldData={field} key={i}/>)
-        }
-      </div>
-
-      {console.log('examData.error', examData.error)}
-      {
-        error?.answer !== undefined ? <span>{error.answer}</span> : ''
-      }
-
-      <div>
-        <button onClick={handlePrevQuestion}>Prev</button>
-        <button onClick={handleNextQuestion}>Next</button>
-      </div> */}
 
       <ShowExam 
       createExamFields={createExamFields} 
@@ -291,7 +276,7 @@ useEffect(() => {
 
       <div className='pt-2'>
         {
-          examData?.questions?.length === 15 ? 
+          currQuestion === 14 ? 
             <button 
             onClick={handleCreateExam}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

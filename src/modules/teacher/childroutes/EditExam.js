@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../../../redux-toolkit/slices/api';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { token } from '../../../Current User/currentUser';
-import { addNewQuestion, createExamData, handleAns, handleError, handleOptions, handleQuestion, handleSubject, initiateExam } from '../../../redux-toolkit/slices/teacher';
+import { getCurrUserData, token } from '../../../Current User/currentUser';
+import { addNewQuestion, createExamData, handleAns, handleError, handleOptions, handleQuestion, handleSubject, initiateExam, initiateQuestions } from '../../../redux-toolkit/slices/teacher';
 import ShowExam from './ShowExam';
 import { toast } from 'react-toastify';
 import { validateData } from '../../../Validation/validation';
@@ -17,6 +17,8 @@ const EditExam = () => {
     const examData = useSelector(state => state.teacher.createExam);
     const status = useSelector(state => state.api.status);
     const error = useSelector(state => state.teacher.error);
+    const questions = useSelector(state => state.teacher.questions);
+    const sameOptionError = useSelector(state => state.teacher.error);
     const navigate = useNavigate();
     const id = searchParams.get('id');
     const subjectName = searchParams.get('subject');
@@ -30,11 +32,17 @@ const EditExam = () => {
                 const config = {
                     method:'get',
                     url:'dashboard/Teachers/examDetail',
-                    headers: { "access-token":`${token}` },
+                    headers: { "access-token":getCurrUserData().token },
                     params:{id}
                 }
                 const res = await dispatch(fetchData(config));
                 console.log('res in edit exam', res)
+                if(res?.payload?.statusCode === 401){
+                  localStorage.removeItem('userData');
+                  localStorage.setItem('login',false);
+                  navigate('/login')
+                  return;
+                }
                 editData.subjectName = subjectName;
                 editData.notes = ['hello'];
                 console.log('res.data.questions', res?.payload?.data?.questions);
@@ -80,7 +88,7 @@ const EditExam = () => {
           type:'text',
           id:'question',
           name:'question',
-          label:'Question:',
+          label:`Question ${currQuestion+1}`,
           data:examData.questions[currQuestion],
           updateData:handleQuestion,
           currQuestion:currQuestion,
@@ -199,15 +207,20 @@ const EditExam = () => {
             dispatch(handleError(error));
             return;
           }
+
+          if(Object.keys(sameOptionError).length !== 0){
+            return;
+          }
         const config = {
           method:'put',
           url:'dashboard/Teachers/editExam',
           data:examData,
-          headers: { "access-token":`${token}` },
+          headers: { "access-token":getCurrUserData().token },
           params:{id}
         }
         const res = await dispatch(fetchData(config));
         console.log('res of edit exam', res);
+        dispatch(initiateQuestions());
         toast.success("Exam Edited Successfully");
         navigate('/teacher/view-exam');
       }catch(error){
@@ -237,6 +250,7 @@ const EditExam = () => {
     }
     
     const handleCancel = () => {
+      dispatch(initiateQuestions());
       navigate(-1);
     }
     

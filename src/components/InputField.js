@@ -2,7 +2,8 @@ import { TextField } from '@mui/material';
 import React from 'react'
 import { useDispatch } from 'react-redux';
 import RadioBtn from './RadioBtn';
-import { handleError } from '../redux-toolkit/slices/teacher';
+import { handleError, handleSameQuestions } from '../redux-toolkit/slices/teacher';
+import { validateData } from '../Validation/validation';
 // import { handleLoginData } from '../redux-toolkit/slices/user';
 
 const InputField = ({fieldData}) => {
@@ -38,9 +39,12 @@ const InputField = ({fieldData}) => {
         disabled={fieldData.disable}
         variant="outlined"
         onChange={(e) => {
+            const {name,value} = e.target;
+            // console.log(value.match('(?! ).*[^ ]')[0])
+            // const words = value.split(/\s+/).filter(word => word !== '');
             let data = {
-                name:e?.target?.name,
-                value:e?.target?.value,
+                name:name,
+                value: value,
                 queIndex:fieldData.currQuestion,
                 opIndex:fieldData.opIndex,
                 ans:fieldData.data[fieldData.id],
@@ -50,9 +54,11 @@ const InputField = ({fieldData}) => {
             if(fieldData?.optionArr?.includes(e?.target?.value)){
                 const error = {};
                 error[fieldData.name] = 'Option is Already Present';
+                dispatch(fieldData.updateData(data))
                 dispatch(handleError(error));
                 return;
             }
+
             dispatch(fieldData.updateData(data))
         }}
         />

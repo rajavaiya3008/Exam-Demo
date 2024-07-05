@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react'
-import { token } from '../../../Current User/currentUser';
+import { getCurrUserData} from '../../../Current User/currentUser';
 import { fetchData } from '../../../redux-toolkit/slices/api';
 import { useDispatch, useSelector } from 'react-redux';
 import { initiateExam, loadViewExamData } from '../../../redux-toolkit/slices/teacher';
 import Pagination from '../../../components/Pagination';
+import { useNavigate } from 'react-router';
 
 const ViewExam = () => {
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const status = useSelector(state => state.api.status);
   const viewExam = useSelector(state => state.teacher.viewExam);
   const btn = {
@@ -39,10 +41,16 @@ const ViewExam = () => {
         const config = {
           method:'get',
           url:'dashboard/Teachers/viewExam',
-          headers: { "access-token":`${token}` }
+          headers: { "access-token":getCurrUserData().token }
       }
       const res = await dispatch(fetchData(config))
       console.log('res in viewExam', res);
+      if(res?.payload?.statusCode === 401){
+        localStorage.removeItem('userData');
+        localStorage.setItem('login',false);
+        navigate('/login')
+        return;
+      }
       dispatch(loadViewExamData(res.payload.data));
       }catch(error){
         console.log('error', error)
@@ -52,7 +60,6 @@ const ViewExam = () => {
   },[])
 
   const keys = ['subjectName','email'];
-
 
   return (
     <div className='h-[100vh] flex items-center justify-center bg-gray-500'>

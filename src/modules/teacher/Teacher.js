@@ -1,25 +1,33 @@
 import React from 'react'
 import Navbar from '../../components/Navbar'
 import { Outlet } from 'react-router-dom'
+import { PiStudentFill } from "react-icons/pi";
+import { PiStudentThin } from "react-icons/pi";
+import { PiExamFill } from "react-icons/pi";
+import { PiExamLight } from "react-icons/pi";
 
 const Teacher = () => {
 
   const teacherRoutes = [
     {
       path:'allstudent',
-      name:'All Students'
+      name:'All Students',
+      icon:<PiStudentThin style={{fontSize:25}}/>
     },
     {
       path:'verified-student',
-      name:'Verified Students'
+      name:'Verified Students',
+      icon:<PiStudentFill style={{fontSize:25}}/>
     },
     {
       path:'create-exam',
-      name:'CreateExam'
+      name:'CreateExam',
+      icon:<PiExamFill style={{fontSize:25}}/>
     },
     {
       path:'view-exam',
-      name:'View Exam'
+      name:'View Exam',
+      icon:<PiExamLight style={{fontSize:25}}/>
     }
   ]
 

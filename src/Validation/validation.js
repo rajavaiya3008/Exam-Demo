@@ -25,6 +25,10 @@ export const validateData = (data,validate) => {
                 error[key] = 'Password Do not Match';
                 return true;
             }
+            if(data?.questions?.includes(data?.question)){
+                error.question = 'Question already Exists';
+                return true;
+            }
 
 
         })

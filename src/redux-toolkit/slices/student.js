@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { handleAns } from "./teacher";
 
 
 const initialState = {
@@ -20,9 +19,9 @@ export const studentSlice = createSlice({
             state.examPaper = action.payload;
         },
         handleStudentAns:(state,action) => {
-            console.log('ans in student slice', action.payload.ans);
+            const {queIndex,ans} = action.payload;
             state.error = {};
-            state.examPaper.questions[action.payload.queIndex].answer = action.payload.ans;
+            state.examPaper.questions[queIndex].answer = ans;
         },
         handleStudentError:(state,action) => {
             state.error = action.payload;
@@ -31,8 +30,9 @@ export const studentSlice = createSlice({
             state.studentProfile = action.payload;
         },
         updateProfile:(state,action) => {
+            const {name,value} = action.payload;
             state.error = {}
-            state.studentProfile[action.payload.name] = action.payload.value;
+            state.studentProfile[name] = value;
         },
         cancelExam:(state,action) => {
             state.examPaper = {};
@@ -40,5 +40,15 @@ export const studentSlice = createSlice({
     }
 })
 
-export const {loadAllExamData,loadExamPaper,handleStudentAns,handleStudentError,loadStudentProfile,updateProfile,cancelExam} = studentSlice.actions;
+export const 
+    {
+        loadAllExamData,
+        loadExamPaper,
+        handleStudentAns,
+        handleStudentError,
+        loadStudentProfile,
+        updateProfile,
+        cancelExam
+    } = studentSlice.actions;
+
 export default studentSlice.reducer;

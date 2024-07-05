@@ -31,13 +31,13 @@ const Pagination = ({data,keys,viewPath,btn}) => {
 
   return (
     <div className="relative overflow-x-auto dark:bg-gray-800">
-        <table className="w-[850px] h-[620px] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <table className="w-[850px] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
 
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <td className="px-6 py-3">Sr No.</td>
                     {
-                        keys.map((tuple,i) => <td key={i} className="px-6 py-3">{keys[i]}</td>)
+                        keys.map((key,i) => <td key={i} className="px-6 py-3">{key}</td>)
                     }
                     {
                         viewPath !== undefined ? <td className="px-6 py-3">View</td> : ''
@@ -73,40 +73,22 @@ const Pagination = ({data,keys,viewPath,btn}) => {
                         </tr>
                     ))
                 }
-                    <tr className='text-center bg-white border-b dark:bg-gray-800 dark:border-gray-700 w-full h-[70px]'>
-                        <td className="px-6 py-3 w-[178px]">{currPage} Out of {totalPage}</td>
-                        <td className="px-6 py-3 w-[225px]">
-                        <button 
-                        onClick={handlePrevPage}
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        >{`<`}</button>
-                        </td>
-                        <td className="px-6 py-3 flex justify-center items-center w-[315px]">
-                            <span className='flex items-center mt-2'>{currPage}</span>
-                        </td>
-                        <td className="px-6 py-3">
-                        <button 
-                        onClick={handleNextPage}
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        >{`>`}</button>
-                        </td>
-                        {/* <td className="px-6 py-3"></td> */}
-                    </tr>
             </tbody>
 
         </table>
 
-        {/* <div className='fixed left-[50%] flex'>
+        <div className='fixed flex w-[850px] justify-between mt-[10px]'>
+            <pre className='text-gray-300'>{currPage} Out of {totalPage}</pre>
             <button 
             onClick={handlePrevPage}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline rounded-full"
             >{`<`}</button>
-            <span className='flex items-center'>{currPage}</span>
+            <span className='flex items-center text-gray-300'>{currPage}</span>
             <button 
             onClick={handleNextPage}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline rounded-full"
             >{`>`}</button>
-        </div> */}
+        </div>
     </div>
   )
 }

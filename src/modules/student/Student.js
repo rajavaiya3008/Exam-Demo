@@ -1,17 +1,21 @@
 import React from 'react'
 import Navbar from '../../components/Navbar'
 import { Outlet } from 'react-router-dom'
+import { PiExamFill } from "react-icons/pi";
+import { CgProfile } from "react-icons/cg";
 
 const Student = () => {
 
   const studentRoutes = [
     {
       path:'all-exam',
-      name:'Exams'
+      name:'Exams',
+      icon:<PiExamFill style={{fontSize:25}}/>
     },
     {
       path:'student-profile',
-      name:'Profile'
+      name:'Profile',
+      icon:<CgProfile style={{fontSize:25}}/>
     }
   ]
 
