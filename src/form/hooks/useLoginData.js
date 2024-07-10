@@ -22,7 +22,7 @@ export const useLoginData = () => {
           type:'email',
           id:'email',
           name:'email',
-          label:'Enter Email:',
+          label:`Enter Email`,
           data:loginData,
           error:error,
           updateData:handleLoginData
@@ -31,7 +31,7 @@ export const useLoginData = () => {
           type:'password',
           id:'password',
           name:'password',
-          label:'Enter Password:',
+          label:'Enter Password',
           data:loginData,
           error:error,
           updateData:handleLoginData
@@ -46,7 +46,6 @@ export const useLoginData = () => {
     const handleSubmit = async() => {
         try{
           const error = validateData(loginData,validate)
-          console.log('error', error)
           if(Object.keys(error).length !== 0){
             dispatch(handleError(error));
             return;
@@ -58,7 +57,6 @@ export const useLoginData = () => {
             data:loginData
           }
           const res = await dispatch(fetchData(config))
-          console.log('res', res);
           if(res.payload.statusCode === 500){
             toast.error(res.payload.message);
             setDisable(false);
@@ -73,7 +71,8 @@ export const useLoginData = () => {
           localStorage.setItem('login',true)
           dispatch(handleLogin(true));
           dispatch(initiateLoginData());
-          navigate(`/${res.payload.data.role}`,{replace:true});
+        //   res.payload.data.role === 'student' ? navigate('/student-dashboard',{replace:true}) : navigate('/teacher-dashboard',{replace:true})
+          navigate(`/${res.payload.data.role}/dashboard`,{replace:true});
         }catch(error){
           setDisable(false);
           console.log('error', error);

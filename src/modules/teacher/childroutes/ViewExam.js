@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { initiateExam, loadViewExamData } from '../../../redux-toolkit/slices/teacher';
 import Pagination from '../../../components/Pagination';
 import { useNavigate } from 'react-router';
+import { handlePrevVisitedPage } from '../../../redux-toolkit/slices/user';
 
 const ViewExam = () => {
 
@@ -44,7 +45,6 @@ const ViewExam = () => {
           headers: { "access-token":getCurrUserData().token }
       }
       const res = await dispatch(fetchData(config))
-      console.log('res in viewExam', res);
       if(res?.payload?.statusCode === 401){
         localStorage.removeItem('userData');
         localStorage.setItem('login',false);
@@ -56,18 +56,25 @@ const ViewExam = () => {
         console.log('error', error)
       }
     }
-    fetchViewExamData();
+    if(viewExam.length === 0){
+      fetchViewExamData();
+    }
+    dispatch(handlePrevVisitedPage(1))
   },[])
 
   const keys = ['subjectName','email'];
 
   return (
-    <div className='h-[100vh] flex items-center justify-center bg-gray-500'>
+    <div className='h-[100vh] flex justify-center mt-[30px]'>
         <div>
             {
                 status === 'loading' ? 
-                  <div className='spinner'></div> :
-                        <Pagination data={viewExam} recodesPerPage={10} keys={keys} btn={btn}/>
+                  <div className='spinner mt-[250px]'></div> :
+                    <div>
+                      <p className='text-center text-4xl mb-4'>View Exams</p>
+                      <Pagination data={viewExam} recodesPerPage={10} keys={keys} btn={btn}/>
+                    </div>
+                        
             }
         </div>
     </div>

@@ -1,4 +1,5 @@
 import App from "../App";
+import ErrorPage from "../components/ErrorPage";
 import ForgetPassword from "../components/ForgetPassword";
 import Home from "../components/Home";
 import NewPassword from "../components/NewPassword";
@@ -25,6 +26,7 @@ import SignUp from "../modules/user/SignUp";
 export const allRouter = [
     {
       path:'/',
+      errorElement:<ErrorPage />,
       element:<App />,
       children:[
         {
@@ -55,7 +57,7 @@ export const allRouter = [
               element:<Teacher />,
               children:[
                 {
-                  index:true,
+                  path:'dashboard',
                   element:<TeacherDashbord />
                 },
                 {
@@ -99,7 +101,7 @@ export const allRouter = [
               element:<Student />,
               children:[
                 {
-                  index:true,
+                  path:'dashboard',
                   element:<StudentDashboard />
                 },
                 {

@@ -6,61 +6,59 @@ import { validateData } from '../../../Validation/validation';
 import { handleStudentError } from '../../../redux-toolkit/slices/student';
 
 
-const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateExamData,totalQue,validate,role}) => {
-
+const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateExamData,totalQue,validate,role,Options}) => {
     const totalQuestion = totalQue || 14;
     const sameOptionError = useSelector(state => state.teacher.error);
     const sameQuestions = useSelector(state => state.teacher.questions);
     const examData = useSelector(state => state.teacher.createExam);
+    const examPaper = useSelector(state => state.student.examPaper)
+    const optionArr = examData?.questions?.[currQuestion]?.options;
     const [lastQueVisited,setLastQueVisited] = useState(false);
 
     const dispatch = useDispatch();
     
     const handlePrevQuestion = () => {
       // dispatch(initiateQuestions());
-      console.log('validateExamData.questions', validateExamData.question);
-      if(!sameQuestions.includes(validateExamData.question) || sameQuestions[currQuestion] !== validateExamData.question){
-        validateExamData.questions = sameQuestions;
-      }
-      if(currQuestion === 14 && !lastQueVisited){
-        setLastQueVisited(true);
-        validateExamData.questions = sameQuestions;
-        const error = validateData(validateExamData,validate);
-        if(Object.keys(error).length !== 0){
-          dispatch(handleError(error));
-          return;
-        }
-      }
-      const error = validateData(validateExamData,validate);
-      if(Object.keys(error).length !== 0){
-        dispatch(handleError(error));
-        return;
-      }
-      dispatch(handleSameQuestions({
-        question:validateExamData.question,
-        queIndex:currQuestion
-      }));
-      if(currQuestion === 1){
-        dispatch(initiateQuestions());
-      }
-        if(currQuestion === 0){
-          setCurrQuestion(totalQuestion);
-        }else{
+      // console.log('validateExamData.questions', validateExamData.question);
+      // if(!sameQuestions.includes(validateExamData.question) || sameQuestions[currQuestion] !== validateExamData.question){
+      //   validateExamData.questions = sameQuestions;
+      // }
+      // if(currQuestion === 14 && !lastQueVisited){
+      //   setLastQueVisited(true);
+      //   validateExamData.questions = sameQuestions;
+      //   const error = validateData(validateExamData,validate);
+      //   if(Object.keys(error).length !== 0){
+      //     dispatch(handleError(error));
+      //     return;
+      //   }
+      // }
+      // const error = validateData(validateExamData,validate);
+      // if(Object.keys(error).length !== 0){
+      //   dispatch(handleError(error));
+      //   return;
+      // }
+      // dispatch(handleSameQuestions({
+      //   question:validateExamData.question,
+      //   queIndex:currQuestion
+      // }));
+      // if(currQuestion === 1){
+      //   dispatch(initiateQuestions());
+      // }
+          dispatch(handleError({}));
           setCurrQuestion(currQuestion -1)
-        }
       }
+
+    function hasDuplicates(array) {
+        return (new Set(array)).size !== array.length;
+    }
     
     const handleNextQuestion = () => {
-      console.log('validateExamData.questions', validateExamData.question);
-      console.log('sameQuestions.length', sameQuestions.length)
-      console.log('currQuestion', currQuestion);
       if((sameQuestions.includes(validateExamData.question) && 
         sameQuestions.length === currQuestion ) ||
           sameQuestions[currQuestion] !== validateExamData.question){
         validateExamData.questions = sameQuestions;
       }
         const error = validateData(validateExamData,validate);
-        console.log('error in give exam', error);
         if(Object.keys(error).length !== 0){
           dispatch(handleError(error));
           return;
@@ -68,6 +66,13 @@ const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateE
         if(Object.keys(sameOptionError).length !== 0){
           return;
         }
+        if(hasDuplicates(optionArr)){
+          const error = {};
+          error['sameOption'] = 'Two Options are Same Please Check';
+          // dispatch(fieldData.updateData(data))
+          dispatch(handleError(error));
+          return;
+      }
         dispatch(handleSameQuestions({
           question:validateExamData.question,
           queIndex:currQuestion
@@ -85,7 +90,7 @@ const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateE
                 ''
               ]
           }
-          if(examData.questions.length !== 15){
+          if(examData.questions.length !== 15 && examData.questions.length < currQuestion+2){
             dispatch(addNewQuestion(question));
           }
           setCurrQuestion(currQuestion+1);
@@ -93,30 +98,19 @@ const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateE
     }
 
     const handlePrev = () => {
-      const error = validateData(validateExamData,validate);
-      if(Object.keys(error).length !== 0){
-        dispatch(handleStudentError(error));
-        return;
-      }
+        console.log('Enter in to prev if block');
+        dispatch(handleStudentError({}));
         setCurrQuestion(currQuestion-1);
     }
 
     const handleNext = () => {
         const error = validateData(validateExamData,validate);
-        console.log('error in give exam', error);
-        console.log('currQuestion', currQuestion)
-        console.log('setCurrQuestion', setCurrQuestion);
         if(Object.keys(error).length !== 0){
             dispatch(handleStudentError(error));
             return;
           }
-          if(currQuestion === totalQuestion){
-            console.log('enter in to if part')
-            setCurrQuestion(0)
-          }else{
-            console.log('enter into else part')
-            setCurrQuestion(currQuestion+1);
-          }
+          // localStorage.setItem('examPaper',JSON.stringify(examPaper))
+          setCurrQuestion(currQuestion+1);
     }
 
   return (
@@ -129,19 +123,23 @@ const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateE
 
       {/* {console.log('examData.error', examData.error)} */}
       {
-        error?.answer !== undefined ? <span className='text-red-500 text-sm'>{error.answer}<sup>*</sup></span> : ''
+        error?.answer !== undefined ? <span className='text-red-500 text-sm'>{error.answer}</span> : ''
+      }
+
+      {
+        error?.sameOption !== undefined ? <span className='text-red-500 text-sm'>{error.sameOption}</span> : ''
       }
 
       <div className='mt-2 ml-[50px]'>
         <button 
         onClick={role === 'student'? handlePrev : handlePrevQuestion}
-        disabled={currQuestion === 0 || Object.keys(error).length !== 0}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        disabled={currQuestion === 0}
+        className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${currQuestion === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
         >Prev</button>
         <button 
-        disabled={currQuestion === 14}
+        disabled={currQuestion === 14 || (role === 'student' && currQuestion === 6)}
         onClick={role === 'student'? handleNext : handleNextQuestion}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-2 rounded focus:outline-none focus:shadow-outline"
+        className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-2 rounded focus:outline-none focus:shadow-outline ${currQuestion === 14 || (role === 'student' && currQuestion === 6)? 'opacity-50 cursor-not-allowed' : ''}`}
         >Next</button>
       </div>
     </div>

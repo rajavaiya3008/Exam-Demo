@@ -3,13 +3,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchData } from '../../../redux-toolkit/slices/api';
 import { getCurrUserData} from '../../../Current User/currentUser';
 import Pagination from '../../../components/Pagination';
-import { loadVerifiedStudentData } from '../../../redux-toolkit/slices/teacher';
+import { handleSearchField, loadVerifiedStudentData } from '../../../redux-toolkit/slices/teacher';
 import { useNavigate } from 'react-router';
+import InputField from '../../../components/InputField';
 
 const VerifiedStudent = () => {
 
     const status = useSelector(state => state.api.status);
     const verifiedStudentData = useSelector(state => state.teacher.verifiedStudentData);
+    const searchData = useSelector(state => state.teacher.searchField)
+    const lastVisitedPage = useSelector(state => state.user.prevVisitedPage);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -22,7 +25,6 @@ const VerifiedStudent = () => {
                 headers: { "access-token":getCurrUserData().token }
             }
             const res = await dispatch(fetchData(config))
-            console.log('res in Verifiedstudent', res);
             if(res?.payload?.statusCode === 401){
                 localStorage.removeItem('userData');
                 localStorage.setItem('login',false);
@@ -32,19 +34,41 @@ const VerifiedStudent = () => {
             dispatch(loadVerifiedStudentData(res?.payload?.data));
 
         }
-        fetchAllStudentData();
+        if(verifiedStudentData.length === 0){
+            fetchAllStudentData();
+        }
     },[]);
 
     const keys = ['name','email','status'];
 
+    const searchField = {
+        type:'text',
+        id:'name',
+        name:'name',
+        label:'Name of Email',
+        data:searchData,
+        updateData:handleSearchField,
+        // error:error
+    }
+
   return (
-    <div className='h-[100vh] flex items-center justify-center bg-gray-500'>
+    <div className='h-[100vh] flex items-center flex-col mt-[30px]'>
+        {
+            status !== 'loading' && 
+            <div className='mb-[20px] text-white'>
+            <InputField fieldData={searchField}/>
+            </div>
+        }
         <div>
             {
                 status === 'loading' ? 
-                    <div className='spinner'></div> :
-                        <Pagination data={verifiedStudentData} recodesPerPage={10} keys={keys} viewPath={`/teacher/view-student-detail`}/>
+                    <div className='spinner mt-[250px]'></div> :
 
+                        <div>
+                            <p className='text-center text-4xl mb-4'>Verified Students</p>
+                            <Pagination data={verifiedStudentData} recodesPerPage={10} keys={keys} viewPath={`/teacher/view-student-detail`} searchKey={['name','email','status']} searchVal={searchData.name} lastVisitedPage={lastVisitedPage}/>
+                        </div>
+                        
             }
         </div>
     </div>

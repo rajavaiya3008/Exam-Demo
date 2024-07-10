@@ -14,7 +14,6 @@ const ViewStudentDetail = () => {
     const currStudentDetail = useSelector(state => state.teacher.currStudentDetail);
     const status = useSelector(state => state.api.status);
     const id = searchParams.get('id');
-    console.log('id', id);
 
     useEffect(() => {
         try{
@@ -26,7 +25,6 @@ const ViewStudentDetail = () => {
                     params:{id}
                 }
                 const res = await dispatch(fetchData(config));
-                console.log('response on view student detail', res);
                 if(res?.payload?.statusCode === 401){
                     localStorage.removeItem('userData');
                     localStorage.setItem('login',false);
@@ -41,14 +39,27 @@ const ViewStudentDetail = () => {
         }
     },[])
 
+    const handleBack = () => {
+        navigate(-1);
+    }
+
   return (
-    <div className='h-[100vh] flex items-center justify-center bg-gray-500'>
+    <div className='h-[100vh] flex justify-center mt-[30px] text-black'>
         <div>
             {
                 status === 'loading' ? 
-                    <div className='spinner'></div> 
-                        :<CurrStudentDetail currStudentDetail={currStudentDetail}/>
+                    <div className='spinner mt-[250px]'></div> 
+                        :
+                            <div>
+                                <p className='text-center mb-4 text-4xl'>Student Detail</p>
+                                <CurrStudentDetail currStudentDetail={currStudentDetail}/>
+                                <button
+                                onClick={handleBack}
+                                className='mt-[30px] ml-[45%] bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
+                                >Back</button>
+                            </div>
             }
+            
         </div>
     </div>
   )

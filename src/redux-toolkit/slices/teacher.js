@@ -8,7 +8,6 @@ const initialState = {
         questions:[
             {
                 question:'',
-                answer:'',
                 options:[
                     '',
                     '',
@@ -22,6 +21,9 @@ const initialState = {
     questions:[],
     viewExam:[],
     currStudentDetail:{},
+    searchField:{},
+    edited:false,
+    ansIndex:[],
     error:{},
 
 }
@@ -37,24 +39,29 @@ export const teacherSlice = createSlice({
             state.verifiedStudentData = action.payload;
         },
         handleSubject:(state,action) => {
+            state.edited = true
             const {name,value} = action.payload;
             state.error = {};
             state.createExam[name] = value
         },
         handleQuestion:(state,action) => {
+            state.edited = true
             const {name,value,queIndex} = action.payload;
             state.error = {};
             state.createExam.questions[queIndex][name] = value
         },
         handleOptions:(state,action) => {
+            state.edited = true
+            console.log('action.payload', action.payload)
             const {queIndex,opIndex,value} = action.payload;
             state.error = {};
-            if(state.createExam.questions[queIndex].options[opIndex] === state.createExam.questions[queIndex].answer){
+            if(state.createExam.questions[queIndex].options[opIndex] === state.createExam.questions[queIndex].answer && state.ansIndex[queIndex] === opIndex){
                 state.createExam.questions[queIndex].answer = value;
             }
             state.createExam.questions[queIndex].options[opIndex] = value;
         },
         handleAns:(state,action) => {
+            state.edited = true
             const {queIndex,ans} = action.payload;
             state.error = {};
             state.createExam.questions[queIndex].answer = ans;
@@ -84,6 +91,18 @@ export const teacherSlice = createSlice({
         },
         initiateQuestions:(state,action) => {
             state.questions = [];
+        },
+        handleSearchField:(state,action) => {
+            state.searchField.name = action.payload.value
+        },
+        handleEdited:(state,action) => {
+            state.edited = false;
+        },
+        handleAnsIndexes:(state,action) => {
+            state.ansIndex[action.payload.currQuestion] = action.payload.ansIndex;
+        },
+        initiateAnsIndex:(state,action) => {
+            state.ansIndex = action.payload
         }
     }
 })
@@ -103,7 +122,11 @@ export const
         loadCurrStudentDetail
         ,initiateTeacherError,
         handleSameQuestions,
-        initiateQuestions
+        initiateQuestions,
+        handleSearchField,
+        handleEdited,
+        handleAnsIndexes,
+        initiateAnsIndex
     } = teacherSlice.actions;
 
 export default teacherSlice.reducer;

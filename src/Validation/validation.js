@@ -1,5 +1,7 @@
 export const validateData = (data,validate) => {
-    console.log(data);
+    if(data.answer === '^'){
+        data.answer = '';
+    }
 
     // let pattern = "^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$";
 
@@ -7,7 +9,6 @@ export const validateData = (data,validate) => {
 
     for(let key in validate){
         validate[key].some((field) => {
-            console.log(data[key],'confirm pass',key,'key is',data.password,'pass')
             if(field.required && !data[key]){
                 error[key] = field.message;
                 return true;
@@ -34,8 +35,6 @@ export const validateData = (data,validate) => {
         })
     }
 
-    console.log(error,'error is here');
-
     // formField.forEach((field) => {
     //     if(data[field.name].length < 3){
     //         error[field.name] = "Please Enter atleast 3 character";
@@ -57,8 +56,6 @@ export const validateData = (data,validate) => {
     // if(data.confirmPassword !== data.password){
     //     error.confirmPassword = 'Conform password did not match with password';
     // }
-
-    console.log(error,'error is here');
     
     return error;
 }

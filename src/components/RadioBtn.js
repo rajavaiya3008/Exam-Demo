@@ -1,11 +1,28 @@
 import { convertLength } from '@mui/material/styles/cssUtils';
-import React from 'react'
-import { useDispatch } from 'react-redux'
+import React, { memo, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { handleAnsIndexes } from '../redux-toolkit/slices/teacher';
 
 const RadioBtn = ({fieldData}) => {
 
     const dispatch = useDispatch();
-    console.log('fieldData in radioBtn', fieldData);
+    console.log('fieldData', fieldData);
+
+    const ansIndex = useSelector(state => state.teacher.ansIndex)
+
+    // let ansIndex;
+
+    // useEffect(() => {
+    //     ansIndex = fieldData.examData.questions[fieldData.currQuestion].options.findIndex((option,i) => option === fieldData?.ans)
+    //     console.log('ansIndex', ansIndex)
+    //     dispatch(handleAnsIndexes({
+    //         ansIndex:ansIndex,
+    //         currQuestion:fieldData.currQuestion
+    //     }))
+    // },[])
+    
+    // const ansIndex = fieldData?.examData?.questions?.[fieldData.currQuestion]?.options?.findIndex((option,i) => option === fieldData?.ans)
+    // console.log('ansIndex', ansIndex)
 
 
   return (
@@ -14,8 +31,12 @@ const RadioBtn = ({fieldData}) => {
         type={fieldData.type}
         id={fieldData.id}
         name={fieldData.name}
-        checked={fieldData.data[fieldData.id] === fieldData.ans}
+        checked={fieldData.data[fieldData.id] === fieldData.ans && ansIndex[fieldData.currQuestion] === fieldData.opIndex }
         onChange={(e) => {
+            dispatch(handleAnsIndexes({
+                currQuestion:fieldData.currQuestion,
+                ansIndex:fieldData.opIndex
+            }))
             let data = {
                 name:e?.target?.name,
                 value:e?.target?.value,
@@ -24,9 +45,7 @@ const RadioBtn = ({fieldData}) => {
                 ans:fieldData.data[fieldData.id],
                 ansIndex:fieldData.ansIndex
             }
-            console.log('current selected option index',fieldData.opIndex)
-            if(fieldData.examData.questions[fieldData.currQuestion].options[fieldData.opIndex] === ''){
-                console.log('Enter in tio if');
+            if(fieldData.examData?.questions[fieldData.currQuestion].options[fieldData.opIndex] === ''){
                 return;
             }
             dispatch(fieldData.updateData(data))
@@ -37,4 +56,4 @@ const RadioBtn = ({fieldData}) => {
   )
 }
 
-export default RadioBtn
+export default memo(RadioBtn)

@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { handleError, handleResetPassword, initiateResetPassword } from '../redux-toolkit/slices/user';
+import { handleError, handleFocus, handlePrevVisitedPage, handleResetPassword, initiateResetPassword } from '../redux-toolkit/slices/user';
 import InputField from './InputField';
 import { token } from '../Current User/currentUser';
 import { fetchData } from '../redux-toolkit/slices/api';
@@ -14,34 +14,43 @@ const ResetPassword = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        dispatch(initiateResetPassword({}))
+        dispatch(handlePrevVisitedPage(1))
+
+        return () => {
+            dispatch(initiateResetPassword({}))
+        }
+    },[])
+
     const resetPassword = useSelector(state => state.user.resetPassword);
-    console.log('resetPassword', resetPassword);
     const error = useSelector(state => state.user.error);
+    const status = useSelector(state => state.api.status);
 
     const ResetPasswordFields = [
         {
-            type:'text',
+            type:'password',
             id:'oldPassword',
             name:'oldPassword',
-            label:'Old Password:',
+            label:'Old Password',
             data:resetPassword,
             updateData:handleResetPassword,
             error:error
         },
         {
-            type:'text',
+            type:'password',
             id:'Password',
             name:'Password',
-            label:'Password:',
+            label:'Password',
             data:resetPassword,
             updateData:handleResetPassword,
             error:error
         },
         {
-            type:'text',
+            type:'password',
             id:'ConfirmPassword',
             name:'ConfirmPassword',
-            label:'Confirm Password:',
+            label:'Confirm Password',
             data:resetPassword,
             updateData:handleResetPassword,
             error:error
@@ -49,16 +58,15 @@ const ResetPassword = () => {
     ]
 
     const validate = {
-        oldPassword:[{required:true,message:'Please Enter Password'},{length:6,message:'Password Must be 6 char'}],
-        Password:[{required:true,message:'Please Enter Password'},{length:6,message:'Password Must be 6 char'}],
-        ConfirmPassword:[{required:true,message:'Please Enter Password'},{length:6,message:'Password Must be 6 char'},{match:true,comKey:resetPassword.Password}],
+        oldPassword:[{required:true,message:'Please Enter Old Password'},{length:6,message:'Password Must be 6 char'},{pattern:/^[a-zA-Z0-9!@#$%^&*]{6,16}$/,message:'Enter Valid Password'}],
+        Password:[{required:true,message:'Please Enter Password'},{length:6,message:'Password Must be 6 char'},{pattern:/^[a-zA-Z0-9!@#$%^&*]{6,16}$/,message:'Enter Valid Password'}],
+        ConfirmPassword:[{required:true,message:'Please Enter Confirm Password'},{length:6,message:'Password Must be 6 char'},{match:true,comKey:resetPassword?.Password}],
       }
 
     const handleReset = async() => {
 
         try{
             const error = validateData(resetPassword,validate)
-            console.log('error', error)
             if(Object.keys(error).length !== 0){
                 dispatch(handleError(error));
                 return;
@@ -70,7 +78,6 @@ const ResetPassword = () => {
                 headers: { "access-token":`${token}` }
             }
             const res = await dispatch(fetchData(config));
-            console.log('res in reset password', res);
             if(res.payload.statusCode !== 200){
                 toast.error('Please check old password');
                 return;
@@ -89,10 +96,15 @@ const ResetPassword = () => {
             Password:'',
             ConfirmPassword:''
         }));
+        dispatch(handleFocus(false));
     }
+
 
   return (
     <div className='h-[100vh] flex items-center justify-center flex-col'>
+
+        <p className='text-center mb-4 text-4xl'>Reset Password</p>
+
         {
             ResetPasswordFields.map((field,i) => <InputField fieldData={field} key={i}/>)
         }
@@ -100,14 +112,18 @@ const ResetPassword = () => {
         <div>
             <button 
             onClick={handleReset}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2"
-            >Reset</button>
+            disabled={status === 'loading'}
+            className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2 ${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+                {
+                    status === 'loading'? <span>Loading...</span> : <span>Reset</span>
+                }
+            </button>
             <button
             onClick={handleCancel}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2 ml-2"
-            >Cancel</button>
+            >Clear</button>
         </div>
-        
     </div>
   )
 }

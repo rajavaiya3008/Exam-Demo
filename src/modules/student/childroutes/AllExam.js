@@ -3,8 +3,10 @@ import { getCurrUserData} from '../../../Current User/currentUser';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../../../redux-toolkit/slices/api';
 import Pagination from '../../../components/Pagination';
-import { loadAllExamData } from '../../../redux-toolkit/slices/student';
+import { handleSearchField, loadAllExamData } from '../../../redux-toolkit/slices/student';
 import { useNavigate } from 'react-router';
+import InputField from '../../../components/InputField';
+import { handlePrevVisitedPage } from '../../../redux-toolkit/slices/user';
 
 const AllExam = () => {
 
@@ -12,6 +14,9 @@ const AllExam = () => {
     const navigate = useNavigate();
     const status = useSelector(state => state.api.status);
     const allExamData = useSelector(state => state.student.allExamData);
+    const searchData = useSelector(state => state.student.searchField)
+    const lastVisitedPage = useSelector(state => state.user.prevVisitedPage);
+    const error = useSelector(state => state.student.error);
 
 
   useEffect(() => {
@@ -22,7 +27,6 @@ const AllExam = () => {
             headers: { "access-token":getCurrUserData().token }
         }
         const res = await dispatch(fetchData(config));
-        console.log('res in all exam for student', res)
         if(res?.payload?.statusCode === 401){
           localStorage.removeItem('userData');
           localStorage.setItem('login',false);
@@ -31,7 +35,14 @@ const AllExam = () => {
         }
         dispatch(loadAllExamData(res?.payload?.data));
     }
-    fetchAllExam();
+    if(allExamData.length === 0){
+      dispatch(handlePrevVisitedPage(1))
+      fetchAllExam();
+    }
+
+    return () => {
+      dispatch(handleSearchField(''))
+    }
   },[]);
 
   const keys = ['subjectName','email'];
@@ -51,14 +62,36 @@ const AllExam = () => {
   //   }
   // ]
 
+  const searchField = {
+      type:'text',
+      id:'subjectName',
+      name:'subjectName',
+      label:'Subject Name or Email',
+      data:searchData,
+      updateData:handleSearchField,
+      // error:error
+  }
+
+
 
   return (
-    <div className='h-[100vh] flex items-center justify-center bg-gray-500'>
+    <div className='h-[100vh] flex items-center flex-col mt-[30px]'>
+      {
+        status !== 'loading' && 
+        <div className='mb-[20px] text-white'>
+          <InputField fieldData={searchField}/>
+        </div>
+      }
         <div>
             {
                 status === 'loading' ?
-                  <div className='spinner'></div> :
-                     <Pagination data={allExamData} keys={keys} btn={btn}/>
+                  <div className='spinner mt-[250px]'></div> :
+
+                    <div>
+                      <p className='text-center text-4xl mb-4'>All Exams</p>
+                      <Pagination data={allExamData} keys={keys} btn={btn} searchKey={['subjectName','email']} searchVal={searchData.subjectName} lastVisitedPage={lastVisitedPage}/>
+                    </div>
+                     
             }
         </div>
     </div>

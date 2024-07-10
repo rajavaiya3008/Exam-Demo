@@ -1,28 +1,42 @@
 import React from 'react'
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import {jwtDecode} from 'jwt-decode';
-import { getCurrUserData} from '../../Current User/currentUser';
+import { getCurrUserData } from '../../Current User/currentUser';
 
 const Auth = ({role}) => {
 
-  const decode = jwtDecode(getCurrUserData().token);
-  console.log('decode', decode);
+  const location = useLocation();
 
-  let currDate = (new Date()).getTime();
-  console.log('currDate', currDate);
-  let milliSecond = currDate/1000;
-  console.log('milliSecond', milliSecond)
-  let out = Math.floor(milliSecond);
-  console.log('out', out)
+  const accessRole = location.pathname.split('/')[1];
+
+  // const decode = jwtDecode(getCurrUserData().token);
+  // console.log('decode', decode);
+
+  // let currDate = (new Date()).getTime();
+  // console.log('currDate', currDate);
+  // let milliSecond = currDate/1000;
+  // console.log('milliSecond', milliSecond)
+  // let out = Math.floor(milliSecond);
+  // console.log('out', out)
   // const milliSecond = currDate.getMilliseconds();
   // console.log('milliSecond', milliSecond);
 
 
-  if(decode?.exp < out){
-    localStorage.setItem('login',false);
+  // if(decode?.exp < out){
+  //   localStorage.setItem('login',false);
+  //   return <Navigate to={'/login'}/>
+  // }
+  const currUserRole = getCurrUserData().role;
+
+  if(!getCurrUserData().token){
     return <Navigate to={'/login'}/>
   }
-  const {role:currUserRole} = getCurrUserData();
+
+  if(accessRole !== currUserRole){
+    return <Navigate to={`${currUserRole}/dashboard`}/>
+  }
+
+
 
 
 

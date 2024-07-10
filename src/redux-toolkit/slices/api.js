@@ -14,8 +14,6 @@ const initialState = {
 
 export const fetchData = createAsyncThunk('data/fetchData', async(config,{rejectWithValue}) => {
     if(currAbortController){
-        console.log('currAbortController', currAbortController);
-        console.log('enter in cancel if')
         currAbortController.abort();
     }
     // currAbortController = controller;
@@ -36,7 +34,6 @@ export const fetchData = createAsyncThunk('data/fetchData', async(config,{reject
 
 export const cancelFetchData = () => {
     const controller = new AbortController();
-    console.log('controller', controller)
     controller.abort();
 };
 

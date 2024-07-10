@@ -1,26 +1,34 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../../../redux-toolkit/slices/api';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { getCurrUserData, token } from '../../../Current User/currentUser';
-import { addNewQuestion, createExamData, handleAns, handleError, handleOptions, handleQuestion, handleSubject, initiateExam, initiateQuestions } from '../../../redux-toolkit/slices/teacher';
+import { getCurrUserData } from '../../../Current User/currentUser';
+import { initiateExam} from '../../../redux-toolkit/slices/teacher';
 import ShowExam from './ShowExam';
-import { toast } from 'react-toastify';
-import { validateData } from '../../../Validation/validation';
+import { useEditExam } from '../teachetData/useEditExam';
 
 
 const EditExam = () => {
 
-    const [currQuestion,setCurrQuestion] = useState(0);
+  const [searchParams,setSearchParams] = useSearchParams();
+  const id = searchParams.get('id');
+
+    const {
+      createExamFields,
+      currQuestion,
+      setCurrQuestion,
+      validateExamData,
+      validate,
+      examData,
+      handleEditExam,
+      handleDeleteExam,
+      handleCancel
+  } = useEditExam(id);
+
     const dispatch = useDispatch();
-    const [searchParams,setSearchParams] = useSearchParams();
-    const examData = useSelector(state => state.teacher.createExam);
     const status = useSelector(state => state.api.status);
     const error = useSelector(state => state.teacher.error);
-    const questions = useSelector(state => state.teacher.questions);
-    const sameOptionError = useSelector(state => state.teacher.error);
     const navigate = useNavigate();
-    const id = searchParams.get('id');
     const subjectName = searchParams.get('subject');
 
 
@@ -36,7 +44,6 @@ const EditExam = () => {
                     params:{id}
                 }
                 const res = await dispatch(fetchData(config));
-                console.log('res in edit exam', res)
                 if(res?.payload?.statusCode === 401){
                   localStorage.removeItem('userData');
                   localStorage.setItem('login',false);
@@ -45,217 +52,35 @@ const EditExam = () => {
                 }
                 editData.subjectName = subjectName;
                 editData.notes = ['hello'];
-                console.log('res.data.questions', res?.payload?.data?.questions);
-                editData.questions = res.payload.data.questions;
+                editData.questions = res.payload?.data?.questions;
                 dispatch(initiateExam(editData));
             }
-            fetchEditExamData();
+              fetchEditExamData();
         }catch(error){
            console.log('error', error) 
         }
+
+        return () => {
+          localStorage.removeItem('createExam');
+          const initiateConfig = {
+            subjectName:'',
+            questions:[
+                {
+                    question:'',
+                    options:[
+                        '',
+                        '',
+                        '',
+                        ''
+                    ]
+                }
+            ],
+            notes:['gffgdg']
+        }
+        dispatch(initiateExam(initiateConfig))
+
+        }
     },[])
-
-    const Options = {
-        op1:examData.questions[currQuestion].options[0],
-        op2:examData.questions[currQuestion].options[1],
-        op3:examData.questions[currQuestion].options[2],
-        op4:examData.questions[currQuestion].options[3],
-    }
-
-    const validate = {
-        subjectName:[{required:true,message:'Please Enter Subject'}],
-        question:[{required:true,message:'Please Enter Question'}],
-        op1:[{required:true,message:'Option Required'}],
-        op2:[{required:true,message:'Option Required'}],
-        op3:[{required:true,message:'Option Required'}],
-        op4:[{required:true,message:'Option Required'}],
-        answer:[{required:true,message:'Answer Required'}]
-      }
-
-    const optionArr = examData.questions[currQuestion].options;
-
-    const createExamFields = [
-        {
-          type:'text',
-          id:'subject',
-          name:'subjectName',
-          label:'Subject Name:',
-          data:examData,
-          updateData:handleSubject,
-          error:error
-        },
-        {
-          type:'text',
-          id:'question',
-          name:'question',
-          label:`Question ${currQuestion+1}`,
-          data:examData.questions[currQuestion],
-          updateData:handleQuestion,
-          currQuestion:currQuestion,
-          error:error
-        },
-        {
-          type:'radio',
-          name:'ans',
-          id:'op1',
-          data:Options,
-          updateData:handleAns,
-          currQuestion:currQuestion,
-          ans:examData.questions[currQuestion].answer,
-          ansIndex:0,
-          error:error
-        },
-        {
-          type:'text',
-          id:'op1',
-          name:'op1',
-          label:'Option 1',
-          data:Options,
-          updateData:handleOptions,
-          optionArr:optionArr,
-          currQuestion:currQuestion,
-          opIndex:0,
-          error:error
-        },
-        {
-          type:'radio',
-          name:'ans',
-          id:'op2',
-          data:Options,
-          updateData:handleAns,
-          currQuestion:currQuestion,
-          ans:examData.questions[currQuestion].answer,
-          opIndex:1,
-          error:error
-        },
-        {
-          type:'text',
-          id:'op2',
-          name:'op2',
-          label:'Option 2',
-          data:Options,
-          updateData:handleOptions,
-          optionArr:optionArr,
-          currQuestion:currQuestion,
-          opIndex:1,
-          error:error
-        },
-        {
-          type:'radio',
-          name:'ans',
-          id:'op3',
-          data:Options,
-          updateData:handleAns,
-          currQuestion:currQuestion,
-          ans:examData.questions[currQuestion].answer,
-          opIndex:2,
-          error:error
-        },
-        {
-          type:'text',
-          id:'op3',
-          name:'op3',
-          label:'Option 3',
-          data:Options,
-          updateData:handleOptions,
-          optionArr:optionArr,
-          currQuestion:currQuestion,
-          opIndex:2,
-          error:error
-        },
-        {
-          type:'radio',
-          name:'ans',
-          id:'op4',
-          data:Options,
-          updateData:handleAns,
-          currQuestion:currQuestion,
-          ans:examData.questions[currQuestion].answer,
-          opIndex:3,
-          error:error
-        },
-        {
-          type:'text',
-          id:'op4',
-          name:'op4',
-          label:'Option 4',
-          data:Options,
-          updateData:handleOptions,
-          optionArr:optionArr,
-          currQuestion:currQuestion,
-          opIndex:3,
-          error:error
-        }
-      ]
-    
-    
-    
-    const validateExamData = {
-        subjectName:examData.subjectName,
-        question:examData.questions[currQuestion].question,
-        op1:examData.questions[currQuestion].options[0],
-        op2:examData.questions[currQuestion].options[1],
-        op3:examData.questions[currQuestion].options[2],
-        op4:examData.questions[currQuestion].options[3],
-        answer:examData.questions[currQuestion].answer.trim(),
-    }
-
-    const handleEditExam = async() => {
-      try{
-        const error = validateData(validateExamData,validate);
-        if(Object.keys(error).length !== 0){
-            dispatch(handleError(error));
-            return;
-          }
-
-          if(Object.keys(sameOptionError).length !== 0){
-            return;
-          }
-        const config = {
-          method:'put',
-          url:'dashboard/Teachers/editExam',
-          data:examData,
-          headers: { "access-token":getCurrUserData().token },
-          params:{id}
-        }
-        const res = await dispatch(fetchData(config));
-        console.log('res of edit exam', res);
-        dispatch(initiateQuestions());
-        toast.success("Exam Edited Successfully");
-        navigate('/teacher/view-exam');
-      }catch(error){
-        console.log('error', error)
-      }
-    }
-
-    const handleDeleteExam = () => {
-      try{
-         const deleteExam = async() => {
-          const config = {
-            method:'delete',
-            url:'dashboard/Teachers/deleteExam',
-            headers: { "access-token":`${token}` },
-            params:{id}
-          }
-          const res = await dispatch(fetchData(config));
-          console.log('resin delete exam', res)
-          toast.success("exam deleted successfully");
-          navigate('/teacher/view-exam');
-        }
-        deleteExam();
-        
-      }catch(error){
-        console.log('error', error)
-      }
-    }
-    
-    const handleCancel = () => {
-      dispatch(initiateQuestions());
-      navigate(-1);
-    }
-    
-
-
 
   return (
     <div className='h-[100vh] flex flex-col items-center justify-center'>
@@ -264,6 +89,7 @@ const EditExam = () => {
         status === 'loading' ?
           <div className='spinner'></div> :
             <>
+            <p className='text-center mb-4 text-4xl'>Edit Exam</p>
               <ShowExam 
               createExamFields={createExamFields} 
               error={error} 
@@ -275,8 +101,9 @@ const EditExam = () => {
 
               <div>
                 <button 
+                disabled={currQuestion !== 14}
                 onClick={handleEditExam}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${currQuestion !== 14 ? 'opacity-50 cursor-not-allowed':''}`}
                 >Submit</button>
                 <button 
                 onClick={handleDeleteExam}
@@ -289,25 +116,6 @@ const EditExam = () => {
               </div>
             </>
       }
-        {/* <ShowExam 
-        createExamFields={createExamFields} 
-        error={error} 
-        setCurrQuestion={setCurrQuestion} 
-        currQuestion={currQuestion}
-        validateExamData={validateExamData}
-        validate={validate}
-        />
-
-        <div>
-          <button 
-          onClick={handleEditExam}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >Edit</button>
-          <button 
-          onClick={handleDeleteExam}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-2 mt-2 rounded focus:outline-none focus:shadow-outline"
-          >Delete</button>
-        </div> */}
     </div>
   )
 }

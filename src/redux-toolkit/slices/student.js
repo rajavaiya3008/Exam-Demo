@@ -5,6 +5,7 @@ const initialState = {
     allExamData:[],
     examPaper:{},
     studentProfile:{},
+    searchField:{subjectName:''},
     error:{}
 }
 
@@ -36,6 +37,9 @@ export const studentSlice = createSlice({
         },
         cancelExam:(state,action) => {
             state.examPaper = {};
+        },
+        handleSearchField:(state,action) => {
+            state.searchField.subjectName = action.payload.value
         }
     }
 })
@@ -48,7 +52,8 @@ export const
         handleStudentError,
         loadStudentProfile,
         updateProfile,
-        cancelExam
+        cancelExam,
+        handleSearchField
     } = studentSlice.actions;
 
 export default studentSlice.reducer;

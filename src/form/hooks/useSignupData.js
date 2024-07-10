@@ -1,16 +1,22 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { handleSignupData } from "../../redux-toolkit/slices/user";
+import { useDispatch, useSelector } from "react-redux";
+import { handleError, handleSignupData, initiateSignupData } from "../../redux-toolkit/slices/user";
+import { validateData } from "../../Validation/validation";
+import { fetchData } from "../../redux-toolkit/slices/api";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 
 
 
 export const useSignupData = () => {
 
-    const signupData = useSelector(state => state.user.signupData);
-    const [disable,setDisable] = useState(false);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
+    const signupData = useSelector(state => state.user.signupData);
     const error = useSelector(state => state.user.error);
+    const [disable,setDisable] = useState(false);
 
 
     const signupField = [
@@ -18,7 +24,7 @@ export const useSignupData = () => {
           type:'text',
           id:'name',
           name:'name',
-          label:'Enter Name:',
+          label:'Enter Name',
           data:signupData,
           error:error,
           updateData:handleSignupData
@@ -27,7 +33,7 @@ export const useSignupData = () => {
           type:'email',
           id:'email',
           name:'email',
-          label:'Enter Email:',
+          label:'Enter Email',
           data:signupData,
           error:error,
           updateData:handleSignupData
@@ -36,7 +42,7 @@ export const useSignupData = () => {
           type:'password',
           id:'password',
           name:'password',
-          label:'Enter Password:',
+          label:'Enter Password',
           data:signupData,
           error:error,
           updateData:handleSignupData
@@ -50,8 +56,40 @@ export const useSignupData = () => {
     
     }
 
+    const handleSignup = async() => {
+        try{
+          const error = validateData(signupData,validate);
+          if(Object.keys(error).length !== 0){
+            dispatch(handleError(error));
+            return;
+          }
+          setDisable(!disable);
+          const config = {
+            method:'post',
+            url:'users/SignUp',
+            data:signupData
+          }
+          const res = await dispatch(fetchData(config))
+          if(res.payload.statusCode === 400){
+            toast.error('White space is not consider');
+            return;
+          }
+          if(res?.payload?.statusCode !== 200){
+            toast.error('Email Already Exist Please Login');
+            return;
+          }
+          dispatch(initiateSignupData());
+          toast.success('Signup Successful');
+          navigate('/login',{replace:true});
+        }catch(error){
+          setDisable(false);
+          console.log('error', error)
+        }
+      }
+
     return {
         signupField,
-        validate
+        handleSignup,
+        disable
     }
 }

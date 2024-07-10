@@ -1,12 +1,22 @@
 import React from 'react'
 import Navbar from '../../components/Navbar'
-import { Outlet } from 'react-router-dom'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { PiExamFill } from "react-icons/pi";
 import { CgProfile } from "react-icons/cg";
+import { RiDashboardHorizontalFill } from "react-icons/ri"
+import { getCurrUserData } from '../../Current User/currentUser';
+import StudentDashboard from './childroutes/StudentDashboard';
 
 const Student = () => {
 
+  const location = useLocation();
+
   const studentRoutes = [
+    {
+      path:'/student/dashboard',
+      name:'Dashboard',
+      icon:<RiDashboardHorizontalFill style={{fontSize:25}}/>
+    },
     {
       path:'all-exam',
       name:'Exams',
@@ -19,14 +29,15 @@ const Student = () => {
     }
   ]
 
-
   return (
     <div className='flex h-[100vh] w-[100vw]'>
       <div className='w-[20%] h-[100vh]'>
         <Navbar navItems={studentRoutes}/>
       </div>
       <div className='w-full'>
-        <Outlet />
+        {
+          location.pathname === '/student' || location.pathname === '/student/' ? <StudentDashboard /> : <Outlet />
+        }
       </div>
     </div>
   )

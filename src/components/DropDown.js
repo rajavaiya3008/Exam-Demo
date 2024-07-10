@@ -10,7 +10,7 @@ const DropDown = ({dropDownOptions,name,updateData}) => {
     <div className='flex gap-[10px]'>
 
         
-            <label htmlFor={name} className='flex items-center text-xl'>{name}</label>
+            <label htmlFor={name} className='flex items-center text-xl'>{name[0].toUpperCase()+name.substring(1)}</label>
             <select
                 name={name} 
                 id={name} 
@@ -24,6 +24,7 @@ const DropDown = ({dropDownOptions,name,updateData}) => {
                 } }
                 className='w-[80px]'
                 >
+                {/* <option>Select {name}</option> */}
                 {
                     dropDownOptions.map((option,i) => (<option value={option} key={i}>{option}</option>))
                 }

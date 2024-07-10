@@ -1,22 +1,35 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import InputField from '../../components/InputField'
-import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, Navigate } from 'react-router-dom'
 import { useLoginData } from '../../form/hooks/useLoginData'
+import { handleError } from '../../redux-toolkit/slices/user'
+import { getCurrUserData } from '../../Current User/currentUser'
 
 
 const Login = () => {
 
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(handleError({}));
+  },[])
+
   const {loginField,handleSubmit,disable} = useLoginData();
 
   let status = useSelector(state => state.api.status);
-  const login = localStorage.getItem('login');
-  const Login = JSON.parse(login);
+  const role = getCurrUserData().role;
+  const Login = JSON.parse(localStorage.getItem('login'));
+
+  if(Login){
+    return <Navigate to={`/${role}/dashboard`}/>
+  }
+
 
   return (
   
     <>
-      {!Login && <div className='border border-black h-[100vh] w-[100vw] flex justify-center items-center'>
+      <div className='border border-black h-[100vh] w-[100vw] flex justify-center items-center'>
 
         <div className='border h-[400px] w-[350px] flex flex-col justify-center items-center gap-[20px] rounded-lg border-black'>
 
@@ -35,10 +48,10 @@ const Login = () => {
 
           <button 
           onClick={handleSubmit}
-          disabled={disable}
-          className='bg-[#7747ff] w-[270px] px-6 py-2 rounded text-white text-sm font-normal flex justify-center'>
+          disabled={status === 'loading'}
+          className={`bg-[#7747ff] w-[270px] px-6 py-2 rounded text-white text-sm font-normal flex justify-center ${status === 'loading'?'opacity-50 cursor-not-allowed':''}`}>
             {
-              status === 'loading'? <div className='spinner'></div> : <span>Login</span>
+              status === 'loading'? <span>Loading...</span> : <span>Login</span>
             }
           </button>
 
@@ -48,7 +61,7 @@ const Login = () => {
 
         </div>
       </div>
-      }
+      
     </>
     
   )

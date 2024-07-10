@@ -7,13 +7,15 @@ const initialState = {
         name:'',
         email:'',
         password:'',
-        role:'',
+        role:'student',
     },
     login:false,
+    focused:false,
     forgetPassword:{},
     newPassword:{},
     resetPassword:{},
-    error:{}
+    error:{},
+    prevVisitedPage:1,
 }
 
 export const userSlice = createSlice({
@@ -27,7 +29,6 @@ export const userSlice = createSlice({
         },
         handleSignupData:(state,action) => {
             const {name,value} = action.payload
-            console.log('name', name)
             state.error = {};
             state.signupData[name] = value;
         },
@@ -58,6 +59,18 @@ export const userSlice = createSlice({
         },
         initiateLoginData:(state,action) => {
             state.loginData = {};
+        },
+        initiateSignupData:(state,action) => {
+            state.signupData = {};
+        },
+        handleFocus:(state,action) => {
+            state.focused = action.payload
+        },
+        handlePrevVisitedPage:(state,action) => {
+            state.prevVisitedPage = action.payload
+        },
+        initiateForgetPassword:(state,action) => {
+            state.forgetPassword = action.payload
         }
     }
 })
@@ -72,7 +85,11 @@ export const
         handleResetPassword,
         initiateResetPassword,
         handleLogin,
-        initiateLoginData
+        initiateLoginData,
+        initiateSignupData,
+        handleFocus,
+        handlePrevVisitedPage,
+        initiateForgetPassword
     } = userSlice.actions;
 
 export default userSlice.reducer;

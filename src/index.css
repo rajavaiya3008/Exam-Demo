@@ -13,8 +13,33 @@
   animation: spinner-c7wet2 1s infinite linear;
 }
 
+.active{
+  color: #474bff;
+  background-color: #474bff;
+}
+
 @keyframes spinner-c7wet2 {
   100% {
      transform: rotate(1turn);
   }
 }
+
+@media only screen and (max-width: 1050px) {
+  .pagination{
+    width: 600px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .pagination{
+    width: 300px;
+  }
+}
+
+@media only screen and (max-width: 610px) {
+  td{
+    padding: 1px;
+  }
+}
+
+

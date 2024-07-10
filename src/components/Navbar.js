@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import { RiLockPasswordFill } from "react-icons/ri";
 import { TbLogout } from "react-icons/tb";
 import { handleLogin } from '../redux-toolkit/slices/user';
+import { loadViewExamData } from '../redux-toolkit/slices/teacher';
+import { loadAllExamData } from '../redux-toolkit/slices/student';
 
 const Navbar = ({navItems}) => {
 
@@ -14,9 +16,11 @@ const Navbar = ({navItems}) => {
   const currUserRole = getCurrUserData().role;
 
   const handleLogout = () => {
-    localStorage.removeItem('userData');
+    localStorage.clear();
     localStorage.setItem('login',false);
     dispatch(handleLogin(false))
+    dispatch(loadViewExamData([]));
+    dispatch(loadAllExamData([]));
     navigate('/login',{replace:true});
   }
 

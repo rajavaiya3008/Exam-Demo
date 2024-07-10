@@ -1,11 +1,12 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
+import { getCurrUserData } from '../Current User/currentUser';
 
 const Header = () => {
 
-    const login = useSelector(state => state.user.login);
     const Login = JSON.parse(localStorage.getItem('login'));
+    const location = useLocation();
+    const role = getCurrUserData().role;
 
   return (
     <div className='h-[50px] text-gray-200 flex justify-between'>
@@ -14,11 +15,24 @@ const Header = () => {
         </div>
 
         {
-            !Login &&
+            !Login ?
             <div className='mr-[60px] flex justify-center items-center'>
-                <NavLink to={'/login'} className='border border-gray-300 rounded-[5px] p-[5px] hover:bg-gray-600 hover:text-white'>Login</NavLink>
-                <NavLink to={'/signup'} className='ml-[20px] border border-gray-300 rounded-[5px] p-[5px] hover:bg-gray-600 hover:text-white'>Sign Up</NavLink>
+                {
+                    location.pathname !== '/login' &&
+                        <NavLink to={'/login'} className='border border-gray-300 rounded-[5px] p-[5px] hover:bg-gray-600 hover:text-white'>Login</NavLink>
+                }
+                {
+                    location.pathname !== '/signup' &&
+                        <NavLink to={'/signup'} className='ml-[20px] border border-gray-300 rounded-[5px] p-[5px] hover:bg-gray-600 hover:text-white'>Sign Up</NavLink>
+                }
+            </div> : 
+            <div className='mr-[60px] flex justify-center items-center'>
+                {
+                        location.pathname === '/'  && Login &&
+                            <NavLink to={`${role}/dashboard`} className='ml-[20px] border border-gray-300 rounded-[5px] p-[5px] hover:bg-gray-600 hover:text-white'>DashBoard</NavLink>
+                }
             </div>
+
         }
     </div>
   )
