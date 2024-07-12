@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { initiateExam } from '../../../redux-toolkit/slices/teacher';
+import { initiateAnsIndex, initiateExam } from '../../../redux-toolkit/slices/teacher';
 import ShowExam from './ShowExam';
 import { useCreateExam } from '../teachetData/useCreateExam';
 import { handlePrevVisitedPage } from '../../../redux-toolkit/slices/user';
@@ -9,6 +9,7 @@ const CreateExam = () => {
 
   const dispatch = useDispatch();
   const status = useSelector(state => state.api.status);
+  const ansIndex = useSelector(state => state.teacher.ansIndex);
 
   const {
     createExamFields,
@@ -24,23 +25,74 @@ const CreateExam = () => {
     handleCancel
 } = useCreateExam();
 
+// window.addEventListener('storage', () => {
+//   const createExamData = JSON.parse(localStorage.getItem('createExam'))
+//   const ansIndex = JSON.parse(localStorage.getItem('ansIndex'));
+//   dispatch(initiateExam(createExamData));
+//   dispatch(initiateAnsIndex(ansIndex));
+// });
+
 useEffect(() => {
   // localStorage.removeItem('createExam');
   const createExamData = JSON.parse(localStorage.getItem('createExam'))
-  if(!createExamData){
+  const ansIndex = JSON.parse(localStorage.getItem('ansIndex'));
+  if(!createExamData || ansIndex === null){
     dispatch(initiateExam(initiateConfig));
+    dispatch(initiateAnsIndex([]))
   }else{
     dispatch(initiateExam(createExamData))
+      dispatch(initiateAnsIndex(ansIndex))
   }
   dispatch(handlePrevVisitedPage(1))
 
   return () => {
     localStorage.removeItem('createExam');
+    localStorage.removeItem('ansIndex')
+    
+    // dispatch(initiateAnsIndex([]));
   }
 },[]);
 
-if(examData.questions.length > 1 ){
+// useEffect(() => {
+//   const handleStorageChange = () => {
+//     const createExamData = JSON.parse(localStorage.getItem('createExam'));
+//     const ansIndex = JSON.parse(localStorage.getItem('ansIndex'));
+
+//     if (!createExamData) {
+//       dispatch(initiateExam(initiateConfig));
+//       dispatch(initiateAnsIndex([]));
+//     } else {
+//       dispatch(initiateExam(createExamData));
+//       dispatch(initiateAnsIndex(ansIndex));
+//     }
+//   };
+
+//   // Listen to 'storage' events
+//   window.addEventListener('storage', handleStorageChange);
+
+//   // Clean up event listener
+//   return () => {
+//     localStorage.removeItem('createExam');
+//     localStorage.removeItem('ansIndex')
+//     window.removeEventListener('storage', handleStorageChange);
+//   };
+// }, []); 
+
+
+console.log('examData', examData)
+
+if(examData.questions.length > 0 && examData.subjectName !== ''){
   localStorage.setItem('createExam',JSON.stringify(examData))
+  console.log('reach ansIndex');
+  if(ansIndex !== null){
+    localStorage.setItem('ansIndex',JSON.stringify(ansIndex))
+  }
+  // const ansIndexLocal = JSON.parse(localStorage.getItem('ansIndex'));
+  // if(ansIndexLocal && ansIndexLocal.length > 0 && ansIndexLocal.length === ansIndex.length){
+  //   localStorage.setItem('ansIndex',JSON.stringify(ansIndexLocal))
+  // }else{
+  //   localStorage.setItem('ansIndex',JSON.stringify(ansIndex))
+  // }
 }
 
 

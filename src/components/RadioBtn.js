@@ -5,8 +5,7 @@ import { handleAnsIndexes } from '../redux-toolkit/slices/teacher';
 
 const RadioBtn = ({fieldData}) => {
 
-    const dispatch = useDispatch();
-    console.log('fieldData', fieldData);
+    const dispatch = useDispatch()
 
     const ansIndex = useSelector(state => state.teacher.ansIndex)
 
@@ -31,7 +30,7 @@ const RadioBtn = ({fieldData}) => {
         type={fieldData.type}
         id={fieldData.id}
         name={fieldData.name}
-        checked={fieldData.data[fieldData.id] === fieldData.ans && ansIndex[fieldData.currQuestion] === fieldData.opIndex }
+        checked={fieldData?.data?.[fieldData.id] === fieldData?.ans && ansIndex?.[fieldData.currQuestion] === fieldData?.opIndex }
         onChange={(e) => {
             dispatch(handleAnsIndexes({
                 currQuestion:fieldData.currQuestion,
@@ -45,9 +44,9 @@ const RadioBtn = ({fieldData}) => {
                 ans:fieldData.data[fieldData.id],
                 ansIndex:fieldData.ansIndex
             }
-            if(fieldData.examData?.questions[fieldData.currQuestion].options[fieldData.opIndex] === ''){
-                return;
-            }
+            // if(fieldData.examData?.questions[fieldData.currQuestion].options[fieldData.opIndex] === ''){
+            //     return;
+            // }
             dispatch(fieldData.updateData(data))
         }}
         className='border-black border'

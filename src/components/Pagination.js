@@ -8,6 +8,7 @@ const Pagination = ({data,keys,viewPath,btn,searchKey,searchVal,lastVisitedPage}
 
     const dispatch = useDispatch();
     const [currPage,setCurrPage] = useState(lastVisitedPage || 1);
+    
 
     useEffect(() => {
         if( searchVal !== undefined && searchVal !== ''){
@@ -86,7 +87,7 @@ const Pagination = ({data,keys,viewPath,btn,searchKey,searchVal,lastVisitedPage}
                             } 
                             {
                                 item?.Result?.length > 0 ? 
-                                (<td className="px-6 py-3 text-blue-200"><NavLink to={btn.showResultBtn} state={item.Result}>Result</NavLink></td>) :
+                                (<td className="px-6 py-3 text-blue-200"><NavLink to={`${btn.showResultBtn}?id=${item._id}`} state={item.Result}>Result</NavLink></td>) :
                                 (btn?.giveExamBtn !== undefined ? <td className="px-6 py-3 text-blue-500"><NavLink to={`${btn.giveExamBtn}?id=${item._id}&subject=${item.subjectName}`}>Give</NavLink></td> : '')
                             }
                         </tr>
@@ -98,9 +99,9 @@ const Pagination = ({data,keys,viewPath,btn,searchKey,searchVal,lastVisitedPage}
         
         {
             data.length > 10 && 
-        <div className='fixed flex w-[850px] justify-between mt-[10px] pagination'>
+        <div className='fixed flex w-[850px] justify-between pagination mt-[20px] paging'>
             <pre className=''>{currPage} Out of {totalPage}</pre>
-            <div className='flex gap-2'>
+            <div className='flex gap-2 move-btn'>
                 <button 
                 disabled={currPage === 1}
                 onClick={handlePrevPage}

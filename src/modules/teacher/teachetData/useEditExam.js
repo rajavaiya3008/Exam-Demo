@@ -11,27 +11,30 @@ import { useNavigate } from "react-router";
 
 export const useEditExam = (id) => {
 
-  useEffect(() => {
-    const ansArr = examData.questions.reduce((acc,curr) => {
-      const ansIndex = curr.options.findIndex(option => option === curr.answer)
-      acc.push(ansIndex)
-      return acc;
-    },[])
+  const examData = useSelector(state => state.teacher.createExam);
 
-    dispatch(initiateAnsIndex(ansArr))
+  // useEffect(() => {
+  //             console.log('reach ansArr')
+  //             console.log('examData', examData)
+  //             const ansArr = examData.questions.reduce((acc,curr) => {
+  //               const ansIndex = curr.options.findIndex(option => option === curr.answer)
+  //               acc.push(ansIndex)
+  //               return acc;
+  //             },[])
 
-    console.log('ansArr', ansArr)
-  },[])
+  //             localStorage.setItem('ansIndex',JSON.stringify(ansArr));
+  //             dispatch(initiateAnsIndex(ansArr))
+  // },[])
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const examData = useSelector(state => state.teacher.createExam);
     const sameQuestions = useSelector(state => state.teacher.questions);
     const [currQuestion,setCurrQuestion] = useState(0);
     const error = useSelector(state => state.teacher.error);
     const sameOptionError = useSelector(state => state.teacher.error);
     const edited = useSelector(state => state.teacher.edited);
+    const {role} = getCurrUserData();
 
     const Options = {
       op1:examData?.questions?.[currQuestion]?.options[0],
@@ -80,7 +83,7 @@ export const useEditExam = (id) => {
           data:Options,
           updateData:handleAns,
           currQuestion:currQuestion,
-          ans:examData.questions[currQuestion].answer,
+          ans:examData?.questions?.[currQuestion]?.answer,
           opIndex:0,
           ansIndex:0,
           error:error
@@ -104,7 +107,7 @@ export const useEditExam = (id) => {
           data:Options,
           updateData:handleAns,
           currQuestion:currQuestion,
-          ans:examData.questions[currQuestion].answer,
+          ans:examData?.questions?.[currQuestion]?.answer,
           opIndex:1,
           error:error
         },
@@ -127,7 +130,7 @@ export const useEditExam = (id) => {
           data:Options,
           updateData:handleAns,
           currQuestion:currQuestion,
-          ans:examData.questions[currQuestion].answer,
+          ans:examData?.questions?.[currQuestion]?.answer,
           opIndex:2,
           error:error
         },
@@ -150,7 +153,7 @@ export const useEditExam = (id) => {
           data:Options,
           updateData:handleAns,
           currQuestion:currQuestion,
-          ans:examData.questions[currQuestion].answer,
+          ans:examData?.questions?.[currQuestion]?.answer,
           opIndex:3,
           error:error
         },
@@ -169,12 +172,12 @@ export const useEditExam = (id) => {
       ]
 
     const validateExamData = {
-        subjectName:examData.subjectName,
-        question:examData.questions[currQuestion].question,
-        op1:examData.questions[currQuestion].options[0],
-        op2:examData.questions[currQuestion].options[1],
-        op3:examData.questions[currQuestion].options[2],
-        op4:examData.questions[currQuestion].options[3],
+        subjectName:examData?.subjectName,
+        question:examData?.questions?.[currQuestion]?.question,
+        op1:examData?.questions?.[currQuestion]?.options[0],
+        op2:examData?.questions?.[currQuestion]?.options[1],
+        op3:examData?.questions?.[currQuestion]?.options[2],
+        op4:examData?.questions?.[currQuestion]?.options[3],
         answer:examData?.questions?.[currQuestion]?.answer?.trim(),
     }
 
@@ -260,7 +263,7 @@ export const useEditExam = (id) => {
     }
         dispatch(initiateQuestions());
         dispatch(initiateExam(initiateConfig))
-        navigate(-1);
+        navigate(`/${role}/dashboard`);
       }
 
     return {

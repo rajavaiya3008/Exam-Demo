@@ -63,7 +63,7 @@ const AllStudent = () => {
           <InputField fieldData={searchField}/>
         </div>
         }
-        <div>
+        <div className='table-container'>
             {
                 status === 'loading' ? 
                     <div className='spinner mt-[250px]'></div> :

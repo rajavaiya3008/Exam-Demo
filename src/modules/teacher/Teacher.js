@@ -7,10 +7,12 @@ import { PiExamFill } from "react-icons/pi";
 import { PiExamLight } from "react-icons/pi";
 import { RiDashboardHorizontalFill } from "react-icons/ri"
 import TeacherDashbord from './childroutes/TeacherDashbord';
+import { useSelector } from 'react-redux';
 
 const Teacher = () => {
 
   const location = useLocation();
+  const menu = useSelector(state => state.user.menu)
 
   const teacherRoutes = [
     {
@@ -43,7 +45,7 @@ const Teacher = () => {
 
   return (
     <div className='flex h-[100vh] w-[100vw]'>
-      <div className='w-[20%] h-[100vh]'>
+      <div className={`w-[190px] h-[100vh] sidebar ${menu ? 'show-menu' : 'hide-menu'}`} >
         <Navbar navItems={teacherRoutes}/>
       </div>
       <div className='w-full'>

@@ -225,6 +225,8 @@ export const useCreateExam = () => {
     const handleCancel = () => {
         dispatch(initiateExam(initiateConfig));
         dispatch(initiateQuestions());
+        localStorage.removeItem('ansIndex')
+        localStorage.removeItem('createExam')
         setCurrQuestion(0);
       }
 

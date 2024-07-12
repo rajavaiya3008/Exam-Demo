@@ -3,9 +3,10 @@ import { getCurrUserData} from '../../../Current User/currentUser';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../../../redux-toolkit/slices/api';
-import { loadExamPaper } from '../../../redux-toolkit/slices/student';
+import { initiateExamPaper, loadExamPaper } from '../../../redux-toolkit/slices/student';
 import ShowExam from '../../teacher/childroutes/ShowExam';
 import { useGiveExam } from '../studentdata/useGiveExam';
+import { initiateAnsIndex } from '../../../redux-toolkit/slices/teacher';
 
 const GiveExam = () => {
 
@@ -27,6 +28,7 @@ const GiveExam = () => {
     const dispatch = useDispatch();
     const status = useSelector(state => state.api.status);
     const examData = useSelector(state => state.student.examPaper);
+    const ansIndex = useSelector(state => state.teacher.ansIndex)
     const subject = searchParams.get('subject');
 
     useEffect(() => {
@@ -49,21 +51,78 @@ const GiveExam = () => {
               notes:['hello'],
           }
             examPaper.questions = res.payload.data;
+            console.log('set examPaper')
+            dispatch(loadExamPaper(examPaper))
             localStorage.setItem('examPaper',JSON.stringify(examPaper))
-            dispatch(loadExamPaper(examPaper));
         }
         const examPaper = JSON.parse(localStorage.getItem('examPaper'))
-        if(JSON.parse(localStorage.getItem('examPaper'))?.subjectName === subject){
+        if(examPaper){
           dispatch(loadExamPaper(JSON.parse(localStorage.getItem('examPaper'))))
+          console.log('set ansIndx')
+          const ansIndexLocal = JSON.parse(localStorage.getItem('ansIndex'))
+          if(ansIndexLocal){
+            dispatch(initiateAnsIndex(ansIndexLocal))
+          }
+          // const ansArr = examPaper.questions.reduce((acc,curr) => {
+          //   const ans = curr.options.findIndex(option => option === curr.answer)
+          //   acc.push(ans)
+          //   return acc;
+          // },[])
         }else{
           fetchExamPaper();
         }
+
+
+        return () => {
+          console.log('enter in to return')
+          localStorage.removeItem('examPaper')
+          dispatch(initiateAnsIndex([]));
+          dispatch(initiateExamPaper({}))
+          // localStorage.removeItem('ansIndex')
+        }
     },[])
+
+    // useEffect(() => {
+    //   const handleStorageChange = () => {
+    //     const examPaper = JSON.parse(localStorage.getItem('examPaper'))
+    //     if(examPaper){
+    //       dispatch(loadExamPaper(JSON.parse(localStorage.getItem('examPaper'))))
+    //       console.log('set ansIndx')
+    //       const ansIndexLocal = JSON.parse(localStorage.getItem('ansIndex'))
+    //       console.log('ans updated at 92')
+    //       // console.log('ansIndexLocal', ansIndexLocal)
+    //       console.log('ansIndex', ansIndex)
+    //       if(ansIndexLocal && ansIndex.length === 0){
+    //         dispatch(initiateAnsIndex(ansIndexLocal))
+    //       }else{
+    //         dispatch(initiateAnsIndex(ansIndex))
+    //       }
+    //       // if(ansIndexLocal.length === ansIndex.length || ansIndex.length === 0){
+    //       //   console.log('ans updated at 92 if')
+    //       //   dispatch(initiateAnsIndex(ansIndexLocal))
+    //       // }
+    //     }
+    //   }
+    
+    //   // Listen to 'storage' events
+    //   window.addEventListener('storage', handleStorageChange);
+    
+    //   // Clean up event listener
+    //   return () => {
+    //     // localStorage.removeItem('createExam');
+    //     // localStorage.removeItem('ansIndex')
+    //     window.removeEventListener('storage', handleStorageChange);
+    //   }
+    // }, []); 
 
     // console.log('examPaper', examPaper)
     if(Object.keys(examData).length !== 0){
       localStorage.setItem('examPaper',JSON.stringify(examData));
+      localStorage.setItem('ansIndex',JSON.stringify(ansIndex))
     }
+    // if(!JSON.parse(localStorage.getItem('ansIndex'))){
+    //   localStorage.setItem('ansIndex',JSON.stringify(ansIndex))
+    // }
     // console.log('examData', examData);
 
   return (
@@ -73,6 +132,7 @@ const GiveExam = () => {
               <div className='spinner'></div> :
 
                 <div>
+                  <p className='text-center text-4xl mb-6'>Give Exam</p>
                   <ShowExam 
                   createExamFields={createExamFields} 
                   setCurrQuestion={setCurrQuestion} 

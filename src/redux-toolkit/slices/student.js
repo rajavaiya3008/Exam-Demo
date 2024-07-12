@@ -40,6 +40,9 @@ export const studentSlice = createSlice({
         },
         handleSearchField:(state,action) => {
             state.searchField.subjectName = action.payload.value
+        },
+        initiateExamPaper:(state,action) => {
+            state.examPaper = action.payload
         }
     }
 })
@@ -53,7 +56,8 @@ export const
         loadStudentProfile,
         updateProfile,
         cancelExam,
-        handleSearchField
+        handleSearchField,
+        initiateExamPaper
     } = studentSlice.actions;
 
 export default studentSlice.reducer;

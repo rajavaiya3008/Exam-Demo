@@ -11,6 +11,7 @@ const initialState = {
     },
     login:false,
     focused:false,
+    menu:false,
     forgetPassword:{},
     newPassword:{},
     resetPassword:{},
@@ -71,6 +72,9 @@ export const userSlice = createSlice({
         },
         initiateForgetPassword:(state,action) => {
             state.forgetPassword = action.payload
+        },
+        handleMenu:(state,action) => {
+            state.menu = !(state.menu)
         }
     }
 })
@@ -89,7 +93,8 @@ export const
         initiateSignupData,
         handleFocus,
         handlePrevVisitedPage,
-        initiateForgetPassword
+        initiateForgetPassword,
+        handleMenu
     } = userSlice.actions;
 
 export default userSlice.reducer;

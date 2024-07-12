@@ -1,12 +1,19 @@
 import React from 'react'
 import { useNavigate } from 'react-router'
+import { getCurrUserData } from '../Current User/currentUser';
 
 const ErrorPage = () => {
 
     const navigate = useNavigate();
+    const login = JSON.parse(localStorage.getItem('login'))
+    const {role}= getCurrUserData()
 
     const handleBack = () => {
-        navigate(-1);
+      if(login){
+        navigate(`${role}/dashboard`)
+      }else{
+        navigate(`/login`)
+      }
     }
 
 

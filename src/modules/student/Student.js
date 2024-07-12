@@ -31,7 +31,7 @@ const Student = () => {
 
   return (
     <div className='flex h-[100vh] w-[100vw]'>
-      <div className='w-[20%] h-[100vh]'>
+      <div className='w-[20%] h-[100vh] sidebar'>
         <Navbar navItems={studentRoutes}/>
       </div>
       <div className='w-full'>

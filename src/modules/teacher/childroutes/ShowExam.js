@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import InputField from '../../../components/InputField';
-import { addNewQuestion, handleError, handleSameQuestions, initiateQuestions} from '../../../redux-toolkit/slices/teacher';
+import { addNewQuestion, handleError, handleSameQuestions, initiateAnsIndex, initiateCreateExam, initiateQuestions} from '../../../redux-toolkit/slices/teacher';
 import { validateData } from '../../../Validation/validation';
-import { handleStudentError } from '../../../redux-toolkit/slices/student';
+import { handleStudentError, loadExamPaper } from '../../../redux-toolkit/slices/student';
 
 
 const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateExamData,totalQue,validate,role,Options}) => {
@@ -45,6 +45,14 @@ const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateE
       //   dispatch(initiateQuestions());
       // }
           dispatch(handleError({}));
+
+          const createExam = JSON.parse(localStorage.getItem('createExam'))
+          if(createExam !== null && (examData.questions.length <= createExam.questions.length )){
+            console.log('createExam', createExam)
+            const ansIndex = JSON.parse(localStorage.getItem('ansIndex'))
+            dispatch(initiateAnsIndex(ansIndex))
+            dispatch(initiateCreateExam(createExam));
+          }
           setCurrQuestion(currQuestion -1)
       }
 
@@ -93,6 +101,13 @@ const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateE
           if(examData.questions.length !== 15 && examData.questions.length < currQuestion+2){
             dispatch(addNewQuestion(question));
           }
+            const createExam = JSON.parse(localStorage.getItem('createExam'))
+            if(createExam !== null && examData.questions.length < createExam.questions.length){
+              console.log('createExam', createExam)
+              const ansIndex = JSON.parse(localStorage.getItem('ansIndex'))
+              dispatch(initiateAnsIndex(ansIndex))
+              dispatch(initiateCreateExam(createExam));
+            }
           setCurrQuestion(currQuestion+1);
         }
     }
@@ -100,16 +115,29 @@ const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateE
     const handlePrev = () => {
         console.log('Enter in to prev if block');
         dispatch(handleStudentError({}));
+        const ansIndex = JSON.parse(localStorage.getItem('ansIndex'))
+        dispatch(initiateAnsIndex(ansIndex))
+
+        const examPaper = JSON.parse(localStorage.getItem('examPaper'));
+        dispatch(loadExamPaper(examPaper))
         setCurrQuestion(currQuestion-1);
     }
 
     const handleNext = () => {
-        const error = validateData(validateExamData,validate);
-        if(Object.keys(error).length !== 0){
-            dispatch(handleStudentError(error));
-            return;
+          const ansIndex = JSON.parse(localStorage.getItem('ansIndex'))
+          dispatch(initiateAnsIndex(ansIndex))
+
+          const examPaper = JSON.parse(localStorage.getItem('examPaper'));
+          dispatch(loadExamPaper(examPaper))
+
+          if(ansIndex.length < currQuestion + 1){
+            const error = validateData(validateExamData,validate);
+            if(Object.keys(error).length !== 0){
+                dispatch(handleStudentError(error));
+                return;
+              }
           }
-          // localStorage.setItem('examPaper',JSON.stringify(examPaper))
+
           setCurrQuestion(currQuestion+1);
     }
 

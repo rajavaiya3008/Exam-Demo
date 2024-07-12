@@ -1,17 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom';
 import { getCurrUserData } from '../Current User/currentUser';
+import { useDispatch } from 'react-redux';
+import { handleMenu } from '../redux-toolkit/slices/user';
 
 const Header = () => {
 
+    const dispatch = useDispatch();
     const Login = JSON.parse(localStorage.getItem('login'));
     const location = useLocation();
     const role = getCurrUserData().role;
 
   return (
     <div className='h-[50px] text-gray-200 flex justify-between'>
-        <div className='text-4xl ml-[95px] flex justify-center items-center'>
-            <p>Exam</p>
+        <div className=' ml-[95px] flex justify-center items-center'>
+            {/* <button 
+            className='translate-x-[-50px] menu-btn hidden'
+            onClick={() => dispatch(handleMenu())}
+            >Menu</button> */}
+            <p className='text-4xl'>Exam</p>
         </div>
 
         {

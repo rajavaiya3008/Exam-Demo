@@ -103,6 +103,9 @@ export const teacherSlice = createSlice({
         },
         initiateAnsIndex:(state,action) => {
             state.ansIndex = action.payload
+        },
+        initiateCreateExam:(state,action) => {
+            state.createExam = action.payload
         }
     }
 })
@@ -126,7 +129,8 @@ export const
         handleSearchField,
         handleEdited,
         handleAnsIndexes,
-        initiateAnsIndex
+        initiateAnsIndex,
+        initiateCreateExam
     } = teacherSlice.actions;
 
 export default teacherSlice.reducer;

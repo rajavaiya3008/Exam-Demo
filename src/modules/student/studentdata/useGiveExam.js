@@ -16,6 +16,7 @@ export const useGiveExam = (id) => {
     const [currQuestion,setCurrQuestion] = useState(0);
     const examData = useSelector(state => state.student.examPaper);
     const error = useSelector(state => state.student.error);
+    const {role} = getCurrUserData()
 
     const Options = {
         op1:examData?.questions?.[currQuestion]?.options[0],
@@ -37,7 +38,7 @@ export const useGiveExam = (id) => {
           type:'text',
           id:'subject',
           name:'subjectName',
-          label:'Subject Name:',
+          label:'Subject Name',
           data:examData,
           disable:true,
           error:error
@@ -61,6 +62,7 @@ export const useGiveExam = (id) => {
           updateData:handleStudentAns,
           currQuestion:currQuestion,
           ans:examData?.questions?.[currQuestion]?.answer,
+          opIndex:0,
           ansIndex:0,
           error:error
         },
@@ -184,7 +186,7 @@ export const useGiveExam = (id) => {
     
       const handleCancel = () => {
         dispatch(cancelExam());
-        navigate(-1);
+        navigate(`/${role}/dashboard`);
       }
 
     return {

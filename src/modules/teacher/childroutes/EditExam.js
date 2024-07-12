@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../../../redux-toolkit/slices/api';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getCurrUserData } from '../../../Current User/currentUser';
-import { initiateExam} from '../../../redux-toolkit/slices/teacher';
+import { initiateAnsIndex, initiateExam} from '../../../redux-toolkit/slices/teacher';
 import ShowExam from './ShowExam';
 import { useEditExam } from '../teachetData/useEditExam';
 
@@ -54,8 +54,35 @@ const EditExam = () => {
                 editData.notes = ['hello'];
                 editData.questions = res.payload?.data?.questions;
                 dispatch(initiateExam(editData));
+                console.log('editData', editData)
+                const ansArr = editData.questions.reduce((acc,curr) => {
+                  const ansIndex = curr.options.findIndex(option => option === curr.answer)
+                  acc.push(ansIndex)
+                  return acc;
+                },[])
+  
+                // localStorage.setItem('ansIndex',JSON.stringify(ansArr));
+                dispatch(initiateAnsIndex(ansArr))
             }
               fetchEditExamData();
+              // console.log('reach ansArr')
+              // const ansArr = examData.questions.reduce((acc,curr) => {
+              //   const ansIndex = curr.options.findIndex(option => option === curr.answer)
+              //   acc.push(ansIndex)
+              //   return acc;
+              // },[])
+
+              // localStorage.setItem('ansIndex',JSON.stringify(ansArr));
+              // dispatch(initiateAnsIndex(ansArr))
+
+              // if(!JSON.parse(localStorage.getItem('ansIndex'))){
+              //   dispatch(initiateAnsIndex(ansArr))
+              // }else{
+              //   dispatch(initiateAnsIndex(JSON.parse(localStorage.getItem('ansIndex'))))
+              // }
+          
+              // console.log('ansArr', ansArr)
+
         }catch(error){
            console.log('error', error) 
         }
