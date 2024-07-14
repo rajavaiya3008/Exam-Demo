@@ -33,67 +33,80 @@ const CreateExam = () => {
 // });
 
 useEffect(() => {
+  console.log('above useEffect is running');
   // localStorage.removeItem('createExam');
   const createExamData = JSON.parse(localStorage.getItem('createExam'))
   const ansIndex = JSON.parse(localStorage.getItem('ansIndex'));
-  if(!createExamData || ansIndex === null){
+  console.log('createExamData', createExamData)
+  console.log('ansIndex', ansIndex)
+  if(!createExamData){
+    console.log('rech 41 line')
     dispatch(initiateExam(initiateConfig));
     dispatch(initiateAnsIndex([]))
   }else{
+    console.log('reach 45 line')
     dispatch(initiateExam(createExamData))
+    if(ansIndex !== null){
       dispatch(initiateAnsIndex(ansIndex))
+    }
   }
   dispatch(handlePrevVisitedPage(1))
 
-  return () => {
-    localStorage.removeItem('createExam');
-    localStorage.removeItem('ansIndex')
+  // return () => {
+  //   localStorage.removeItem('createExam');
+  //   localStorage.removeItem('ansIndex')
     
-    // dispatch(initiateAnsIndex([]));
-  }
+  //   // dispatch(initiateAnsIndex([]));
+  // }
 },[]);
 
-// useEffect(() => {
-//   const handleStorageChange = () => {
-//     const createExamData = JSON.parse(localStorage.getItem('createExam'));
-//     const ansIndex = JSON.parse(localStorage.getItem('ansIndex'));
+useEffect(() => {
+  console.log('below useEffect is running')
+  const handleStorageChange = () => {
+    const createExamData = JSON.parse(localStorage.getItem('createExam'));
+    const ansIndex = JSON.parse(localStorage.getItem('ansIndex'));
 
-//     if (!createExamData) {
-//       dispatch(initiateExam(initiateConfig));
-//       dispatch(initiateAnsIndex([]));
-//     } else {
-//       dispatch(initiateExam(createExamData));
-//       dispatch(initiateAnsIndex(ansIndex));
-//     }
-//   };
+    if (!createExamData) {
+      console.log('reach 63 line')
+      dispatch(initiateExam(initiateConfig));
+      dispatch(initiateAnsIndex([]));
+      setCurrQuestion(0);
+    } else {
+      console.log('reach 68 line')
+      dispatch(initiateExam(createExamData));
+      if(ansIndex !== null){
+        dispatch(initiateAnsIndex(ansIndex));
+      }
+    }
+  };
 
-//   // Listen to 'storage' events
-//   window.addEventListener('storage', handleStorageChange);
+  // Listen to 'storage' events
+  window.addEventListener('storage', handleStorageChange);
 
-//   // Clean up event listener
-//   return () => {
-//     localStorage.removeItem('createExam');
-//     localStorage.removeItem('ansIndex')
-//     window.removeEventListener('storage', handleStorageChange);
-//   };
-// }, []); 
+  // Clean up event listener
+  return () => {
+    // localStorage.removeItem('createExam');
+    // localStorage.removeItem('ansIndex')
+    window.removeEventListener('storage', handleStorageChange);
+  };
+}, []); 
 
 
-console.log('examData', examData)
+// console.log('examData', examData)
 
-if(examData.questions.length > 0 && examData.subjectName !== ''){
-  localStorage.setItem('createExam',JSON.stringify(examData))
-  console.log('reach ansIndex');
-  if(ansIndex !== null){
-    localStorage.setItem('ansIndex',JSON.stringify(ansIndex))
-  }
-  // const ansIndexLocal = JSON.parse(localStorage.getItem('ansIndex'));
-  // if(ansIndexLocal && ansIndexLocal.length > 0 && ansIndexLocal.length === ansIndex.length){
-  //   localStorage.setItem('ansIndex',JSON.stringify(ansIndexLocal))
-  // }else{
-  //   localStorage.setItem('ansIndex',JSON.stringify(ansIndex))
-  // }
-}
+// if(examData.questions.length > 0 && examData.subjectName !== ''){
+//   localStorage.setItem('createExam',JSON.stringify(examData))
+//   console.log('reach ansIndex');
+//   if(ansIndex !== null){
+//     localStorage.setItem('ansIndex',JSON.stringify(ansIndex))
+//   }
+//   // const ansIndexLocal = JSON.parse(localStorage.getItem('ansIndex'));
+//   // if(ansIndexLocal && ansIndexLocal.length > 0 && ansIndexLocal.length === ansIndex.length){
+//   //   localStorage.setItem('ansIndex',JSON.stringify(ansIndexLocal))
+//   // }else{
+//   //   localStorage.setItem('ansIndex',JSON.stringify(ansIndex))
+//   // }
+// }
 
 
   return (

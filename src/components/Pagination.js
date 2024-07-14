@@ -99,7 +99,7 @@ const Pagination = ({data,keys,viewPath,btn,searchKey,searchVal,lastVisitedPage}
         
         {
             data.length > 10 && 
-        <div className='fixed flex w-[850px] justify-between pagination mt-[20px] paging'>
+        <div className=' flex w-[850px] justify-between pagination mt-[20px] paging'>
             <pre className=''>{currPage} Out of {totalPage}</pre>
             <div className='flex gap-2 move-btn'>
                 <button 

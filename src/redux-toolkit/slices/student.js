@@ -23,6 +23,7 @@ export const studentSlice = createSlice({
             const {queIndex,ans} = action.payload;
             state.error = {};
             state.examPaper.questions[queIndex].answer = ans;
+            localStorage.setItem('examPaper',JSON.stringify(state.examPaper))
         },
         handleStudentError:(state,action) => {
             state.error = action.payload;

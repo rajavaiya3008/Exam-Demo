@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../../../redux-toolkit/slices/api';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getCurrUserData } from '../../../Current User/currentUser';
-import { initiateAnsIndex, initiateExam} from '../../../redux-toolkit/slices/teacher';
+import { initiateAnsIndex, initiateExam, initiateQuestions} from '../../../redux-toolkit/slices/teacher';
 import ShowExam from './ShowExam';
 import { useEditExam } from '../teachetData/useEditExam';
 
@@ -89,6 +89,7 @@ const EditExam = () => {
 
         return () => {
           localStorage.removeItem('createExam');
+          localStorage.removeItem('ansIndex');
           const initiateConfig = {
             subjectName:'',
             questions:[
@@ -105,7 +106,8 @@ const EditExam = () => {
             notes:['gffgdg']
         }
         dispatch(initiateExam(initiateConfig))
-
+        dispatch(initiateAnsIndex([]));
+        dispatch(initiateQuestions([]));
         }
     },[])
 

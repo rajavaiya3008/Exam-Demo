@@ -5,7 +5,7 @@ import Header from './components/Header';
 
 function App() {
   return (
-    <div className="text-black h-[100vh] overflow-y-hidden">
+    <div className="text-black h-[100vh] overflow-x-hidden">
 
       <div className='h-[50px] dark:bg-gray-800 border-b border-gray-400'>
         <Header />

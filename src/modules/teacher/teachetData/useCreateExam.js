@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { handleAns, handleError, handleOptions, handleQuestion, handleSubject, initiateExam, initiateQuestions } from "../../../redux-toolkit/slices/teacher";
+import { handleAns, handleError, handleOptions, handleQuestion, handleSubject, initiateAnsIndex, initiateExam, initiateQuestions } from "../../../redux-toolkit/slices/teacher";
 import { useState } from "react";
 import { validateData } from "../../../Validation/validation";
 import { getCurrUserData } from "../../../Current User/currentUser";
@@ -225,6 +225,7 @@ export const useCreateExam = () => {
     const handleCancel = () => {
         dispatch(initiateExam(initiateConfig));
         dispatch(initiateQuestions());
+        dispatch(initiateAnsIndex([]));
         localStorage.removeItem('ansIndex')
         localStorage.removeItem('createExam')
         setCurrQuestion(0);

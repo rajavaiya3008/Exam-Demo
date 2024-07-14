@@ -1,10 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { getCurrUserData } from "../../../Current User/currentUser";
-import { cancelExam, handleStudentAns, handleStudentError, loadAllExamData } from "../../../redux-toolkit/slices/student";
+import { cancelExam, handleStudentAns, handleStudentError, initiateExamPaper, loadAllExamData } from "../../../redux-toolkit/slices/student";
 import { fetchData } from "../../../redux-toolkit/slices/api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import { useState } from "react";
+import { initiateAnsIndex } from "../../../redux-toolkit/slices/teacher";
 
 
 
@@ -186,6 +187,9 @@ export const useGiveExam = (id) => {
     
       const handleCancel = () => {
         dispatch(cancelExam());
+        dispatch(initiateAnsIndex([]))
+        localStorage.removeItem('ansIndex')
+        localStorage.removeItem('examPaper');
         navigate(`/${role}/dashboard`);
       }
 

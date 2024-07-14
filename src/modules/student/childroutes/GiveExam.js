@@ -32,6 +32,7 @@ const GiveExam = () => {
     const subject = searchParams.get('subject');
 
     useEffect(() => {
+      console.log('above useEffect is running')
         const fetchExamPaper = async() => {
             const config = {
                 method:'get',
@@ -53,73 +54,74 @@ const GiveExam = () => {
             examPaper.questions = res.payload.data;
             console.log('set examPaper')
             dispatch(loadExamPaper(examPaper))
-            localStorage.setItem('examPaper',JSON.stringify(examPaper))
+            // localStorage.setItem('examPaper',JSON.stringify(examPaper))
         }
         const examPaper = JSON.parse(localStorage.getItem('examPaper'))
         if(examPaper){
           dispatch(loadExamPaper(JSON.parse(localStorage.getItem('examPaper'))))
           console.log('set ansIndx')
           const ansIndexLocal = JSON.parse(localStorage.getItem('ansIndex'))
-          if(ansIndexLocal){
+          console.log('ansIndexLocal', ansIndexLocal)
             dispatch(initiateAnsIndex(ansIndexLocal))
-          }
-          // const ansArr = examPaper.questions.reduce((acc,curr) => {
-          //   const ans = curr.options.findIndex(option => option === curr.answer)
-          //   acc.push(ans)
-          //   return acc;
-          // },[])
+          
         }else{
           fetchExamPaper();
         }
 
 
-        return () => {
-          console.log('enter in to return')
-          localStorage.removeItem('examPaper')
-          dispatch(initiateAnsIndex([]));
-          dispatch(initiateExamPaper({}))
-          // localStorage.removeItem('ansIndex')
-        }
+        // return () => {
+        //   console.log('enter in to return')
+        //   localStorage.removeItem('examPaper')
+        //   dispatch(initiateAnsIndex([]));
+        //   dispatch(initiateExamPaper({}))
+        //   // localStorage.removeItem('ansIndex')
+        // }
     },[])
 
-    // useEffect(() => {
-    //   const handleStorageChange = () => {
-    //     const examPaper = JSON.parse(localStorage.getItem('examPaper'))
-    //     if(examPaper){
-    //       dispatch(loadExamPaper(JSON.parse(localStorage.getItem('examPaper'))))
-    //       console.log('set ansIndx')
-    //       const ansIndexLocal = JSON.parse(localStorage.getItem('ansIndex'))
-    //       console.log('ans updated at 92')
-    //       // console.log('ansIndexLocal', ansIndexLocal)
-    //       console.log('ansIndex', ansIndex)
-    //       if(ansIndexLocal && ansIndex.length === 0){
-    //         dispatch(initiateAnsIndex(ansIndexLocal))
-    //       }else{
-    //         dispatch(initiateAnsIndex(ansIndex))
-    //       }
-    //       // if(ansIndexLocal.length === ansIndex.length || ansIndex.length === 0){
-    //       //   console.log('ans updated at 92 if')
-    //       //   dispatch(initiateAnsIndex(ansIndexLocal))
-    //       // }
-    //     }
-    //   }
+    useEffect(() => {
+      console.log('below useEffect is running');
+      const handleStorageChange = () => {
+        const examPaper = JSON.parse(localStorage.getItem('examPaper'))
+        if(examPaper){
+          dispatch(loadExamPaper(JSON.parse(localStorage.getItem('examPaper'))))
+          console.log('set ansIndx')
+          const ansIndexLocal = JSON.parse(localStorage.getItem('ansIndex'))
+          console.log('ans updated at 92')
+          // console.log('ansIndexLocal', ansIndexLocal)
+          console.log('ansIndex', ansIndex)
+          if(ansIndexLocal && ansIndex.length === 0){
+            console.log('enter in to if block')
+            console.log('ansIndexLocal', ansIndexLocal)
+            dispatch(initiateAnsIndex(ansIndexLocal))
+          }else{
+            console.log('enter in to else block')
+            dispatch(initiateExamPaper({}))
+            dispatch(initiateAnsIndex(ansIndex))
+            navigate(`/student/dashboard`)
+          }
+          // if(ansIndexLocal.length === ansIndex.length || ansIndex.length === 0){
+          //   console.log('ans updated at 92 if')
+          //   dispatch(initiateAnsIndex(ansIndexLocal))
+          // }
+        }
+      }
     
-    //   // Listen to 'storage' events
-    //   window.addEventListener('storage', handleStorageChange);
+      // Listen to 'storage' events
+      window.addEventListener('storage', handleStorageChange);
     
-    //   // Clean up event listener
-    //   return () => {
-    //     // localStorage.removeItem('createExam');
-    //     // localStorage.removeItem('ansIndex')
-    //     window.removeEventListener('storage', handleStorageChange);
-    //   }
-    // }, []); 
+      // Clean up event listener
+      return () => {
+        // localStorage.removeItem('createExam');
+        // localStorage.removeItem('ansIndex')
+        window.removeEventListener('storage', handleStorageChange);
+      }
+    }, []); 
 
     // console.log('examPaper', examPaper)
-    if(Object.keys(examData).length !== 0){
-      localStorage.setItem('examPaper',JSON.stringify(examData));
-      localStorage.setItem('ansIndex',JSON.stringify(ansIndex))
-    }
+    // if(Object.keys(examData).length !== 0){
+    //   localStorage.setItem('examPaper',JSON.stringify(examData));
+    //   localStorage.setItem('ansIndex',JSON.stringify(ansIndex))
+    // }
     // if(!JSON.parse(localStorage.getItem('ansIndex'))){
     //   localStorage.setItem('ansIndex',JSON.stringify(ansIndex))
     // }

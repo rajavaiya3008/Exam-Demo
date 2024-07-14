@@ -46,13 +46,13 @@ const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateE
       // }
           dispatch(handleError({}));
 
-          const createExam = JSON.parse(localStorage.getItem('createExam'))
-          if(createExam !== null && (examData.questions.length <= createExam.questions.length )){
-            console.log('createExam', createExam)
-            const ansIndex = JSON.parse(localStorage.getItem('ansIndex'))
-            dispatch(initiateAnsIndex(ansIndex))
-            dispatch(initiateCreateExam(createExam));
-          }
+          // const createExam = JSON.parse(localStorage.getItem('createExam'))
+          // if(createExam !== null && (examData.questions.length <= createExam.questions.length )){
+          //   console.log('createExam', createExam)
+          //   const ansIndex = JSON.parse(localStorage.getItem('ansIndex'))
+          //   dispatch(initiateAnsIndex(ansIndex))
+          //   dispatch(initiateCreateExam(createExam));
+          // }
           setCurrQuestion(currQuestion -1)
       }
 
@@ -101,13 +101,13 @@ const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateE
           if(examData.questions.length !== 15 && examData.questions.length < currQuestion+2){
             dispatch(addNewQuestion(question));
           }
-            const createExam = JSON.parse(localStorage.getItem('createExam'))
-            if(createExam !== null && examData.questions.length < createExam.questions.length){
-              console.log('createExam', createExam)
-              const ansIndex = JSON.parse(localStorage.getItem('ansIndex'))
-              dispatch(initiateAnsIndex(ansIndex))
-              dispatch(initiateCreateExam(createExam));
-            }
+            // const createExam = JSON.parse(localStorage.getItem('createExam'))
+            // if(createExam !== null && examData.questions.length < createExam.questions.length){
+            //   console.log('createExam', createExam)
+            //   const ansIndex = JSON.parse(localStorage.getItem('ansIndex'))
+            //   dispatch(initiateAnsIndex(ansIndex))
+            //   dispatch(initiateCreateExam(createExam));
+            // }
           setCurrQuestion(currQuestion+1);
         }
     }
@@ -115,28 +115,34 @@ const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateE
     const handlePrev = () => {
         console.log('Enter in to prev if block');
         dispatch(handleStudentError({}));
-        const ansIndex = JSON.parse(localStorage.getItem('ansIndex'))
-        dispatch(initiateAnsIndex(ansIndex))
+        // const ansIndex = JSON.parse(localStorage.getItem('ansIndex'))
+        // dispatch(initiateAnsIndex(ansIndex))
 
-        const examPaper = JSON.parse(localStorage.getItem('examPaper'));
-        dispatch(loadExamPaper(examPaper))
+        // const examPaper = JSON.parse(localStorage.getItem('examPaper'));
+        // dispatch(loadExamPaper(examPaper))
         setCurrQuestion(currQuestion-1);
     }
 
     const handleNext = () => {
-          const ansIndex = JSON.parse(localStorage.getItem('ansIndex'))
-          dispatch(initiateAnsIndex(ansIndex))
+          // const ansIndex = JSON.parse(localStorage.getItem('ansIndex'))
+          // dispatch(initiateAnsIndex(ansIndex))
 
-          const examPaper = JSON.parse(localStorage.getItem('examPaper'));
-          dispatch(loadExamPaper(examPaper))
+          // const examPaper = JSON.parse(localStorage.getItem('examPaper'));
+          // dispatch(loadExamPaper(examPaper))
 
-          if(ansIndex.length < currQuestion + 1){
-            const error = validateData(validateExamData,validate);
+          const error = validateData(validateExamData,validate);
             if(Object.keys(error).length !== 0){
                 dispatch(handleStudentError(error));
                 return;
               }
-          }
+
+          // if(ansIndex.length < currQuestion + 1){
+          //   const error = validateData(validateExamData,validate);
+          //   if(Object.keys(error).length !== 0){
+          //       dispatch(handleStudentError(error));
+          //       return;
+          //     }
+          // }
 
           setCurrQuestion(currQuestion+1);
     }

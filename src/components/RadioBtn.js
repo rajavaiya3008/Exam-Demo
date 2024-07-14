@@ -8,7 +8,8 @@ const RadioBtn = ({fieldData}) => {
     const dispatch = useDispatch()
 
     const ansIndex = useSelector(state => state.teacher.ansIndex)
-
+    // console.log('ansIndex in radio btn', ansIndex)
+    // console.log('fieldData', fieldData)
     // let ansIndex;
 
     // useEffect(() => {

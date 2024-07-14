@@ -14,10 +14,10 @@ const Header = () => {
   return (
     <div className='h-[50px] text-gray-200 flex justify-between'>
         <div className=' ml-[95px] flex justify-center items-center'>
-            {/* <button 
-            className='translate-x-[-50px] menu-btn hidden'
+            <button 
+            className='translate-x-[-50px] menu-btn'
             onClick={() => dispatch(handleMenu())}
-            >Menu</button> */}
+            >Menu</button>
             <p className='text-4xl'>Exam</p>
         </div>
 
