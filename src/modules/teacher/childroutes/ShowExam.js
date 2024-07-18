@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import InputField from '../../../components/InputField';
+import InputField from '../../../shared/InputField';
 import { addNewQuestion, handleError, handleSameQuestions, initiateAnsIndex, initiateCreateExam, initiateQuestions} from '../../../redux-toolkit/slices/teacher';
 import { validateData } from '../../../Validation/validation';
 import { handleStudentError, loadExamPaper } from '../../../redux-toolkit/slices/student';

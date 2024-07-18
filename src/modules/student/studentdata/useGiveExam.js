@@ -2,10 +2,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCurrUserData } from "../../../Current User/currentUser";
 import { cancelExam, handleStudentAns, handleStudentError, initiateExamPaper, loadAllExamData } from "../../../redux-toolkit/slices/student";
 import { fetchData } from "../../../redux-toolkit/slices/api";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import { initiateAnsIndex } from "../../../redux-toolkit/slices/teacher";
+import { toastError, toastSuccess } from "../../../utils/toastFunction";
+import { IsRemoveItem } from "../../../utils/IsFunction";
+import { ALL_EXAM } from "../../../utils/constant";
 
 
 
@@ -173,24 +175,24 @@ export const useGiveExam = (id) => {
               }
               dispatch(loadAllExamData([]));
               const res = await dispatch(fetchData(config));
-              toast.success('Exam Submitted Successfully');
-              navigate('/student/all-exam');
+              toastSuccess('Exam Submitted Successfully');
+              navigate(ALL_EXAM);
             }catch(error){
               console.log('error', error)
             }
           }
           submitExam();
         }else{
-          toast.error('Please Fill all Questions');
+          toastError('Please Fill all Questions');
         }
       }
     
       const handleCancel = () => {
         dispatch(cancelExam());
         dispatch(initiateAnsIndex([]))
-        localStorage.removeItem('ansIndex')
-        localStorage.removeItem('examPaper');
-        navigate(`/${role}/dashboard`);
+        IsRemoveItem('ansIndex')
+        IsRemoveItem('examPaper');
+        navigate(ALL_EXAM);
       }
 
     return {

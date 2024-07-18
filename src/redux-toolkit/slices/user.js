@@ -11,7 +11,7 @@ const initialState = {
     },
     login:false,
     focused:false,
-    menu:true,
+    menu:false,
     forgetPassword:{},
     newPassword:{},
     resetPassword:{},

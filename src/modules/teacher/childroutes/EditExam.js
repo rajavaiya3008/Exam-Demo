@@ -6,6 +6,7 @@ import { getCurrUserData } from '../../../Current User/currentUser';
 import { initiateAnsIndex, initiateExam, initiateQuestions} from '../../../redux-toolkit/slices/teacher';
 import ShowExam from './ShowExam';
 import { useEditExam } from '../teachetData/useEditExam';
+import { IsRemoveItem, IsSetItem } from '../../../utils/IsFunction';
 
 
 const EditExam = () => {
@@ -30,8 +31,6 @@ const EditExam = () => {
     const error = useSelector(state => state.teacher.error);
     const navigate = useNavigate();
     const subjectName = searchParams.get('subject');
-
-
     let editData = {};
 
     useEffect(() => {
@@ -45,8 +44,8 @@ const EditExam = () => {
                 }
                 const res = await dispatch(fetchData(config));
                 if(res?.payload?.statusCode === 401){
-                  localStorage.removeItem('userData');
-                  localStorage.setItem('login',false);
+                  IsRemoveItem('userData');
+                  IsSetItem('login',false);
                   navigate('/login')
                   return;
                 }
@@ -88,8 +87,8 @@ const EditExam = () => {
         }
 
         return () => {
-          localStorage.removeItem('createExam');
-          localStorage.removeItem('ansIndex');
+          IsRemoveItem('createExam');
+          IsRemoveItem('ansIndex');
           const initiateConfig = {
             subjectName:'',
             questions:[
@@ -112,7 +111,7 @@ const EditExam = () => {
     },[])
 
   return (
-    <div className='h-[100vh] flex flex-col items-center justify-center'>
+    <div className='flex flex-col items-center mt-[70px] overflow-hidden'>
 
       {
         status === 'loading' ?

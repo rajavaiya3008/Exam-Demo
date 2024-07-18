@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+*,body{
+  box-sizing: border-box;
+}
+
 .spinner {
   width: 40px;
   height: 40px;
@@ -24,28 +28,34 @@
   }
 }
 
-@media only screen and (max-width: 1050px) {
+/* @media only screen and (max-width: 1050px) {
   .pagination{
     width: 600px;
   }
-}
+} */
 
-@media only screen and (max-width: 768px) {
+/* @media only screen and (max-width: 768px) {
   .pagination{
     width: 300px;
   }
-}
+} */
 
 @media only screen and (max-width: 725px) {
   .table-container{
     width: 500px;
   }
+  /* .pagination{
+    width: 500px;
+  } */
 }
 
 @media only screen and (max-width: 630px) {
   .table-container{
     width: 400px;
   }
+  /* .pagination{
+    width: 400px;
+  } */
 }
 
 @media only screen and (max-width: 650px) {
@@ -57,7 +67,7 @@
   }
 }
 
-@media only screen and (max-width: 500px) {
+/* @media only screen and (max-width: 500px) {
   .table-container{
     width: 300px;
   }
@@ -65,12 +75,7 @@
     margin-left: 20px;
     flex: none;
   }
-  .move-btn{
-    left: 10px;
-    position: absolute;
-    top: 30px ;
-  }
-}
+} */
 
 @media only screen and (max-width: 400px) {
   .table-container{
@@ -83,6 +88,68 @@
     width: 230px;
   }
 }
+
+/* @media only screen and (max-height: 800px) {
+  .app{
+    overflow-y: auto;
+  }
+} */
+
+@media only screen and (min-width: 900px) {
+  .all-exam{
+    width: auto;
+  }
+}
+
+
+
+/* @media only screen and (max-height: 870px) {
+  .all-exam{
+    margin-top: 50px;
+  }
+}
+
+@media only screen and (max-height: 840px) {
+  .all-exam{
+    margin-top: 80px;
+  }
+}
+
+@media only screen and (max-height: 770px) {
+  .all-exam{
+    margin-top: 120px;
+  }
+}
+
+@media only screen and (max-height: 690px) {
+  .all-exam{
+    margin-top: 150px;
+  }
+}
+
+@media only screen and (max-height: 630px) {
+  .all-exam{
+    margin-top: 180px;
+  }
+}
+
+@media only screen and (max-height: 580px) {
+  .all-exam{
+    margin-top: 200px;
+  }
+}
+
+@media only screen and (max-height: 540px) {
+  .all-exam{
+    margin-top: 250px;
+  }
+}
+
+@media only screen and (max-height: 430px) {
+  .all-exam{
+    margin-top: 300px;
+  }
+} */
 
 .show-menu{
   display: block;

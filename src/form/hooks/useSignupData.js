@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { handleError, handleSignupData, initiateSignupData } from "../../redux-toolkit/slices/user";
 import { validateData } from "../../Validation/validation";
 import { fetchData } from "../../redux-toolkit/slices/api";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import { toastError, toastSuccess } from "../../utils/toastFunction";
+import { LOGIN_PAGE } from "../../utils/constant";
 
 
 
@@ -71,16 +72,16 @@ export const useSignupData = () => {
           }
           const res = await dispatch(fetchData(config))
           if(res.payload.statusCode === 400){
-            toast.error('White space is not consider');
+            toastError('White space is not consider');
             return;
           }
           if(res?.payload?.statusCode !== 200){
-            toast.error('Email Already Exist Please Login');
+            toastError('Email Already Exist Please Login');
             return;
           }
           dispatch(initiateSignupData());
-          toast.success('Signup Successful');
-          navigate('/login',{replace:true});
+          toastSuccess('Signup Successful');
+          navigate(LOGIN_PAGE,{replace:true});
         }catch(error){
           setDisable(false);
           console.log('error', error)

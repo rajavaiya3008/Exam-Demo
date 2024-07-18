@@ -4,8 +4,10 @@ import { useState } from "react";
 import { validateData } from "../../../Validation/validation";
 import { getCurrUserData } from "../../../Current User/currentUser";
 import { fetchData } from "../../../redux-toolkit/slices/api";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import { VIEW_EXAM } from "../../../utils/constant";
+import { toastSuccess } from "../../../utils/toastFunction";
+import { IsRemoveItem } from "../../../utils/IsFunction";
 
 
 
@@ -33,12 +35,12 @@ export const useCreateExam = () => {
     }
     
     const validate = {
-        subjectName:[{required:true,message:'Please Enter Subject'},{pattern:/^\S[a-zA-Z0-9 ]+\S$/,message:'Enter Valid Subject'}],
-        question:[{required:true,message:'Please Enter Question'},{pattern:/^\S[a-zA-Z0-9 ]+\S$/,message:'Enter Valid Question'}],
-        op1:[{required:true,message:'Option Required'},{pattern:/^\S[a-zA-Z0-9 ]+\S$/,message:'Enter Valid Option'}],
-        op2:[{required:true,message:'Option Required'},{pattern:/^\S[a-zA-Z0-9 ]+\S$/,message:'Enter Valid Option'}],
-        op3:[{required:true,message:'Option Required'},{pattern:/^\S[a-zA-Z0-9 ]+\S$/,message:'Enter Valid Option'}],
-        op4:[{required:true,message:'Option Required'},{pattern:/^\S[a-zA-Z0-9 ]+\S$/,message:'Enter Valid Option'}],
+        subjectName:[{required:true,message:'Please Enter Subject'},{pattern:/^\S[a-zA-Z0-9 ]+\S$/,message:'Enter Valid Option'}],
+        question:[{required:true,message:'Please Enter Question'},{pattern:/^\S[a-zA-Z0-9 ]+\S$/,message:'Enter Valid Option'}],
+        op1:[{required:true,message:'Option Required'}],
+        op2:[{required:true,message:'Option Required'}],
+        op3:[{required:true,message:'Option Required'}],
+        op4:[{required:true,message:'Option Required'}],
         answer:[{required:true,message:'Answer Required'}]
     }
     
@@ -210,11 +212,11 @@ export const useCreateExam = () => {
               headers: { "access-token":getCurrUserData().token }
             }
             const res = await dispatch(fetchData(config))
-            toast.success('Exam Created Successfully');
+            toastSuccess('Exam Created Successfully');
             setCurrQuestion(0);
             dispatch(initiateQuestions());
             // dispatch(initiateExam(initiateConfig));
-            navigate('/teacher/view-exam');
+            navigate(VIEW_EXAM);
           }catch(e){
             console.log('e', e)
           }
@@ -226,8 +228,8 @@ export const useCreateExam = () => {
         dispatch(initiateExam(initiateConfig));
         dispatch(initiateQuestions());
         dispatch(initiateAnsIndex([]));
-        localStorage.removeItem('ansIndex')
-        localStorage.removeItem('createExam')
+        IsRemoveItem('ansIndex')
+        IsRemoveItem('createExam')
         setCurrQuestion(0);
       }
 

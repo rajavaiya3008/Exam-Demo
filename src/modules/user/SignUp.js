@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
-import InputField from '../../components/InputField'
+import InputField from '../../shared/InputField'
 import { useDispatch, useSelector } from 'react-redux'
 import { handleError, handleSignupData } from '../../redux-toolkit/slices/user'
-import DropDown from '../../components/DropDown'
+import DropDown from '../../shared/DropDown'
 import { Link, Navigate} from 'react-router-dom'
 import { useSignupData } from '../../form/hooks/useSignupData'
 import { getCurrUserData } from '../../Current User/currentUser'
@@ -29,11 +29,11 @@ const SignUp = () => {
 
   return (
 
-    <div className='border border-black h-[100vh] w-[100vw] flex justify-center items-center'>
-        <div className='border h-[550px] w-[350px] flex flex-col justify-center items-center gap-[15px] rounded-lg border-black'>
-            <h1 className='text-2xl mt-[10px] font-semibold'>SignUp Here</h1>
+    <div className='w-[100vw] flex justify-center has-[660px]:mb-[50px]'>
+        <div className='border border-black h-[550px] w-[320px] max-[360px]:w-[290px] mt-[70px] flex flex-col justify-center gap-[15px] mb-[10px] rounded-lg'>
+            <h1 className='text-2xl text-center mt-[10px] font-semibold'>SignUp Here</h1>
 
-            <div>
+            <div className='flex flex-col items-center'>
               {
                 signupField.map((field,i) => <InputField fieldData={field} key={i}/>)
               }
@@ -44,13 +44,13 @@ const SignUp = () => {
             <button 
             onClick={handleSignup}
             disabled={status === 'loading'}
-            className={`bg-[#7747ff] w-[270px] px-6 py-2 rounded text-white text-sm font-normal flex justify-center ${status === 'loading'?'opacity-50 cursor-not-allowed':''}`}>
+            className={`bg-[#7747ff] w-[270px] mx-auto px-6 py-2 rounded text-white text-sm font-normal flex justify-center ${status === 'loading'?'opacity-50 cursor-not-allowed':''}`}>
                 {
                   status === 'loading'? <span>Loading...</span> : <span>Sign Up</span>
                 }
             </button>
 
-            <div>
+            <div className='text-center'>
               <p>Do You have an Account? <Link to='/login' className='text-[#7747ff]'>Login</Link></p>
             </div>
 

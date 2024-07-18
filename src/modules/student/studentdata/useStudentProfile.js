@@ -3,8 +3,9 @@ import { validateData } from "../../../Validation/validation";
 import { handleStudentError, loadStudentProfile, updateProfile } from "../../../redux-toolkit/slices/student";
 import { getCurrUserData } from "../../../Current User/currentUser";
 import { fetchData } from "../../../redux-toolkit/slices/api";
-import { toast } from "react-toastify";
 import { useState } from "react";
+import { IsGetItem, IsSetItem } from "../../../utils/IsFunction";
+import { toastSuccess } from "../../../utils/toastFunction";
 
 
 
@@ -49,7 +50,7 @@ export const useStudentProfile = () => {
     
       const saveProfile = async() => {
         try{
-          const student = JSON.parse(localStorage.getItem('student'));
+          const student = IsGetItem('student');
           if(student.name === studentProfile.name){
             setDisable(true);
             dispatch(loadStudentProfile(student));
@@ -68,8 +69,8 @@ export const useStudentProfile = () => {
             headers: { "access-token":getCurrUserData().token }
         }
         const res = await dispatch(fetchData(config));
-        localStorage.setItem('student',JSON.stringify(res.payload.data));
-        toast.success('Profile Updated Successfully');
+        IsSetItem('student',res.payload.data);
+        toastSuccess('Profile Updated Successfully');
         setDisable(true);
         }catch(error){
           console.log('error', error);

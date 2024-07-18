@@ -4,31 +4,18 @@ import { handleAns, handleEdited, handleError, handleOptions, handleQuestion, ha
 import { validateData } from "../../../Validation/validation";
 import { getCurrUserData } from "../../../Current User/currentUser";
 import { fetchData } from "../../../redux-toolkit/slices/api";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import { VIEW_EXAM } from "../../../utils/constant";
+import { toastSuccess } from "../../../utils/toastFunction";
 
 
 
 export const useEditExam = (id) => {
 
-  const examData = useSelector(state => state.teacher.createExam);
-
-  // useEffect(() => {
-  //             console.log('reach ansArr')
-  //             console.log('examData', examData)
-  //             const ansArr = examData.questions.reduce((acc,curr) => {
-  //               const ansIndex = curr.options.findIndex(option => option === curr.answer)
-  //               acc.push(ansIndex)
-  //               return acc;
-  //             },[])
-
-  //             localStorage.setItem('ansIndex',JSON.stringify(ansArr));
-  //             dispatch(initiateAnsIndex(ansArr))
-  // },[])
-
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const examData = useSelector(state => state.teacher.createExam);
     const sameQuestions = useSelector(state => state.teacher.questions);
     const [currQuestion,setCurrQuestion] = useState(0);
     const error = useSelector(state => state.teacher.error);
@@ -46,10 +33,10 @@ export const useEditExam = (id) => {
     const validate = {
       subjectName:[{required:true,message:'Please Enter Subject'},{pattern:/^\S[a-zA-Z0-9 ]+\S$/,message:'Enter Valid Subject'}],
       question:[{required:true,message:'Please Enter Question'},{pattern:/^\S[a-zA-Z0-9 ]+\S$/,message:'Enter Valid Question'}],
-      op1:[{required:true,message:'Option Required'},{pattern:/^\S[a-zA-Z0-9 ]+\S$/,message:'Enter Valid Option'}],
-      op2:[{required:true,message:'Option Required'},{pattern:/^\S[a-zA-Z0-9 ]+\S$/,message:'Enter Valid Option'}],
-      op3:[{required:true,message:'Option Required'},{pattern:/^\S[a-zA-Z0-9 ]+\S$/,message:'Enter Valid Option'}],
-      op4:[{required:true,message:'Option Required'},{pattern:/^\S[a-zA-Z0-9 ]+\S$/,message:'Enter Valid Option'}],
+      op1:[{required:true,message:'Option Required'}],
+      op2:[{required:true,message:'Option Required'}],
+      op3:[{required:true,message:'Option Required'}],
+      op4:[{required:true,message:'Option Required'}],
       answer:[{required:true,message:'Answer Required'}]
   }
 
@@ -214,8 +201,8 @@ export const useEditExam = (id) => {
           const res = await dispatch(fetchData(config));
           dispatch(initiateQuestions());
           dispatch(handleEdited());
-          toast.success("Exam Edited Successfully");
-          navigate('/teacher/view-exam');
+          toastSuccess("Exam Edited Successfully");
+          navigate(VIEW_EXAM);
         }catch(error){
           console.log('error', error)
         }
@@ -235,8 +222,8 @@ export const useEditExam = (id) => {
               params:{id}
             }
             const res = await dispatch(fetchData(config));
-            toast.success("exam deleted successfully");
-            navigate('/teacher/view-exam');
+            toastSuccess("exam deleted successfully");
+            navigate(VIEW_EXAM);
           }
           deleteExam();
           
@@ -263,7 +250,7 @@ export const useEditExam = (id) => {
     }
         dispatch(initiateQuestions());
         dispatch(initiateExam(initiateConfig))
-        navigate(`/${role}/dashboard`);
+        navigate(VIEW_EXAM);
       }
 
     return {

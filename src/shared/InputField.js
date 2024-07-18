@@ -11,14 +11,10 @@ const InputField = ({fieldData}) => {
 
     const dispatch = useDispatch();
     const focused = useSelector(state => state.user.focused);
+    
     if(fieldData?.type === 'radio'){
         return <RadioBtn fieldData={fieldData}/>
     }
-
-
-    
-
-
 
   return (
     <div className='flex flex-col gap-2 w-[250px] mt-[10px]'>
@@ -35,7 +31,7 @@ const InputField = ({fieldData}) => {
         variant="outlined"
         placeholder={fieldData?.label}
         InputLabelProps={{ shrink: true }}
-        onClick={() => dispatch(handleFocus(true))}
+        // onClick={() => dispatch(handleFocus(true))}
         onChange={(e) => {
             const {name,value} = e.target;
             let data = {

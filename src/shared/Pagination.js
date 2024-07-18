@@ -14,12 +14,6 @@ const Pagination = ({data,keys,viewPath,btn,searchKey,searchVal,lastVisitedPage}
         if( searchVal !== undefined && searchVal !== ''){
             setCurrPage(1);
         }
-        // if(currPage === 1){
-        //     setCurrPage(prevVisitedPage)
-        // }
-        // return () => {
-        //     dispatch(handlePrevVisitedPage(currPage));
-        // }
     },[searchVal])
 
     if(searchVal?.trim() !== '' && searchVal?.trim()!== undefined){
@@ -48,8 +42,6 @@ const Pagination = ({data,keys,viewPath,btn,searchKey,searchVal,lastVisitedPage}
 
   return (
     <div className="relative overflow-x-auto dark:bg-gray-800">
-
-        {/* <InputField searchField={searchField}/> */}
 
         <table className="w-[850px] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 pagination">
 
@@ -99,15 +91,15 @@ const Pagination = ({data,keys,viewPath,btn,searchKey,searchVal,lastVisitedPage}
         
         {
             data.length > 10 && 
-        <div className=' flex w-[850px] justify-between pagination mt-[20px] paging'>
-            <pre className=''>{currPage} Out of {totalPage}</pre>
-            <div className='flex gap-2 move-btn'>
+        <div className='text-white flex w-[850px] gap-[50px] px-[5px] mt-[20px] mb-[10px]'>
+            <pre className='mt-[8px] w-[116px]'>{currPage} Out of {totalPage}</pre>
+            <div className='flex gap-2 pb-2'>
                 <button 
                 disabled={currPage === 1}
                 onClick={handlePrevPage}
                 className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline rounded-full ${currPage === 1?'opacity-50 cursor-not-allowed':''}`}
                 >{`<`}</button>
-                <span className='flex items-center'>{currPage}</span>
+                <span className='flex items-center justify-center w-[17px]'>{currPage}</span>
                 <button
                 disabled={currPage === totalPage} 
                 onClick={handleNextPage}
@@ -116,18 +108,6 @@ const Pagination = ({data,keys,viewPath,btn,searchKey,searchVal,lastVisitedPage}
             </div>
         </div>
         }
-        {/* <div className='fixed flex w-[850px] justify-between mt-[10px] pagination'>
-            <pre className='text-gray-300'>{currPage} Out of {totalPage}</pre>
-            <button 
-            onClick={handlePrevPage}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline rounded-full"
-            >{`<`}</button>
-            <span className='flex items-center text-gray-300'>{currPage}</span>
-            <button 
-            onClick={handleNextPage}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline rounded-full"
-            >{`>`}</button>
-        </div> */}
     </div>
   )
 }

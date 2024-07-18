@@ -4,6 +4,7 @@ import { initiateAnsIndex, initiateExam } from '../../../redux-toolkit/slices/te
 import ShowExam from './ShowExam';
 import { useCreateExam } from '../teachetData/useCreateExam';
 import { handlePrevVisitedPage } from '../../../redux-toolkit/slices/user';
+import { IsGetItem } from '../../../utils/IsFunction';
 
 const CreateExam = () => {
 
@@ -25,22 +26,15 @@ const CreateExam = () => {
     handleCancel
 } = useCreateExam();
 
-// window.addEventListener('storage', () => {
-//   const createExamData = JSON.parse(localStorage.getItem('createExam'))
-//   const ansIndex = JSON.parse(localStorage.getItem('ansIndex'));
-//   dispatch(initiateExam(createExamData));
-//   dispatch(initiateAnsIndex(ansIndex));
-// });
-
 useEffect(() => {
   console.log('above useEffect is running');
   // localStorage.removeItem('createExam');
-  const createExamData = JSON.parse(localStorage.getItem('createExam'))
-  const ansIndex = JSON.parse(localStorage.getItem('ansIndex'));
+  const createExamData = IsGetItem('createExam')
+  const ansIndex = IsGetItem('ansIndex');
   console.log('createExamData', createExamData)
   console.log('ansIndex', ansIndex)
   if(!createExamData){
-    console.log('rech 41 line')
+    console.log('reach 41 line')
     dispatch(initiateExam(initiateConfig));
     dispatch(initiateAnsIndex([]))
   }else{
@@ -63,8 +57,8 @@ useEffect(() => {
 useEffect(() => {
   console.log('below useEffect is running')
   const handleStorageChange = () => {
-    const createExamData = JSON.parse(localStorage.getItem('createExam'));
-    const ansIndex = JSON.parse(localStorage.getItem('ansIndex'));
+    const createExamData = IsGetItem('createExam');
+    const ansIndex = IsGetItem('ansIndex');
 
     if (!createExamData) {
       console.log('reach 63 line')
@@ -92,25 +86,8 @@ useEffect(() => {
 }, []); 
 
 
-// console.log('examData', examData)
-
-// if(examData.questions.length > 0 && examData.subjectName !== ''){
-//   localStorage.setItem('createExam',JSON.stringify(examData))
-//   console.log('reach ansIndex');
-//   if(ansIndex !== null){
-//     localStorage.setItem('ansIndex',JSON.stringify(ansIndex))
-//   }
-//   // const ansIndexLocal = JSON.parse(localStorage.getItem('ansIndex'));
-//   // if(ansIndexLocal && ansIndexLocal.length > 0 && ansIndexLocal.length === ansIndex.length){
-//   //   localStorage.setItem('ansIndex',JSON.stringify(ansIndexLocal))
-//   // }else{
-//   //   localStorage.setItem('ansIndex',JSON.stringify(ansIndex))
-//   // }
-// }
-
-
   return (
-    <div className='h-[100vh] flex items-center justify-center flex-col'>
+    <div className='flex items-center flex-col mt-[70px]'>
 
       <p className='text-center text-4xl mb-4'>Create Exam</p>
 

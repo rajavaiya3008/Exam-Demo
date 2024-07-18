@@ -4,9 +4,10 @@ import { handleError, handleForgetPassword, initiateForgetPassword } from '../re
 import InputField from './InputField'
 import { fetchData } from '../redux-toolkit/slices/api'
 import { validateData } from '../Validation/validation'
-import { toast } from 'react-toastify'
 import { Navigate, useNavigate } from 'react-router'
 import { getCurrUserData } from '../Current User/currentUser'
+import { toastError, toastSuccess } from '../utils/toastFunction'
+import { LOGIN_PAGE } from '../utils/constant'
 
 const ForgetPassword = () => {
     const dispatch = useDispatch();
@@ -48,16 +49,16 @@ const ForgetPassword = () => {
             }
             const res = await dispatch(fetchData(config));
             if(res.payload.statusCode === 500){
-                toast.error('Email not Found Please SignUp');
+                toastError('Email not Found Please SignUp');
                 return;
             }
             if(res.payload.statusCode === 400){
-                toast.error('White space is not consider')
+                toastError('White space is not consider')
                 return;
             }
-            navigate('/login')
+            navigate(LOGIN_PAGE)
             dispatch(initiateForgetPassword({}));
-            toast.success('Mail send Successful Please Check Your Email');
+            toastSuccess('Mail send Successful Please Check Your Email');
         }catch(error){
             console.log('error', error)
         }
@@ -71,7 +72,7 @@ const ForgetPassword = () => {
     <>
         {
             !login && 
-            <div className='flex justify-center items-center flex-col h-[100vh]'>
+            <div className='flex items-center flex-col mt-[70px]'>
                 <p className='text-center mb-4 text-4xl'>Forget Password</p>
                 <InputField fieldData={fieldData}/>
                 <button 

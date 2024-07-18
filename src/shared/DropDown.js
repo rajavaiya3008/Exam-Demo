@@ -7,7 +7,7 @@ const DropDown = ({dropDownOptions,name,updateData}) => {
     const dispatch = useDispatch();
 
   return (
-    <div className='flex gap-[10px]'>
+    <div className='flex justify-center gap-[10px]'>
 
         
             <label htmlFor={name} className='flex items-center text-xl'>{name[0].toUpperCase()+name.substring(1)}</label>

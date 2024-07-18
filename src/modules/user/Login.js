@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import InputField from '../../components/InputField'
+import InputField from '../../shared/InputField'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Navigate } from 'react-router-dom'
 import { useLoginData } from '../../form/hooks/useLoginData'
@@ -29,18 +29,18 @@ const Login = () => {
   return (
   
     <>
-      <div className='border border-black h-[100vh] w-[100vw] flex justify-center items-center'>
+      <div className='w-[100vw] flex justify-center '>
 
-        <div className='border h-[400px] w-[350px] flex flex-col justify-center items-center gap-[20px] rounded-lg border-black'>
+        <div className='border h-[400px] w-[320px] max-[360px]:w-[290px] mt-[70px] flex flex-col justify-center gap-[20px] mb-[10px] rounded-lg border-black login-container'>
 
         
-          <h1 className='text-2xl mt-[10px] font-semibold'>Login Here</h1>
+          <h1 className='text-2xl mt-[10px] font-semibold text-center'>Login Here</h1>
 
-          <div className='mb-[10px] relative gap-4'>
+          <div className='mb-[10px] relative gap-4 flex flex-col items-center'>
             {
               loginField.map((field,i) => <InputField fieldData={field} key={i}/>)
             }
-            <div className='absolute bottom-[-25px] right-0'>
+            <div className='absolute bottom-[-25px] right-[45px]'>
               <p><Link to='/forget-password' className='text-[#7747ff]'>forget password?</Link></p>
             </div>
           </div>
@@ -49,13 +49,13 @@ const Login = () => {
           <button 
           onClick={handleSubmit}
           disabled={status === 'loading'}
-          className={`bg-[#7747ff] w-[270px] px-6 py-2 rounded text-white text-sm font-normal flex justify-center ${status === 'loading'?'opacity-50 cursor-not-allowed':''}`}>
+          className={`bg-[#7747ff] w-[270px] mx-auto px-6 py-2 rounded text-white text-sm font-normal flex justify-center ${status === 'loading'?'opacity-50 cursor-not-allowed':''}`}>
             {
               status === 'loading'? <span>Loading...</span> : <span>Login</span>
             }
           </button>
 
-          <div>
+          <div className='text-center'>
             <p>Don't have an account yet? <Link to='/signup' className='text-[#7747ff]'>Sign Up</Link></p>
           </div>
 

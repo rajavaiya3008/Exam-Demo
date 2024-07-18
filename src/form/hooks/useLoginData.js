@@ -2,9 +2,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { handleError, handleLogin, handleLoginData, initiateLoginData } from "../../redux-toolkit/slices/user";
 import { validateData } from "../../Validation/validation";
 import { fetchData } from "../../redux-toolkit/slices/api";
-import { toast } from "react-toastify";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { toastError, toastSuccess } from "../../utils/toastFunction";
+import { IsSetItem } from "../../utils/IsFunction";
 
 
 
@@ -58,17 +59,17 @@ export const useLoginData = () => {
           }
           const res = await dispatch(fetchData(config))
           if(res.payload.statusCode === 500){
-            toast.error(res.payload.message);
+            toastError(res.payload.message);
             setDisable(false);
             return;
           }
           if(res.payload.statusCode === 400){
-            toast.error('white space is not consider');
+            toastError('white space is not consider');
             return;
           }
-          toast.success('Login Successful');
-          localStorage.setItem('userData',JSON.stringify(res.payload.data));
-          localStorage.setItem('login',true)
+          toastSuccess('Login Successful');
+          IsSetItem('userData',res.payload.data);
+          IsSetItem('login',true)
           dispatch(handleLogin(true));
           dispatch(initiateLoginData());
         //   res.payload.data.role === 'student' ? navigate('/student-dashboard',{replace:true}) : navigate('/teacher-dashboard',{replace:true})

@@ -3,10 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../../../redux-toolkit/slices/api';
 import { getCurrUserData} from '../../../Current User/currentUser';
 import { loadStudentProfile } from '../../../redux-toolkit/slices/student';
-import InputField from '../../../components/InputField';
+import InputField from '../../../shared/InputField';
 import { useNavigate } from 'react-router';
 import { useStudentProfile } from '../studentdata/useStudentProfile';
 import { handlePrevVisitedPage } from '../../../redux-toolkit/slices/user';
+import { IsGetItem, IsRemoveItem, IsSetItem } from '../../../utils/IsFunction';
+import { LOGIN_PAGE } from '../../../utils/constant';
 
 const StudentProfile = () => {
 
@@ -30,18 +32,18 @@ const StudentProfile = () => {
         }
         const res = await dispatch(fetchData(config));
         if(res?.payload?.statusCode === 401){
-          localStorage.removeItem('userData');
-          localStorage.setItem('login',false);
-          navigate('/login')
+          IsRemoveItem('userData');
+          IsSetItem('login',false);
+          navigate(LOGIN_PAGE)
           return;
         }
         dispatch(loadStudentProfile(res.payload.data));
-        localStorage.setItem('student',JSON.stringify(res.payload.data))
+        IsSetItem('student',res.payload.data)
       }catch(error){
         console.log('error', error)
       }
     }
-    const student = JSON.parse(localStorage.getItem('student'))
+    const student = IsGetItem('student')
     if(!student){
       fetchStudentDetail();
     }else{
@@ -54,11 +56,11 @@ const StudentProfile = () => {
 
    const handleCancel = () => {
     setDisable(true);
-    dispatch(loadStudentProfile(JSON.parse(localStorage.getItem('student'))));
+    dispatch(loadStudentProfile(IsGetItem('student')));
   }
   
   return (
-    <div className='h-[100vh] flex items-center justify-center'>
+    <div className='flex justify-center mt-[70px] overflow-hidden'>
       <div>
         {
           status === 'loading' ?

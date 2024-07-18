@@ -1,9 +1,9 @@
 import App from "../App";
-import ErrorPage from "../components/ErrorPage";
-import ForgetPassword from "../components/ForgetPassword";
-import Home from "../components/Home";
-import NewPassword from "../components/NewPassword";
-import ResetPassword from "../components/ResetPassword";
+import ErrorPage from "../shared/ErrorPage";
+import ForgetPassword from "../shared/ForgetPassword";
+import Home from "../shared/Home";
+import NewPassword from "../shared/NewPassword";
+import ResetPassword from "../shared/ResetPassword";
 import Auth from "../modules/auth/Auth";
 import Student from "../modules/student/Student";
 import AllExam from "../modules/student/childroutes/AllExam";
@@ -21,11 +21,12 @@ import ViewExam from "../modules/teacher/childroutes/ViewExam";
 import ViewStudentDetail from "../modules/teacher/childroutes/ViewStudentDetail";
 import Login from "../modules/user/Login";
 import SignUp from "../modules/user/SignUp";
+import { ALL_EXAM, ALL_STUDENT, CREATE_EXAM, EDIT_EXAM, FORGET_PASSWORD, GIVE_EXAM, HOME_PAGE, LOGIN_PAGE, NEW_PASSWORD, SHOW_RESULT, SIGNUP_PAGE, STUDENT, STUDENT_DASHBOARD, STUDENT_DETAIL, STUDENT_PROFILE, TEACHER, TEACHER_DASHBOARD, VERIFIED_STUDENT, VIEW_EXAM } from "../utils/constant";
 
 
 export const allRouter = [
     {
-      path:'/',
+      path:HOME_PAGE,
       errorElement:<ErrorPage />,
       element:<App />,
       children:[
@@ -34,55 +35,55 @@ export const allRouter = [
             element:<Home />
         },
         {
-          path:'login',
+          path:LOGIN_PAGE,
           element:<Login />
         },
         {
-          path:'signup',
+          path:SIGNUP_PAGE,
           element:<SignUp />
         },
         {
-          path:'forget-password',
+          path:FORGET_PASSWORD,
           element:<ForgetPassword />
         },
         {
-          path:'newPassword',
+          path:NEW_PASSWORD,
           element:<NewPassword />
         },
         {
           element:<Auth role={["teacher"]}/>,
           children:[
             {
-              path:'teacher',
+              path:TEACHER,
               element:<Teacher />,
               children:[
                 {
-                  path:'dashboard',
+                  path:TEACHER_DASHBOARD,
                   element:<TeacherDashbord />
                 },
                 {
                   // index:true,
-                  path:'allstudent',
+                  path:ALL_STUDENT,
                   element:<AllStudent />
                 },
                 {
-                  path:'verified-student',
+                  path:VERIFIED_STUDENT,
                   element:<VerifiedStudent />
                 },
                 {
-                  path:'view-student-detail',
+                  path:STUDENT_DETAIL,
                   element:<ViewStudentDetail />
                 },
                 {
-                  path:'create-exam',
+                  path:CREATE_EXAM,
                   element:<CreateExam />
                 },
                 {
-                  path:'view-exam',
+                  path:VIEW_EXAM,
                   element:<ViewExam />
                 },
                 {
-                  path:'edit-exam',
+                  path:EDIT_EXAM,
                   element:<EditExam />
                 },
                 {
@@ -97,23 +98,23 @@ export const allRouter = [
           element:<Auth role={['student']}/>,
           children:[
             {
-              path:'student',
+              path:STUDENT,
               element:<Student />,
               children:[
                 {
-                  path:'dashboard',
+                  path:STUDENT_DASHBOARD,
                   element:<StudentDashboard />
                 },
                 {
-                  path:'all-exam',
+                  path:ALL_EXAM,
                   element:<AllExam />
                 },
                 {
-                  path:'give-exam',
+                  path:GIVE_EXAM,
                   element:<GiveExam />
                 },
                 {
-                  path:'student-profile',
+                  path:STUDENT_PROFILE,
                   element:<StudentProfile />
                 },
                 {
@@ -121,7 +122,7 @@ export const allRouter = [
                   element:<ResetPassword />
                 },
                 {
-                  path:'show-result',
+                  path:SHOW_RESULT,
                   element:<ShowResult />
                 }
               ]

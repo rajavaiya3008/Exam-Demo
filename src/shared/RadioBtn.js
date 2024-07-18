@@ -8,22 +8,6 @@ const RadioBtn = ({fieldData}) => {
     const dispatch = useDispatch()
 
     const ansIndex = useSelector(state => state.teacher.ansIndex)
-    // console.log('ansIndex in radio btn', ansIndex)
-    // console.log('fieldData', fieldData)
-    // let ansIndex;
-
-    // useEffect(() => {
-    //     ansIndex = fieldData.examData.questions[fieldData.currQuestion].options.findIndex((option,i) => option === fieldData?.ans)
-    //     console.log('ansIndex', ansIndex)
-    //     dispatch(handleAnsIndexes({
-    //         ansIndex:ansIndex,
-    //         currQuestion:fieldData.currQuestion
-    //     }))
-    // },[])
-    
-    // const ansIndex = fieldData?.examData?.questions?.[fieldData.currQuestion]?.options?.findIndex((option,i) => option === fieldData?.ans)
-    // console.log('ansIndex', ansIndex)
-
 
   return (
     <div>

@@ -2,20 +2,20 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchData } from '../../../redux-toolkit/slices/api';
 import { getCurrUserData} from '../../../Current User/currentUser';
-import Pagination from '../../../components/Pagination';
+import Pagination from '../../../shared/Pagination';
 import { handleSearchField, loadVerifiedStudentData } from '../../../redux-toolkit/slices/teacher';
 import { useNavigate } from 'react-router';
-import InputField from '../../../components/InputField';
+import InputField from '../../../shared/InputField';
+import { IsRemoveItem, IsSetItem } from '../../../utils/IsFunction';
 
 const VerifiedStudent = () => {
 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const status = useSelector(state => state.api.status);
     const verifiedStudentData = useSelector(state => state.teacher.verifiedStudentData);
     const searchData = useSelector(state => state.teacher.searchField)
     const lastVisitedPage = useSelector(state => state.user.prevVisitedPage);
-
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchAllStudentData = async() => {
@@ -26,8 +26,8 @@ const VerifiedStudent = () => {
             }
             const res = await dispatch(fetchData(config))
             if(res?.payload?.statusCode === 401){
-                localStorage.removeItem('userData');
-                localStorage.setItem('login',false);
+                IsRemoveItem('userData');
+                IsSetItem('login',false);
                 navigate('/login')
                 return;
               }
@@ -52,7 +52,7 @@ const VerifiedStudent = () => {
     }
 
   return (
-    <div className='h-[100vh] flex items-center flex-col mt-[30px]'>
+    <div className='h-[100vh] flex items-center flex-col mt-[70px]'>
         {
             status !== 'loading' && 
             <div className='mb-[20px] text-white'>

@@ -4,7 +4,8 @@ import { getCurrUserData} from '../../../Current User/currentUser';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../../../redux-toolkit/slices/api';
 import { loadCurrStudentDetail } from '../../../redux-toolkit/slices/teacher';
-import CurrStudentDetail from '../../../components/CurrStudentDetail';
+import CurrStudentDetail from '../../../shared/CurrStudentDetail';
+import { ALL_STUDENT } from '../../../utils/constant';
 
 const ViewStudentDetail = () => {
 
@@ -31,6 +32,11 @@ const ViewStudentDetail = () => {
                     navigate('/login')
                     return;
                   }
+                if(res?.payload?.statusCode === 500){
+                    navigate(ALL_STUDENT)
+                    return;
+                 }
+                  console.log('Student Detail', res.payload.data[0])
                 dispatch(loadCurrStudentDetail(res.payload.data[0]));
             }
             fetchStudentDetail();
@@ -40,15 +46,15 @@ const ViewStudentDetail = () => {
     },[])
 
     const handleBack = () => {
-        navigate(-1);
+        navigate('/teacher/allstudent');
     }
 
   return (
-    <div className='h-[100vh] flex justify-center mt-[30px] text-black'>
-        <div>
+    <div className='flex justify-center mt-[70px] text-black'>
+        <div className='overflow-hidden'>
             {
                 status === 'loading' ? 
-                    <div className='spinner mt-[250px]'></div> 
+                    <div className='spinner mt-[20px]'></div> 
                         :
                             <div>
                                 <p className='text-center mb-4 text-4xl'>Student Detail</p>

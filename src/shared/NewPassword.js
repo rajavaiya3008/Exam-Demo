@@ -4,9 +4,11 @@ import { handleError, handleNewPassword } from '../redux-toolkit/slices/user';
 import InputField from './InputField';
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { fetchData } from '../redux-toolkit/slices/api';
-import { toast } from 'react-toastify';
 import { validateData } from '../Validation/validation';
 import { getCurrUserData } from '../Current User/currentUser';
+import { IsGetItem } from '../utils/IsFunction';
+import { toastSuccess } from '../utils/toastFunction';
+import { LOGIN_PAGE } from '../utils/constant';
 
 const NewPassword = () => {
 
@@ -18,7 +20,7 @@ const NewPassword = () => {
     const status = useSelector(state => state.api.status);
     const [searchParams,setSearchParams] = useSearchParams();
     const token = searchParams.get('token');
-    const login = JSON.parse(localStorage.getItem('login'))
+    const login = IsGetItem('login')
     const role = getCurrUserData().role;
 
     const createNewPasswordField = [
@@ -61,8 +63,8 @@ const NewPassword = () => {
                 params:{token}
             }
             const res = await dispatch(fetchData(config));
-            toast.success('Password Change Successfully');
-            navigate('/login');
+            toastSuccess('Password Change Successfully');
+            navigate(LOGIN_PAGE);
         }catch(error){
             console.log('error', error)
         }
@@ -76,7 +78,7 @@ const NewPassword = () => {
     <>
         {
             !login && 
-        <div className='flex justify-center items-center flex-col h-[100vh]'>
+        <div className='flex items-center flex-col mt-[70px]'>
             <p className='text-center text-4xl mb-4'>New Password</p>
             {
                 createNewPasswordField.map((field,i) => <InputField fieldData={field} key={i}/>)

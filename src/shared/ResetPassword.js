@@ -2,17 +2,21 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { handleError, handleFocus, handlePrevVisitedPage, handleResetPassword, initiateResetPassword } from '../redux-toolkit/slices/user';
 import InputField from './InputField';
-import { token } from '../Current User/currentUser';
+import { getCurrUserData, token } from '../Current User/currentUser';
 import { fetchData } from '../redux-toolkit/slices/api';
 import { validateData } from '../Validation/validation';
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { currUserRole } from '../Current User/currentUser';
+import { toastError, toastSuccess } from '../utils/toastFunction';
 
 const ResetPassword = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const resetPassword = useSelector(state => state.user.resetPassword);
+    const error = useSelector(state => state.user.error);
+    const status = useSelector(state => state.api.status);
+    const {token,role} = getCurrUserData()
 
     useEffect(() => {
         dispatch(initiateResetPassword({}))
@@ -22,10 +26,6 @@ const ResetPassword = () => {
             dispatch(initiateResetPassword({}))
         }
     },[])
-
-    const resetPassword = useSelector(state => state.user.resetPassword);
-    const error = useSelector(state => state.user.error);
-    const status = useSelector(state => state.api.status);
 
     const ResetPasswordFields = [
         {
@@ -78,13 +78,17 @@ const ResetPassword = () => {
                 headers: { "access-token":`${token}` }
             }
             const res = await dispatch(fetchData(config));
-            if(res.payload.statusCode !== 200){
-                toast.error('Please check old password');
+            if(res.payload.statusCode === 500){
+                toastError("Old Password and New Password are same")
                 return;
             }
-            toast.success('Password Reset Successfully');
+            if(res.payload.statusCode !== 200){
+                toastError('Please check old password');
+                return;
+            }
+            toastSuccess('Password Reset Successfully');
             dispatch(initiateResetPassword());
-            navigate(`/${currUserRole}`);
+            navigate(`/${role}/dashboard`);
         }catch(error){
             console.log('error', error)
         }
@@ -101,7 +105,7 @@ const ResetPassword = () => {
 
 
   return (
-    <div className='h-[100vh] flex items-center justify-center flex-col'>
+    <div className='flex items-center flex-col mt-[70px]'>
 
         <p className='text-center mb-4 text-4xl'>Reset Password</p>
 

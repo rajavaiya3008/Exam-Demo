@@ -7,6 +7,8 @@ import { initiateExamPaper, loadExamPaper } from '../../../redux-toolkit/slices/
 import ShowExam from '../../teacher/childroutes/ShowExam';
 import { useGiveExam } from '../studentdata/useGiveExam';
 import { initiateAnsIndex } from '../../../redux-toolkit/slices/teacher';
+import { IsGetItem, IsRemoveItem, IsSetItem } from '../../../utils/IsFunction';
+import { ALL_EXAM, LOGIN_PAGE } from '../../../utils/constant';
 
 const GiveExam = () => {
 
@@ -42,9 +44,9 @@ const GiveExam = () => {
             }
             const res = await dispatch(fetchData(config));
             if(res?.payload?.statusCode === 401){
-              localStorage.removeItem('userData');
-              localStorage.setItem('login',false)
-              navigate('/login')
+              IsRemoveItem('userData');
+              IsSetItem('login',false)
+              navigate(LOGIN_PAGE)
               return;
             }
             let examPaper = {
@@ -56,36 +58,27 @@ const GiveExam = () => {
             dispatch(loadExamPaper(examPaper))
             // localStorage.setItem('examPaper',JSON.stringify(examPaper))
         }
-        const examPaper = JSON.parse(localStorage.getItem('examPaper'))
+        const examPaper = IsGetItem('examPaper')
         if(examPaper){
-          dispatch(loadExamPaper(JSON.parse(localStorage.getItem('examPaper'))))
+          dispatch(loadExamPaper(IsGetItem('examPaper')))
           console.log('set ansIndx')
-          const ansIndexLocal = JSON.parse(localStorage.getItem('ansIndex'))
+          const ansIndexLocal = IsGetItem('ansIndex')
           console.log('ansIndexLocal', ansIndexLocal)
             dispatch(initiateAnsIndex(ansIndexLocal))
           
         }else{
           fetchExamPaper();
         }
-
-
-        // return () => {
-        //   console.log('enter in to return')
-        //   localStorage.removeItem('examPaper')
-        //   dispatch(initiateAnsIndex([]));
-        //   dispatch(initiateExamPaper({}))
-        //   // localStorage.removeItem('ansIndex')
-        // }
     },[])
 
     useEffect(() => {
       console.log('below useEffect is running');
       const handleStorageChange = () => {
-        const examPaper = JSON.parse(localStorage.getItem('examPaper'))
+        const examPaper = IsGetItem('examPaper')
         if(examPaper){
-          dispatch(loadExamPaper(JSON.parse(localStorage.getItem('examPaper'))))
+          dispatch(loadExamPaper(IsGetItem('examPaper')))
           console.log('set ansIndx')
-          const ansIndexLocal = JSON.parse(localStorage.getItem('ansIndex'))
+          const ansIndexLocal = IsGetItem('ansIndex')
           console.log('ans updated at 92')
           // console.log('ansIndexLocal', ansIndexLocal)
           console.log('ansIndex', ansIndex)
@@ -97,12 +90,8 @@ const GiveExam = () => {
             console.log('enter in to else block')
             dispatch(initiateExamPaper({}))
             dispatch(initiateAnsIndex(ansIndex))
-            navigate(`/student/dashboard`)
+            navigate(ALL_EXAM)
           }
-          // if(ansIndexLocal.length === ansIndex.length || ansIndex.length === 0){
-          //   console.log('ans updated at 92 if')
-          //   dispatch(initiateAnsIndex(ansIndexLocal))
-          // }
         }
       }
     
@@ -111,24 +100,12 @@ const GiveExam = () => {
     
       // Clean up event listener
       return () => {
-        // localStorage.removeItem('createExam');
-        // localStorage.removeItem('ansIndex')
         window.removeEventListener('storage', handleStorageChange);
       }
     }, []); 
 
-    // console.log('examPaper', examPaper)
-    // if(Object.keys(examData).length !== 0){
-    //   localStorage.setItem('examPaper',JSON.stringify(examData));
-    //   localStorage.setItem('ansIndex',JSON.stringify(ansIndex))
-    // }
-    // if(!JSON.parse(localStorage.getItem('ansIndex'))){
-    //   localStorage.setItem('ansIndex',JSON.stringify(ansIndex))
-    // }
-    // console.log('examData', examData);
-
   return (
-    <div className='h-[100vh] flex items-center justify-center'>
+    <div className='flex justify-center mt-[70px] overflow-hidden'>
         {
             status === 'loading' ?
               <div className='spinner'></div> :
