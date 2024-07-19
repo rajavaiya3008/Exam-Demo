@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../../../redux-toolkit/slices/api';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getCurrUserData } from '../../../Current User/currentUser';
-import { initiateAnsIndex, initiateExam, initiateQuestions} from '../../../redux-toolkit/slices/teacher';
+import { handleEdited, initiateAnsIndex, initiateExam, initiateQuestions} from '../../../redux-toolkit/slices/teacher';
 import ShowExam from './ShowExam';
 import { useEditExam } from '../teachetData/useEditExam';
 import { IsRemoveItem, IsSetItem } from '../../../utils/IsFunction';
+import { VIEW_EXAM } from '../../../utils/constant';
 
 
 const EditExam = () => {
@@ -17,10 +18,11 @@ const EditExam = () => {
     const {
       createExamFields,
       currQuestion,
-      setCurrQuestion,
       validateExamData,
       validate,
+      edited,
       examData,
+      setCurrQuestion,
       handleEditExam,
       handleDeleteExam,
       handleCancel
@@ -49,6 +51,10 @@ const EditExam = () => {
                   navigate('/login')
                   return;
                 }
+                if(res?.payload?.statusCode === 500){
+                  navigate(VIEW_EXAM)
+                  return
+                }
                 editData.subjectName = subjectName;
                 editData.notes = ['hello'];
                 editData.questions = res.payload?.data?.questions;
@@ -62,6 +68,8 @@ const EditExam = () => {
   
                 // localStorage.setItem('ansIndex',JSON.stringify(ansArr));
                 dispatch(initiateAnsIndex(ansArr))
+                dispatch(handleEdited())
+                dispatch(initiateQuestions([]))
             }
               fetchEditExamData();
               // console.log('reach ansArr')
@@ -87,8 +95,6 @@ const EditExam = () => {
         }
 
         return () => {
-          IsRemoveItem('createExam');
-          IsRemoveItem('ansIndex');
           const initiateConfig = {
             subjectName:'',
             questions:[
@@ -107,6 +113,9 @@ const EditExam = () => {
         dispatch(initiateExam(initiateConfig))
         dispatch(initiateAnsIndex([]));
         dispatch(initiateQuestions([]));
+        dispatch(handleEdited());
+        IsRemoveItem('createExam');
+        IsRemoveItem('ansIndex');
         }
     },[])
 
@@ -129,9 +138,9 @@ const EditExam = () => {
 
               <div>
                 <button 
-                disabled={currQuestion !== 14}
+                disabled={!edited}
                 onClick={handleEditExam}
-                className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${currQuestion !== 14 ? 'opacity-50 cursor-not-allowed':''}`}
+                className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${!edited ? 'opacity-50 cursor-not-allowed':''}`}
                 >Submit</button>
                 <button 
                 onClick={handleDeleteExam}

@@ -51,10 +51,10 @@ export const useSignupData = () => {
       ]
     
     const validate = {
-        name:[{required:true,message:'Please Enter Name'},{length:3,message:'username Must be 3 char'}],
+        name:[{required:true,message:'Please Enter Name'},{length:3,message:'username Must be 3 char'},{pattern:/^([a-zA-Z0-9]+\s?)*\S$/,message:'Enter Valid Name'}],
         email: [{required:true,message:'Please Enter Email'},{pattern:/^[a-zA-Z0-9]+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/,message:'Enter Valid Email'}],
-        password:[{required:true,message:'Please Enter Password'},{length:6,message:'Password Must be 6 char'}],
-    
+        password:[{required:true,message:'Please Enter Password'},{length:6,message:'Password Must be 6 char'},{pattern:/^[a-zA-Z0-9!@#$%^&*]{6,16}$/,message:'Enter Valid Password'}],
+        role:[{required:true,message:'Please Select Role'}]
     }
 
     const handleSignup = async() => {
@@ -90,7 +90,7 @@ export const useSignupData = () => {
 
     return {
         signupField,
-        handleSignup,
-        disable
+        disable,
+        handleSignup
     }
 }

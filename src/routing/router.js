@@ -58,6 +58,7 @@ export const allRouter = [
               element:<Teacher />,
               children:[
                 {
+                  // index:true,
                   path:TEACHER_DASHBOARD,
                   element:<TeacherDashbord />
                 },

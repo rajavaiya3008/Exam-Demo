@@ -3,7 +3,7 @@ import InputField from '../../shared/InputField'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Navigate } from 'react-router-dom'
 import { useLoginData } from '../../form/hooks/useLoginData'
-import { handleError } from '../../redux-toolkit/slices/user'
+import { handleError, initiateLoginData } from '../../redux-toolkit/slices/user'
 import { getCurrUserData } from '../../Current User/currentUser'
 
 
@@ -13,6 +13,10 @@ const Login = () => {
 
   useEffect(() => {
     dispatch(handleError({}));
+
+    return () => {
+      dispatch(initiateLoginData())
+    }
   },[])
 
   const {loginField,handleSubmit,disable} = useLoginData();

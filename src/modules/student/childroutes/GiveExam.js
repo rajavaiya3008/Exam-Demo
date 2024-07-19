@@ -14,6 +14,7 @@ const GiveExam = () => {
 
   const [searchParams,setSearchParams] = useSearchParams();
   const id = searchParams.get('id');
+  const subject = searchParams.get('subject');
 
   const {
     createExamFields,
@@ -31,7 +32,6 @@ const GiveExam = () => {
     const status = useSelector(state => state.api.status);
     const examData = useSelector(state => state.student.examPaper);
     const ansIndex = useSelector(state => state.teacher.ansIndex)
-    const subject = searchParams.get('subject');
 
     useEffect(() => {
       console.log('above useEffect is running')
@@ -48,6 +48,10 @@ const GiveExam = () => {
               IsSetItem('login',false)
               navigate(LOGIN_PAGE)
               return;
+            }
+            if(res?.payload?.statusCode === 500){
+              navigate(ALL_EXAM)
+              return
             }
             let examPaper = {
               subjectName:subject,

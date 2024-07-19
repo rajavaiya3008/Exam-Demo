@@ -4,9 +4,13 @@ import InputField from '../../../shared/InputField';
 import { addNewQuestion, handleError, handleSameQuestions, initiateAnsIndex, initiateCreateExam, initiateQuestions} from '../../../redux-toolkit/slices/teacher';
 import { validateData } from '../../../Validation/validation';
 import { handleStudentError, loadExamPaper } from '../../../redux-toolkit/slices/student';
+import { useLocation } from 'react-router';
+import { EDIT_EXAM } from '../../../utils/constant';
 
 
 const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateExamData,totalQue,validate,role,Options}) => {
+
+    const location = useLocation(); 
     const totalQuestion = totalQue || 14;
     const sameOptionError = useSelector(state => state.teacher.error);
     const sameQuestions = useSelector(state => state.teacher.questions);
@@ -19,31 +23,35 @@ const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateE
     
     const handlePrevQuestion = () => {
       // dispatch(initiateQuestions());
-      // console.log('validateExamData.questions', validateExamData.question);
-      // if(!sameQuestions.includes(validateExamData.question) || sameQuestions[currQuestion] !== validateExamData.question){
-      //   validateExamData.questions = sameQuestions;
-      // }
-      // if(currQuestion === 14 && !lastQueVisited){
-      //   setLastQueVisited(true);
-      //   validateExamData.questions = sameQuestions;
-      //   const error = validateData(validateExamData,validate);
-      //   if(Object.keys(error).length !== 0){
-      //     dispatch(handleError(error));
-      //     return;
-      //   }
-      // }
-      // const error = validateData(validateExamData,validate);
-      // if(Object.keys(error).length !== 0){
-      //   dispatch(handleError(error));
-      //   return;
-      // }
-      // dispatch(handleSameQuestions({
-      //   question:validateExamData.question,
-      //   queIndex:currQuestion
-      // }));
-      // if(currQuestion === 1){
-      //   dispatch(initiateQuestions());
-      // }
+      if(location.pathname === EDIT_EXAM){
+      console.log('validateExamData.questions', validateExamData.question);
+      if(!sameQuestions.includes(validateExamData.question) || sameQuestions[currQuestion] !== validateExamData.question){
+        validateExamData.questions = sameQuestions;
+        validateExamData.sameQueMsg = 'Question already exists'
+      }
+      if(currQuestion === 14 && !lastQueVisited){
+        setLastQueVisited(true);
+        validateExamData.questions = sameQuestions;
+        validateExamData.sameQueMsg = 'Question already exists'
+        const error = validateData(validateExamData,validate);
+        if(Object.keys(error).length !== 0){
+          dispatch(handleError(error));
+          return;
+        }
+      }
+      const error = validateData(validateExamData,validate);
+      if(Object.keys(error).length !== 0){
+        dispatch(handleError(error));
+        return;
+      }
+      dispatch(handleSameQuestions({
+        question:validateExamData.question,
+        queIndex:currQuestion
+      }));
+      if(currQuestion === 1){
+        dispatch(initiateQuestions());
+      }
+    }
           dispatch(handleError({}));
 
           // const createExam = JSON.parse(localStorage.getItem('createExam'))
@@ -63,8 +71,9 @@ const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateE
     const handleNextQuestion = () => {
       if((sameQuestions.includes(validateExamData.question) && 
         sameQuestions.length === currQuestion ) ||
-          sameQuestions[currQuestion] !== validateExamData.question){
+        sameQuestions[currQuestion] !== validateExamData.question){
         validateExamData.questions = sameQuestions;
+        validateExamData.sameQueMsg = 'Question already Exists'
       }
         const error = validateData(validateExamData,validate);
         if(Object.keys(error).length !== 0){
@@ -76,7 +85,7 @@ const ShowExam = ({createExamFields,error,setCurrQuestion,currQuestion,validateE
         }
         if(hasDuplicates(optionArr)){
           const error = {};
-          error['sameOption'] = 'Two Options are Same Please Check';
+          error.sameOption = 'Two Options are Same Please Check';
           // dispatch(fieldData.updateData(data))
           dispatch(handleError(error));
           return;

@@ -35,12 +35,12 @@ export const useCreateExam = () => {
     }
     
     const validate = {
-        subjectName:[{required:true,message:'Please Enter Subject'},{pattern:/^\S[a-zA-Z0-9 ]+\S$/,message:'Enter Valid Option'}],
-        question:[{required:true,message:'Please Enter Question'},{pattern:/^\S[a-zA-Z0-9 ]+\S$/,message:'Enter Valid Option'}],
-        op1:[{required:true,message:'Option Required'}],
-        op2:[{required:true,message:'Option Required'}],
-        op3:[{required:true,message:'Option Required'}],
-        op4:[{required:true,message:'Option Required'}],
+        subjectName:[{required:true,message:'Please Enter Subject'},{pattern:/^([a-zA-Z0-9]+\s?)*\S$/,message:'Enter Valid Subject'}],
+        question:[{required:true,message:'Please Enter Question'},{pattern:/^([a-zA-Z0-9]+\s?)*\S$/,message:'Enter Valid Question'}],
+        op1:[{required:true,message:'Option Required'},{pattern:/^([a-zA-Z0-9]+\s?)*\S$/,message:'Enter Valid Option'}],
+        op2:[{required:true,message:'Option Required'},{pattern:/^([a-zA-Z0-9]+\s?)*\S$/,message:'Enter Valid Option'}],
+        op3:[{required:true,message:'Option Required'},{pattern:/^([a-zA-Z0-9]+\s?)*\S$/,message:'Enter Valid Option'}],
+        op4:[{required:true,message:'Option Required'},{pattern:/^([a-zA-Z0-9]+\s?)*\S$/,message:'Enter Valid Option'}],
         answer:[{required:true,message:'Answer Required'}]
     }
     
@@ -241,9 +241,9 @@ export const useCreateExam = () => {
         currQuestion,
         Options,
         examData,
+        initiateConfig,
         setCurrQuestion,
         handleCreateExam,
-        initiateConfig,
         handleCancel
     }
 }

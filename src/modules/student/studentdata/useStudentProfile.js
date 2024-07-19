@@ -41,7 +41,7 @@ export const useStudentProfile = () => {
       ]
     
       const validate = {
-        name:[{required:true,message:'Please Enter Name'},{length:3,message:'username Must be 3 char'},{pattern:/^[a-zA-Z]+$/,message:'Enter Valid Name'}],
+        name:[{required:true,message:'Please Enter Name'},{length:3,message:'username Must be 3 char'},{pattern:/^([a-zA-Z0-9]+\s?)*\S$/,message:'Enter Valid Name'}],
       }
     
       const updatedData = {

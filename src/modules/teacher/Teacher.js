@@ -1,6 +1,6 @@
 import React from 'react'
 import Navbar from '../../shared/Navbar'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { PiStudentFill } from "react-icons/pi";
 import { PiStudentThin } from "react-icons/pi";
 import { PiExamFill } from "react-icons/pi";
@@ -49,9 +49,9 @@ const Teacher = () => {
       <div className={`w-[100%] z-10 fixed h-[100%] top-[50px] overflow-scroll ${menu ? 'show-menu' :'hide-menu'}`} >
         <Navbar navItems={teacherRoutes}/>
       </div>
-      <div className='w-full overflow-auto mb-[20px]'>
+      <div className='w-full mb-[20px]'>
         {
-          location.pathname === '/teacher' || location.pathname === '/teacher/' ? <TeacherDashbord /> : <Outlet />
+          location.pathname === '/teacher' || location.pathname === '/teacher/' ? <Navigate to={'/teacher/dashboard'} /> : <Outlet />
         }
       </div>
     </div>

@@ -14,6 +14,10 @@ const ForgetPassword = () => {
     const navigate = useNavigate();
     useEffect(() => {
         dispatch(handleError({}));
+
+        return () => {
+            dispatch(initiateForgetPassword({}))
+        }
     },[])
     const forgetPassword = useSelector(state => state.user.forgetPassword)
     const error = useSelector(state => state.user.error);

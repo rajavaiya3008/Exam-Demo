@@ -60,7 +60,7 @@ const ResetPassword = () => {
     const validate = {
         oldPassword:[{required:true,message:'Please Enter Old Password'},{length:6,message:'Password Must be 6 char'},{pattern:/^[a-zA-Z0-9!@#$%^&*]{6,16}$/,message:'Enter Valid Password'}],
         Password:[{required:true,message:'Please Enter Password'},{length:6,message:'Password Must be 6 char'},{pattern:/^[a-zA-Z0-9!@#$%^&*]{6,16}$/,message:'Enter Valid Password'}],
-        ConfirmPassword:[{required:true,message:'Please Enter Confirm Password'},{length:6,message:'Password Must be 6 char'},{match:true,comKey:resetPassword?.Password}],
+        ConfirmPassword:[{required:true,message:'Please Enter Confirm Password'},{length:6,message:'Password Must be 6 char'},{match:true,comKey:resetPassword?.Password,message:'Password Do not Match'}],
       }
 
     const handleReset = async() => {

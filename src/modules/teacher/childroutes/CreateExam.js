@@ -27,18 +27,12 @@ const CreateExam = () => {
 } = useCreateExam();
 
 useEffect(() => {
-  console.log('above useEffect is running');
-  // localStorage.removeItem('createExam');
   const createExamData = IsGetItem('createExam')
   const ansIndex = IsGetItem('ansIndex');
-  console.log('createExamData', createExamData)
-  console.log('ansIndex', ansIndex)
   if(!createExamData){
-    console.log('reach 41 line')
     dispatch(initiateExam(initiateConfig));
     dispatch(initiateAnsIndex([]))
   }else{
-    console.log('reach 45 line')
     dispatch(initiateExam(createExamData))
     if(ansIndex !== null){
       dispatch(initiateAnsIndex(ansIndex))
@@ -55,18 +49,15 @@ useEffect(() => {
 },[]);
 
 useEffect(() => {
-  console.log('below useEffect is running')
   const handleStorageChange = () => {
     const createExamData = IsGetItem('createExam');
     const ansIndex = IsGetItem('ansIndex');
 
     if (!createExamData) {
-      console.log('reach 63 line')
       dispatch(initiateExam(initiateConfig));
       dispatch(initiateAnsIndex([]));
       setCurrQuestion(0);
     } else {
-      console.log('reach 68 line')
       dispatch(initiateExam(createExamData));
       if(ansIndex !== null){
         dispatch(initiateAnsIndex(ansIndex));

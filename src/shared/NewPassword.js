@@ -45,7 +45,7 @@ const NewPassword = () => {
     ]
 
     const validate = {
-        Password:[{required:true,message:'Please Enter Password'},{length:6,message:'Password Must be 6 char'}],
+        Password:[{required:true,message:'Please Enter Password'},{length:6,message:'Password Must be 6 char'},{pattern:/^[a-zA-Z0-9!@#$%^&*]{6,16}$/,message:'Enter Valid Password'}],
         ConfirmPassword:[{required:true,message:'Please Enter Password'},{length:6,message:'Password Must be 6 char'},{match:true,comKey:newPassword.Password}],
     }
 

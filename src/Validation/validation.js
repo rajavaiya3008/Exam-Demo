@@ -1,9 +1,7 @@
 export const validateData = (data,validate) => {
-    if(data.answer === '^'){
-        data.answer = '';
-    }
-
-    // let pattern = "^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$";
+    // if(data.answer === '^'){
+    //     data.answer = '';
+    // }
 
     let error = {};
 
@@ -22,16 +20,13 @@ export const validateData = (data,validate) => {
                 return true;
             }
             if(field.match && data[key] !== field.comKey){
-
-                error[key] = 'Password Do not Match';
+                error[key] = field.message;
                 return true;
             }
             if(data?.questions?.includes(data?.question)){
-                error.question = 'Question already Exists';
+                error.question = data?.sameQueMsg;
                 return true;
             }
-
-
         })
     }
 

@@ -41,7 +41,7 @@ export const useLoginData = () => {
     
     const validate = {
         email: [{required:true,message:'Please Enter Email'},{pattern:/^[a-zA-Z0-9]+@[a-zA-Z_]+\.[a-zA-Z]{2,3}$/,message:'Enter Valid Email'}],
-        password:[{required:true,message:'Please Enter Password'},{length:6,message:'Password Must be 6 char'}],
+        password:[{required:true,message:'Please Enter Password'},{length:6,message:'Password Must be 6 char'},{pattern:/^[a-zA-Z0-9!@#$%^&*]{6,16}$/,message:'Enter Valid Password'}],
     }
 
     const handleSubmit = async() => {
@@ -58,6 +58,7 @@ export const useLoginData = () => {
             data:loginData
           }
           const res = await dispatch(fetchData(config))
+          console.log('res', res)
           if(res.payload.statusCode === 500){
             toastError(res.payload.message);
             setDisable(false);

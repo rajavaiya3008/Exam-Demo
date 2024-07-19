@@ -7,7 +7,7 @@ const initialState = {
         name:'',
         email:'',
         password:'',
-        role:'student',
+        role:'',
     },
     login:false,
     focused:false,
@@ -62,7 +62,12 @@ export const userSlice = createSlice({
             state.loginData = {};
         },
         initiateSignupData:(state,action) => {
-            state.signupData = {};
+            state.signupData = {
+                name:'',
+                email:'',
+                password:'',
+                role:'student',
+            };
         },
         handleFocus:(state,action) => {
             state.focused = action.payload

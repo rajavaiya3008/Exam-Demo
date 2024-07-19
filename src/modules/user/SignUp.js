@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import InputField from '../../shared/InputField'
 import { useDispatch, useSelector } from 'react-redux'
-import { handleError, handleSignupData } from '../../redux-toolkit/slices/user'
+import { handleError, handleSignupData, initiateSignupData } from '../../redux-toolkit/slices/user'
 import DropDown from '../../shared/DropDown'
 import { Link, Navigate} from 'react-router-dom'
 import { useSignupData } from '../../form/hooks/useSignupData'
@@ -13,6 +13,10 @@ const SignUp = () => {
 
   useEffect(() => {
     dispatch(handleError({}));
+
+    return () => {
+      dispatch(initiateSignupData())
+    }
   },[])
 
   const {signupField,handleSignup,disable} = useSignupData();

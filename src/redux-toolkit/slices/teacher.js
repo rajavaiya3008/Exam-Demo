@@ -54,7 +54,6 @@ export const teacherSlice = createSlice({
         },
         handleOptions:(state,action) => {
             state.edited = true
-            console.log('action.payload', action.payload)
             const {queIndex,opIndex,value} = action.payload;
             state.error = {};
             if(state.createExam.questions[queIndex].options[opIndex] === state.createExam.questions[queIndex].answer && state.ansIndex[queIndex] === opIndex){

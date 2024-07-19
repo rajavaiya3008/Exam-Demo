@@ -18,7 +18,7 @@ const Pagination = ({data,keys,viewPath,btn,searchKey,searchVal,lastVisitedPage}
 
     if(searchVal?.trim() !== '' && searchVal?.trim()!== undefined){
         searchVal.toLowerCase();
-        data = data.filter((item,i) => item?.[searchKey[0]].toLowerCase()?.includes(searchVal) || item?.[searchKey[1]]?.toLowerCase()?.includes(searchVal) || (searchKey[2] && item?.[searchKey[2]].toLowerCase()?.includes(searchVal)))
+        data = data.filter((item,i) => item?.[searchKey[0]].toLowerCase()?.includes(searchVal.trim().toLowerCase()) || item?.[searchKey[1]]?.toLowerCase()?.includes(searchVal.trim().toLowerCase()) || searchKey[2] && item?.[searchKey[2]].toLowerCase()?.includes(searchVal.trim().toLowerCase()))
     }
 
     let recordsPerPage = 10;
