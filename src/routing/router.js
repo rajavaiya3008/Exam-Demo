@@ -6,22 +6,22 @@ import NewPassword from "../shared/NewPassword";
 import ResetPassword from "../shared/ResetPassword";
 import Auth from "../modules/auth/Auth";
 import Student from "../modules/student/Student";
-import AllExam from "../modules/student/childroutes/AllExam";
-import GiveExam from "../modules/student/childroutes/GiveExam";
-import ShowResult from "../modules/student/childroutes/ShowResult";
-import StudentDashboard from "../modules/student/childroutes/StudentDashboard";
-import StudentProfile from "../modules/student/childroutes/StudentProfile";
+import AllExam from "../modules/student/studentPresentation/AllExam";
+import GiveExam from "../modules/student/studentPresentation/GiveExam";
+import ShowResult from "../modules/student/studentPresentation/ShowResult";
+import StudentDashboard from "../modules/student/studentPresentation/StudentDashboard";
+import StudentProfile from "../modules/student/studentPresentation/StudentProfile";
 import Teacher from "../modules/teacher/Teacher";
-import AllStudent from "../modules/teacher/childroutes/AllStudent";
-import CreateExam from "../modules/teacher/childroutes/CreateExam";
-import EditExam from "../modules/teacher/childroutes/EditExam";
-import TeacherDashbord from "../modules/teacher/childroutes/TeacherDashbord";
-import VerifiedStudent from "../modules/teacher/childroutes/VerifiedStudent";
-import ViewExam from "../modules/teacher/childroutes/ViewExam";
-import ViewStudentDetail from "../modules/teacher/childroutes/ViewStudentDetail";
+import AllStudent from "../modules/teacher/teacherPresentation/AllStudent";
+import CreateExam from "../modules/teacher/teacherPresentation/CreateExam";
+import EditExam from "../modules/teacher/teacherPresentation/EditExam";
+import TeacherDashbord from "../modules/teacher/teacherPresentation/TeacherDashbord";
+import VerifiedStudent from "../modules/teacher/teacherPresentation/VerifiedStudent";
+import ViewExam from "../modules/teacher/teacherPresentation/ViewExam";
+import ViewStudentDetail from "../modules/teacher/teacherPresentation/ViewStudentDetail";
 import Login from "../modules/user/Login";
 import SignUp from "../modules/user/SignUp";
-import { ALL_EXAM, ALL_STUDENT, CREATE_EXAM, EDIT_EXAM, FORGET_PASSWORD, GIVE_EXAM, HOME_PAGE, LOGIN_PAGE, NEW_PASSWORD, SHOW_RESULT, SIGNUP_PAGE, STUDENT, STUDENT_DASHBOARD, STUDENT_DETAIL, STUDENT_PROFILE, TEACHER, TEACHER_DASHBOARD, VERIFIED_STUDENT, VIEW_EXAM } from "../utils/constant";
+import { ALL_EXAM, ALL_STUDENT, CREATE_EXAM, EDIT_EXAM, FORGET_PASSWORD, GIVE_EXAM, HOME_PAGE, LOGIN_PAGE, NEW_PASSWORD, RESET_PASSWORD, SHOW_RESULT, SIGNUP_PAGE, STUDENT, STUDENT_DASHBOARD, STUDENT_DETAIL, STUDENT_PROFILE, STUDENT_RESET_PASS, TEACHER, TEACHER_DASHBOARD, TEACHER_RESET_PASS, VERIFIED_STUDENT, VIEW_EXAM } from "../utils/routeConstant";
 
 
 export const allRouter = [
@@ -54,7 +54,7 @@ export const allRouter = [
           element:<Auth role={["teacher"]}/>,
           children:[
             {
-              path:TEACHER,
+              // path:TEACHER,
               element:<Teacher />,
               children:[
                 {
@@ -88,7 +88,7 @@ export const allRouter = [
                   element:<EditExam />
                 },
                 {
-                  path:'reset-password',
+                  path:TEACHER_RESET_PASS,
                   element:<ResetPassword />
                 },
               ]
@@ -99,7 +99,7 @@ export const allRouter = [
           element:<Auth role={['student']}/>,
           children:[
             {
-              path:STUDENT,
+              // path:STUDENT,
               element:<Student />,
               children:[
                 {
@@ -108,7 +108,7 @@ export const allRouter = [
                 },
                 {
                   path:ALL_EXAM,
-                  element:<AllExam />
+                  element:<AllExam />,
                 },
                 {
                   path:GIVE_EXAM,
@@ -119,7 +119,7 @@ export const allRouter = [
                   element:<StudentProfile />
                 },
                 {
-                  path:'reset-password',
+                  path:STUDENT_RESET_PASS,
                   element:<ResetPassword />
                 },
                 {

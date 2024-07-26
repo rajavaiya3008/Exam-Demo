@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { store } from './redux-toolkit/store/store';
-import { ToastContainer, toast } from 'react-toastify';
+import { store } from './redux/store/store';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { allRouter } from './routing/router';
 

@@ -1,52 +1,25 @@
-import React from 'react'
-import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import {jwtDecode} from 'jwt-decode';
-import { getCurrUserData } from '../../Current User/currentUser';
+import React, { useEffect } from 'react'
+import { Navigate, Outlet, useNavigate } from 'react-router-dom'
+import { getCurrUserData } from '../../utils/currentUser';
+import { LOGIN_PAGE, STUDENT_DASHBOARD, TEACHER_DASHBOARD } from '../../utils/routeConstant';
 
 const Auth = ({role}) => {
 
-  const location = useLocation();
+  const navigate = useNavigate()
+  const {role:currUserRole} = getCurrUserData();
+  const isStudent = currUserRole === 'student'
 
-  const accessRole = location.pathname.split('/')[1];
-
-  // const decode = jwtDecode(getCurrUserData().token);
-  // console.log('decode', decode);
-
-  // let currDate = (new Date()).getTime();
-  // console.log('currDate', currDate);
-  // let milliSecond = currDate/1000;
-  // console.log('milliSecond', milliSecond)
-  // let out = Math.floor(milliSecond);
-  // console.log('out', out)
-  // const milliSecond = currDate.getMilliseconds();
-  // console.log('milliSecond', milliSecond);
-
-
-  // if(decode?.exp < out){
-  //   localStorage.setItem('login',false);
-  //   return <Navigate to={'/login'}/>
-  // }
-  const currUserRole = getCurrUserData().role;
-
-  if(!getCurrUserData().token){
-    return <Navigate to={'/login'}/>
-  }
-
-  if(accessRole !== currUserRole){
-    return <Navigate to={`${currUserRole}/dashboard`}/>
-  }
-
-
-
-
+  useEffect(() => {
+    if(!currUserRole){
+      navigate(LOGIN_PAGE)
+    }
+  },[])
 
   return (
     <div>
-        {/* <div>Auth</div> */}
-
         <div>
             {
-              role.includes(currUserRole) && <Outlet/>
+              role.includes(currUserRole) ? <Outlet/> : <Navigate to={isStudent ? STUDENT_DASHBOARD : TEACHER_DASHBOARD}/>
             }
         </div>
     </div>
