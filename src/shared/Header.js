@@ -41,7 +41,7 @@ const Header = () => {
         "w-max ml-[20px] border border-gray-300 rounded-[5px] p-[5px] hover:bg-gray-600 hover:text-white",
     },
     {
-      path: isStudent ? STUDENT_DASHBOARD : TEACHER_DASHBOARD,
+      path: isStudent() ? STUDENT_DASHBOARD : TEACHER_DASHBOARD,
       visible: role && dashboardBtn,
       text: "Dashboard",
       style:

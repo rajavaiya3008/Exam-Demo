@@ -1,6 +1,6 @@
 import React from "react";
 import InputField from "../../shared/InputField";
-import { handleSignupData } from "../../redux/slices/user";
+import { handleError } from "../../redux/slices/user";
 import DropDown from "../../shared/DropDown";
 import { Link } from "react-router-dom";
 import { useSignupData } from "../../form/hooks/useSignupData";
@@ -10,8 +10,8 @@ import Button from "../../shared/Button";
 const dropDownOptions = ["student", "teacher"];
 
 const SignUp = () => {
-  const { signupField, signupData, handleSignup } = useSignupData();
-  const disable = useLoading()
+  const { signupField, handleSignup } = useSignupData();
+  const disable = useLoading();
 
   return (
     <div className="w-[100vw] flex justify-center has-[660px]:mb-[50px]">
@@ -20,22 +20,24 @@ const SignUp = () => {
           SignUp Here
         </h1>
 
-        <div className="flex flex-col items-center">
-          {signupField.map((field, i) => (
-            <InputField fieldData={field} key={i} />
-          ))}
-        </div>
+        <form onSubmit={handleSignup}>
+          <div className="flex flex-col items-center">
+            {signupField.map((field, i) => (
+              <InputField fieldData={field} key={i} />
+            ))}
+          </div>
 
-        <DropDown
-          dropDownOptions={dropDownOptions}
-          name={"role"}
-          updateData={handleSignupData}
-          signupData={signupData}
-        />
+          <DropDown
+            style={'mt-[10px]'}
+            dropDownOptions={dropDownOptions}
+            name={"role"}
+            clearError={handleError}
+          />
 
-        <Button onSubmit={handleSignup} disable={disable} style={'w-[270px]'}>
-          <span>{disable ? "Loading..." : "Sign Up"}</span>
-        </Button>
+          <Button type={'submit'} disable={disable} style={"w-[270px] mt-[10px]"}>
+            <span>{disable ? "Loading..." : "Sign Up"}</span>
+          </Button>
+        </form>
 
         <div className="text-center">
           <p>

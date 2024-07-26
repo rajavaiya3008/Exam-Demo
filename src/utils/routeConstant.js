@@ -9,10 +9,6 @@ export const FORGET_PASSWORD = '/forget-password'
 
 export const NEW_PASSWORD = '/newPassword'
 
-// export const RESET_PASSWORD = '/reset-password';
-
-// export const TEACHER = '/teacher'
-
 export const TEACHER_DASHBOARD = '/teacher-dashboard'
 
 export const ALL_STUDENT = '/all-student'
@@ -28,8 +24,6 @@ export const VIEW_EXAM = '/view-exam'
 export const EDIT_EXAM = '/view-exam/edit-exam'
 
 export const TEACHER_RESET_PASS = '/teacher-reset-password'
-
-// export const STUDENT = '/student'
 
 export const STUDENT_DASHBOARD = '/student-dashboard'
 

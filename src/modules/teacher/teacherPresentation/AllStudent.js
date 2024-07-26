@@ -30,7 +30,6 @@ const AllStudent = () => {
               data={allStudentData}
               recodesPerPage={10}
               keys={keys}
-              // viewPath={STUDENT_DETAIL}
               newBtn={newBtn}
               searchKey={["name", "email", "status"]}
               searchVal={searchData.name}

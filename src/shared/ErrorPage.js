@@ -10,11 +10,7 @@ const ErrorPage = () => {
   const { role } = getCurrUserData();
 
   const handleBack = () => {
-    if (role) {
-      navigate(isStudent ? STUDENT_DASHBOARD :TEACHER_DASHBOARD);
-    } else {
-      navigate(LOGIN_PAGE);
-    }
+    (role ? navigate(isStudent() ? STUDENT_DASHBOARD :TEACHER_DASHBOARD) : navigate(LOGIN_PAGE))
   };
 
   return (

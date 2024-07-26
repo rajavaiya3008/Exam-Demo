@@ -52,9 +52,7 @@ export const useAllExam = () => {
       }
       dispatch(loadAllExamData(res?.payload?.data));
     };
-    if (!allExamData.length) {
-      fetchAllExam();
-    }
+    (!allExamData.length && fetchAllExam())
 
     return () => {
       dispatch(handleSearchField(""));

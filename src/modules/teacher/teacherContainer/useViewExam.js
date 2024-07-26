@@ -38,9 +38,7 @@ export const useViewExam = () => {
         console.log("error", error);
       }
     };
-    if (!viewExam.length) {
-      fetchViewExamData();
-    }
+    (!viewExam.length && fetchViewExamData())
   }, []);
 
   return {

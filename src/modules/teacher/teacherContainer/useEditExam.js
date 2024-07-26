@@ -22,7 +22,8 @@ import { removeLocalStorageItem } from "../../../utils/localStorageFunction";
 import { useSearchParams } from "react-router-dom";
 import { getEditExam, teacherDeleteExam, teacherEditExam } from "../../../utils/apiUrlConstant";
 import { examValidation } from "../../../utils/validationConstant";
-import { hasDuplicates } from "../../../utils/commonFunction";
+import { hasDuplicates, hasObjectLength, validateOptions, validationExamData } from "../../../utils/commonFunction";
+import { examFields } from "../../../utils/examDataConstatnt";
 
 const validate = examValidation
 
@@ -40,139 +41,127 @@ export const useEditExam = () => {
   const { token } = getCurrUserData();
   let editData = {};
 
-  const Options = {
-    op1: examData?.questions?.[currQuestion]?.options[0],
-    op2: examData?.questions?.[currQuestion]?.options[1],
-    op3: examData?.questions?.[currQuestion]?.options[2],
-    op4: examData?.questions?.[currQuestion]?.options[3],
-  };
+  const validateExamData = validationExamData(examData,currQuestion);
+
+  const Options = validateOptions(examData,currQuestion);
 
   const optionArr = examData?.questions?.[currQuestion]?.options;
 
-  const createExamFields = [
-    {
-      type: "text",
-      id: "subject",
-      name: "subjectName",
-      label: "Subject Name",
-      data: examData,
-      updateData: handleSubject,
-      error: error,
-    },
-    {
-      type: "text",
-      id: "question",
-      name: "question",
-      label: `Question ${currQuestion + 1}`,
-      data: examData.questions[currQuestion],
-      updateData: handleQuestion,
-      currQuestion: currQuestion,
-      error: error,
-    },
-    {
-      type: "radio",
-      name: "ans",
-      id: "op1",
-      data: Options,
-      updateData: handleAns,
-      currQuestion: currQuestion,
-      ans: examData?.questions?.[currQuestion]?.answer,
-      opIndex: 0,
-      ansIndex: 0,
-      error: error,
-    },
-    {
-      type: "text",
-      id: "op1",
-      name: "op1",
-      label: "Option 1",
-      data: Options,
-      updateData: handleOptions,
-      optionArr: optionArr,
-      currQuestion: currQuestion,
-      opIndex: 0,
-      error: error,
-    },
-    {
-      type: "radio",
-      name: "ans",
-      id: "op2",
-      data: Options,
-      updateData: handleAns,
-      currQuestion: currQuestion,
-      ans: examData?.questions?.[currQuestion]?.answer,
-      opIndex: 1,
-      error: error,
-    },
-    {
-      type: "text",
-      id: "op2",
-      name: "op2",
-      label: "Option 2",
-      data: Options,
-      updateData: handleOptions,
-      optionArr: optionArr,
-      currQuestion: currQuestion,
-      opIndex: 1,
-      error: error,
-    },
-    {
-      type: "radio",
-      name: "ans",
-      id: "op3",
-      data: Options,
-      updateData: handleAns,
-      currQuestion: currQuestion,
-      ans: examData?.questions?.[currQuestion]?.answer,
-      opIndex: 2,
-      error: error,
-    },
-    {
-      type: "text",
-      id: "op3",
-      name: "op3",
-      label: "Option 3",
-      data: Options,
-      updateData: handleOptions,
-      optionArr: optionArr,
-      currQuestion: currQuestion,
-      opIndex: 2,
-      error: error,
-    },
-    {
-      type: "radio",
-      name: "ans",
-      id: "op4",
-      data: Options,
-      updateData: handleAns,
-      currQuestion: currQuestion,
-      ans: examData?.questions?.[currQuestion]?.answer,
-      opIndex: 3,
-      error: error,
-    },
-    {
-      type: "text",
-      id: "op4",
-      name: "op4",
-      label: "Option 4",
-      data: Options,
-      updateData: handleOptions,
-      optionArr: optionArr,
-      currQuestion: currQuestion,
-      opIndex: 3,
-      error: error,
-    },
-  ];
+  // const createExamFields = [
+  //   {
+  //     type: "text",
+  //     id: "subject",
+  //     name: "subjectName",
+  //     label: "Subject Name",
+  //     data: examData,
+  //     updateData: handleSubject,
+  //     error: error,
+  //   },
+  //   {
+  //     type: "text",
+  //     id: "question",
+  //     name: "question",
+  //     label: `Question ${currQuestion + 1}`,
+  //     data: examData.questions[currQuestion],
+  //     updateData: handleQuestion,
+  //     currQuestion: currQuestion,
+  //     error: error,
+  //   },
+  //   {
+  //     type: "radio",
+  //     name: "ans",
+  //     id: "op1",
+  //     data: Options,
+  //     updateData: handleAns,
+  //     currQuestion: currQuestion,
+  //     ans: examData?.questions?.[currQuestion]?.answer,
+  //     opIndex: 0,
+  //     error: error,
+  //   },
+  //   {
+  //     type: "text",
+  //     id: "op1",
+  //     name: "op1",
+  //     label: "Option 1",
+  //     data: Options,
+  //     updateData: handleOptions,
+  //     optionArr: optionArr,
+  //     currQuestion: currQuestion,
+  //     opIndex: 0,
+  //     error: error,
+  //   },
+  //   {
+  //     type: "radio",
+  //     name: "ans",
+  //     id: "op2",
+  //     data: Options,
+  //     updateData: handleAns,
+  //     currQuestion: currQuestion,
+  //     ans: examData?.questions?.[currQuestion]?.answer,
+  //     opIndex: 1,
+  //     error: error,
+  //   },
+  //   {
+  //     type: "text",
+  //     id: "op2",
+  //     name: "op2",
+  //     label: "Option 2",
+  //     data: Options,
+  //     updateData: handleOptions,
+  //     optionArr: optionArr,
+  //     currQuestion: currQuestion,
+  //     opIndex: 1,
+  //     error: error,
+  //   },
+  //   {
+  //     type: "radio",
+  //     name: "ans",
+  //     id: "op3",
+  //     data: Options,
+  //     updateData: handleAns,
+  //     currQuestion: currQuestion,
+  //     ans: examData?.questions?.[currQuestion]?.answer,
+  //     opIndex: 2,
+  //     error: error,
+  //   },
+  //   {
+  //     type: "text",
+  //     id: "op3",
+  //     name: "op3",
+  //     label: "Option 3",
+  //     data: Options,
+  //     updateData: handleOptions,
+  //     optionArr: optionArr,
+  //     currQuestion: currQuestion,
+  //     opIndex: 2,
+  //     error: error,
+  //   },
+  //   {
+  //     type: "radio",
+  //     name: "ans",
+  //     id: "op4",
+  //     data: Options,
+  //     updateData: handleAns,
+  //     currQuestion: currQuestion,
+  //     ans: examData?.questions?.[currQuestion]?.answer,
+  //     opIndex: 3,
+  //     error: error,
+  //   },
+  //   {
+  //     type: "text",
+  //     id: "op4",
+  //     name: "op4",
+  //     label: "Option 4",
+  //     data: Options,
+  //     updateData: handleOptions,
+  //     optionArr: optionArr,
+  //     currQuestion: currQuestion,
+  //     opIndex: 3,
+  //     error: error,
+  //   },
+  // ];
 
-  const validateExamData = {
-    subjectName: examData?.subjectName,
-    question: examData?.questions?.[currQuestion]?.question,
-    op1: examData?.questions?.[currQuestion]?.options[0],
-    op2: examData?.questions?.[currQuestion]?.options[1],
-    op3: examData?.questions?.[currQuestion]?.options[2],
-    op4: examData?.questions?.[currQuestion]?.options[3],
-    answer: examData?.questions?.[currQuestion]?.answer?.trim(),
-  };
+  const createExamFields = examFields(examData,error,currQuestion,Options)
 
   useEffect(() => {
     try {
@@ -236,7 +225,7 @@ export const useEditExam = () => {
       }
 
       const error = validateData(validateExamData, validate);
-      if (Object.keys(error).length !== 0) {
+      if (hasObjectLength(error)) {
         dispatch(handleError(error));
         return;
       }

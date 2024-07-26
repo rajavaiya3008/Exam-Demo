@@ -44,9 +44,7 @@ export const useAllStudent = () => {
       }
       dispatch(loadAllStudentData(res?.payload?.data));
     };
-    if (!allStudentData.length) {
-      fetchAllStudentData();
-    }
+    (!allStudentData.length && fetchAllStudentData())
     return () => {
       dispatch(handleSearchField(""));
     };

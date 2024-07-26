@@ -1,8 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleError,
-  handleLoginData,
-  initiateLoginData,
 } from "../../redux/slices/user";
 import { validateData } from "../../utils/validation";
 import { fetchData } from "../../redux/slices/api";
@@ -17,7 +15,7 @@ import { loginUrl } from "../../utils/apiUrlConstant";
 import { getCurrUserData } from "../../utils/currentUser";
 import { useEffect } from "react";
 import { STUDENT_DASHBOARD, TEACHER_DASHBOARD } from "../../utils/routeConstant";
-import { isStudent } from "../../utils/commonFunction";
+import { hasObjectLength, isStudent } from "../../utils/commonFunction";
 
 const validate = {
   email: emailValidation,
@@ -27,7 +25,6 @@ const validate = {
 export const useLoginData = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const loginData = useSelector((state) => state.user.loginData);
   const error = useSelector((state) => state.user.error);
   const { role } = getCurrUserData();
 
@@ -37,36 +34,38 @@ export const useLoginData = () => {
       id: "email",
       name: "email",
       label: `Enter Email`,
-      data: loginData,
+      clearError: handleError,
       error: error,
-      updateData: handleLoginData,
     },
     {
       type: "password",
       id: "password",
       name: "password",
       label: "Enter Password",
-      data: loginData,
       error: error,
-      updateData: handleLoginData,
+      clearError: handleError,
     },
   ];
 
   useEffect(() => {
     dispatch(handleError({}));
     if (role) {
-      navigate(isStudent ? STUDENT_DASHBOARD :TEACHER_DASHBOARD, { replace: true });
+      navigate(isStudent() ? STUDENT_DASHBOARD :TEACHER_DASHBOARD, { replace: true });
     }
-
-    return () => {
-      dispatch(initiateLoginData());
-    };
   }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     try {
+      const formData = new FormData(e.target);
+      const email = formData.get("email");
+      const password = formData.get('password')
+      const loginData = {
+        email,
+        password
+      };
       const error = validateData(loginData, validate);
-      if (Object.keys(error).length) {
+      if (hasObjectLength(error)) {
         dispatch(handleError(error));
         return;
       }

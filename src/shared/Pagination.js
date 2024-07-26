@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import Button from "./Button";
+import { isStudent } from "../utils/commonFunction";
+
 
 const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
   const [currPage, setCurrPage] = useState(1);
 
   useEffect(() => {
-    if (searchVal) {
-      setCurrPage(1);
-    }
+    (searchVal && setCurrPage(1))
   }, [searchVal]);
 
   const dataFilter = () => {
@@ -27,9 +27,7 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
     );
   };
 
-  if (searchVal?.trim()) {
-    dataFilter();
-  }
+  (searchVal?.trim() && dataFilter())
 
   let recordsPerPage = 10;
   let totalPage = Math.ceil(data?.length / recordsPerPage);
@@ -101,26 +99,15 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
                   </NavLink>
                 </td>
               ))}
-              {item?.Result?.length > 0 ? (
-                <td className="px-6 py-3 text-blue-200">
+              {isStudent() &&
+                <td className={`px-6 py-3 ${item?.Result?.length ?'text-blue-200':'text-blue-500'}`}>
                   <NavLink
-                    to={`${btn.showResultBtn}?id=${item._id}`}
-                    state={item.Result}
+                    to={`${item?.Result?.length ?btn.showResultBtn:btn?.giveExamBtn }?id=${item._id}&subject=${item.subjectName}`}
                   >
-                    Result
+                    {item?.Result?.length ? 'Result' : 'Give'}
                   </NavLink>
                 </td>
-              ) : (
-                btn?.giveExamBtn && (
-                  <td className="px-6 py-3 text-blue-500">
-                    <NavLink
-                      to={`${btn.giveExamBtn}?id=${item._id}&subject=${item.subjectName}`}
-                    >
-                      Give
-                    </NavLink>
-                  </td>
-                )
-              )}
+              }
             </tr>
           ))}
         </tbody>

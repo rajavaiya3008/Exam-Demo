@@ -5,42 +5,34 @@ export const emailValidation = [
     message: "Enter Valid Email",
   },
 ];
-export const passwordValidation = [
+
+export const confirmPasswordValidation = [
   { required: true, message: "Please Enter Password" },
   { length: 6, message: "Password Must be 6 char" },
+];
+
+export const passwordValidation = [
+  ...confirmPasswordValidation,
   { pattern: /^[a-zA-Z0-9!@#$%^&*]{6,16}$/, message: "Enter Valid Password" },
 ];
 
-export const nameValidation = [
-  { required: true, message: "Please Enter Name" },
-  { length: 3, message: "username Must be 3 char" },
-  { pattern: /^([a-zA-Z0-9]+\s?)*\S$/, message: "Enter Valid Name" },
-]
+const examValidationData = (requireMsg,validMsg) => {
+  return [
+    { required: true, message: requireMsg },
+    { pattern: /^([a-zA-Z0-9]+\s?)*\S$/, message: validMsg },
+  ]
+}
+export const nameValidation = [...examValidationData("Please Enter Name","Enter Valid Name"),{ length: 3, message: "username Must be 3 char" }]
+
+const opRequireMsg = 'Option Required'
+const opValidMsg = 'Enter Valid Option'
 
 export const examValidation = {
-  subjectName: [
-    { required: true, message: "Please Enter Subject" },
-    { pattern: /^([a-zA-Z0-9]+\s?)*\S$/, message: "Enter Valid Subject" },
-  ],
-  question: [
-    { required: true, message: "Please Enter Question" },
-    { pattern: /^([a-zA-Z0-9]+\s?)*\S$/, message: "Enter Valid Question" },
-  ],
-  op1: [
-    { required: true, message: "Option Required" },
-    { pattern: /^([a-zA-Z0-9]+\s?)*\S$/, message: "Enter Valid Option" },
-  ],
-  op2: [
-    { required: true, message: "Option Required" },
-    { pattern: /^([a-zA-Z0-9]+\s?)*\S$/, message: "Enter Valid Option" },
-  ],
-  op3: [
-    { required: true, message: "Option Required" },
-    { pattern: /^([a-zA-Z0-9]+\s?)*\S$/, message: "Enter Valid Option" },
-  ],
-  op4: [
-    { required: true, message: "Option Required" },
-    { pattern: /^([a-zA-Z0-9]+\s?)*\S$/, message: "Enter Valid Option" },
-  ],
+  subjectName: examValidationData('Please Enter Subject','Enter Valid Subject'),
+  question: examValidationData('Please Enter Question','Enter Valid Question'),
+  op1: examValidationData(opRequireMsg,opValidMsg),
+  op2: examValidationData(opRequireMsg,opValidMsg),
+  op3: examValidationData(opRequireMsg,opValidMsg),
+  op4: examValidationData(opRequireMsg,opValidMsg),
   answer: [{ required: true, message: "Answer Required" }],
 };

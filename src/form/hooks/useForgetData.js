@@ -1,19 +1,19 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import {
-  handleError,
-  handleForgetPassword,
-  initiateForgetPassword,
-} from "../../redux/slices/user";
+import { handleError } from "../../redux/slices/user";
 import { validateData } from "../../utils/validation";
 import { fetchData } from "../../redux/slices/api";
 import { toastError, toastSuccess } from "../../utils/toastFunction";
-import { LOGIN_PAGE, STUDENT_DASHBOARD, TEACHER_DASHBOARD } from "../../utils/routeConstant";
+import {
+  LOGIN_PAGE,
+  STUDENT_DASHBOARD,
+  TEACHER_DASHBOARD,
+} from "../../utils/routeConstant";
 import { getCurrUserData } from "../../utils/currentUser";
 import { emailValidation } from "../../utils/validationConstant";
 import { forgetPasswordUrl } from "../../utils/apiUrlConstant";
-import { isStudent } from "../../utils/commonFunction";
+import { hasObjectLength, isStudent } from "../../utils/commonFunction";
 
 const validate = {
   email: emailValidation,
@@ -22,7 +22,6 @@ const validate = {
 export const useForgetData = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const forgetPassword = useSelector((state) => state.user.forgetPassword);
   const error = useSelector((state) => state.user.error);
   const { role } = getCurrUserData();
   const fieldData = {
@@ -30,33 +29,36 @@ export const useForgetData = () => {
     id: "email",
     name: "email",
     label: "Email",
-    data: forgetPassword,
-    updateData: handleForgetPassword,
+    clearError: handleError,
     error: error,
   };
 
   useEffect(() => {
-    dispatch(handleError({}));
+    dispatch(handleError({}))
     if (role) {
-      navigate(isStudent ? STUDENT_DASHBOARD :TEACHER_DASHBOARD, { replace: true });
+      navigate(isStudent() ? STUDENT_DASHBOARD : TEACHER_DASHBOARD, {
+        replace: true,
+      });
     }
-
-    return () => {
-      dispatch(initiateForgetPassword());
-    };
   }, []);
 
-  const sendMail = async () => {
+  const sendMail = async (e) => {
+    e.preventDefault();
     try {
-      const error = validateData(forgetPassword, validate);
-      if (Object.keys(error).length) {
+      const formData = new FormData(e.target);
+      const email = formData.get("email");
+      const forgetData = {
+        email,
+      };
+      const error = validateData(forgetData, validate);
+      if (hasObjectLength(error)) {
         dispatch(handleError(error));
         return;
       }
       const config = {
         method: "post",
         url: forgetPasswordUrl,
-        data: forgetPassword,
+        data: forgetData,
       };
       const res = await dispatch(fetchData(config));
       if (res.payload.statusCode === 500) {

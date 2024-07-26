@@ -1,8 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleError,
-  handleSignupData,
-  initiateSignupData,
 } from "../../redux/slices/user";
 import { validateData } from "../../utils/validation";
 import { fetchData } from "../../redux/slices/api";
@@ -13,7 +11,7 @@ import { emailValidation, nameValidation, passwordValidation } from "../../utils
 import { signupUrl } from "../../utils/apiUrlConstant";
 import { getCurrUserData } from "../../utils/currentUser";
 import { useEffect } from "react";
-import { isStudent } from "../../utils/commonFunction";
+import { hasObjectLength, isStudent } from "../../utils/commonFunction";
 
 const validate = {
   name: nameValidation,
@@ -25,7 +23,6 @@ const validate = {
 export const useSignupData = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const signupData = useSelector((state) => state.user.signupData);
   const error = useSelector((state) => state.user.error);
   const {role} = getCurrUserData();
 
@@ -35,46 +32,51 @@ export const useSignupData = () => {
       id: "name",
       name: "name",
       label: "Enter Name",
-      data: signupData,
       error: error,
-      updateData: handleSignupData,
+      clearError: handleError
     },
     {
       type: "email",
       id: "email",
       name: "email",
       label: "Enter Email",
-      data: signupData,
       error: error,
-      updateData: handleSignupData,
+      clearError: handleError
     },
     {
       type: "password",
       id: "password",
       name: "password",
       label: "Enter Password",
-      data: signupData,
       error: error,
-      updateData: handleSignupData,
+      clearError: handleError
     },
   ];
 
   useEffect(() => {
     dispatch(handleError({}));
-
     if (role) {
-      navigate(isStudent ? STUDENT_DASHBOARD :TEACHER_DASHBOARD,{replace:true});
+      navigate(isStudent() ? STUDENT_DASHBOARD :TEACHER_DASHBOARD,{replace:true});
     }
-
-    return () => {
-      dispatch(initiateSignupData());
-    };
   }, []);
 
-  const handleSignup = async () => {
+  const handleSignup = async (e) => {
+    e.preventDefault();
     try {
+      const formData = new FormData(e.target);
+      const name = formData.get('name');
+      const email = formData.get("email");
+      const password = formData.get('password')
+      const userRole = formData.get('role');
+      const signupData = {
+        name,
+        email,
+        password,
+        role:userRole
+      };
+      console.log('signupData', signupData);
       const error = validateData(signupData, validate);
-      if (Object.keys(error).length) {
+      if (hasObjectLength(error)) {
         dispatch(handleError(error));
         return;
       }
@@ -97,7 +99,6 @@ export const useSignupData = () => {
 
   return {
     signupField,
-    signupData,
     handleSignup,
   };
 };

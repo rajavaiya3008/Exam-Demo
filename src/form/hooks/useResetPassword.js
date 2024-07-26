@@ -3,23 +3,31 @@ import { useNavigate } from "react-router";
 import { getCurrUserData } from "../../utils/currentUser";
 import {
   handleError,
-  handleResetPassword,
-  initiateResetPassword,
 } from "../../redux/slices/user";
-import { useEffect } from "react";
 import { validateData } from "../../utils/validation";
 import { fetchData } from "../../redux/slices/api";
 import { toastError, toastSuccess } from "../../utils/toastFunction";
-import { passwordValidation } from "../../utils/validationConstant";
-import { isStudent } from "../../utils/commonFunction";
-import { STUDENT_DASHBOARD, TEACHER_DASHBOARD } from "../../utils/routeConstant";
+import {
+  confirmPasswordValidation,
+  passwordValidation,
+} from "../../utils/validationConstant";
+import { hasObjectLength, isStudent } from "../../utils/commonFunction";
+import {
+  STUDENT_DASHBOARD,
+  TEACHER_DASHBOARD,
+} from "../../utils/routeConstant";
+
+const validate = {
+  oldPassword: passwordValidation,
+  Password: passwordValidation,
+  ConfirmPassword: confirmPasswordValidation,
+};
 
 export const useResetPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const resetPassword = useSelector((state) => state.user.resetPassword);
   const error = useSelector((state) => state.user.error);
-  const { token, role } = getCurrUserData();
+  const { token } = getCurrUserData();
 
   const ResetPasswordFields = [
     {
@@ -27,61 +35,54 @@ export const useResetPassword = () => {
       id: "oldPassword",
       name: "oldPassword",
       label: "Old Password",
-      data: resetPassword,
-      updateData: handleResetPassword,
       error: error,
+      clearError: handleError,
     },
     {
       type: "password",
       id: "Password",
       name: "Password",
       label: "Password",
-      data: resetPassword,
-      updateData: handleResetPassword,
       error: error,
+      clearError: handleError,
     },
     {
       type: "password",
       id: "ConfirmPassword",
       name: "ConfirmPassword",
       label: "Confirm Password",
-      data: resetPassword,
-      updateData: handleResetPassword,
       error: error,
+      clearError: handleError,
     },
   ];
 
-  const validate = {
-    oldPassword: passwordValidation,
-    Password: passwordValidation,
-    ConfirmPassword: [
-      { required: true, message: "Please Enter Confirm Password" },
-      { length: 6, message: "Password Must be 6 char" },
-      {
-        match: true,
-        comKey: resetPassword?.Password,
-        message: "Password Do not Match",
-      },
-    ],
-  };
-
-  useEffect(() => {
-    return () => {
-      dispatch(initiateResetPassword());
-    };
-  }, []);
-
-  const handleReset = async () => {
+  const handleReset = async (e) => {
+    e.preventDefault();
     try {
-      const error = validateData(resetPassword, validate);
-      if (Object.keys(error).length !== 0) {
+      const formData = new FormData(e.target);
+      const oldPassword = formData.get("oldPassword");
+      const Password = formData.get("Password");
+      const ConfirmPassword = formData.get("ConfirmPassword");
+      const resetPasswordData = {
+        oldPassword,
+        Password,
+        ConfirmPassword,
+      };
+      validate.ConfirmPassword.push({
+        match: true,
+        comKey: resetPasswordData.Password,
+        message: "Password Do not Match",
+      });
+      const error = validateData(resetPasswordData, validate);
+      if (hasObjectLength(error)) {
         dispatch(handleError(error));
+        validate.ConfirmPassword.pop()
         return;
       }
       const config = {
         method: "post",
         url: "users/ResetPassword",
-        data: resetPassword,
+        data: resetPasswordData,
         headers: { "access-token": `${token}` },
       };
       const res = await dispatch(fetchData(config));
@@ -93,20 +94,16 @@ export const useResetPassword = () => {
         toastError("Please check old password");
         return;
       }
+      validate.ConfirmPassword.pop();
       toastSuccess("Password Reset Successfully");
-      navigate(isStudent ? STUDENT_DASHBOARD :TEACHER_DASHBOARD);
+      navigate(isStudent() ? STUDENT_DASHBOARD : TEACHER_DASHBOARD);
     } catch (error) {
       console.log("error", error);
     }
   };
 
-  const handleCancel = () => {
-    dispatch(initiateResetPassword());
-  };
-
   return {
     ResetPasswordFields,
     handleReset,
-    handleCancel,
   };
 };

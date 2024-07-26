@@ -4,21 +4,26 @@ import { useNewPassword } from "../form/hooks/useNewPassword";
 import Button from "./Button";
 import { useLoading } from "../form/hooks/useLoading";
 
-
 const NewPassword = () => {
   const { createNewPasswordField, handleChangePassword } = useNewPassword();
-  const disable = useLoading()
+  const disable = useLoading();
 
   return (
     <>
       <div className="flex items-center flex-col mt-[70px]">
         <p className="text-center text-4xl mb-4">New Password</p>
-        {createNewPasswordField.map((field, i) => (
-          <InputField fieldData={field} key={i} />
-        ))}
-        <Button onSubmit={handleChangePassword} disable={disable} style={'mt-[10px]'}>
-          Submit
-        </Button>
+        <form onSubmit={handleChangePassword}>
+          {createNewPasswordField.map((field, i) => (
+            <InputField fieldData={field} key={i} />
+          ))}
+          <Button
+            type={'submit'}
+            disable={disable}
+            style={"mt-[10px]"}
+          >
+            Submit
+          </Button>
+        </form>
       </div>
     </>
   );

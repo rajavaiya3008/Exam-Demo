@@ -1,16 +1,16 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { hasObjectLength } from "../utils/commonFunction";
 
-const DropDown = ({ dropDownOptions, name, updateData, signupData }) => {
+const DropDown = ({ dropDownOptions, name, value, updateData,style ,clearError}) => {
   const dispatch = useDispatch();
   const error = useSelector((state) => state.user.error);
-  const { role } = signupData || {};
   const label = name[0].toUpperCase() + name.substring(1);
-  const selectAttribute = { id: name, name, value: role, label };
+  const selectAttribute = { id: name, name, value: value, label };
 
   return (
-    <div className="w-[250px] mx-auto gap-[10px]">
+    <div className={`w-[250px] mx-auto gap-[10px] ${style}`}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">{label}</InputLabel>
         <Select
@@ -22,11 +22,14 @@ const DropDown = ({ dropDownOptions, name, updateData, signupData }) => {
               name,
               value,
             };
-            dispatch(updateData(data));
+            if(updateData){
+              dispatch(updateData(data));
+            }
+            (hasObjectLength(error) && clearError && dispatch(clearError({})))
           }}
         >
           {dropDownOptions.map((option, i) => (
-            <MenuItem value={option} key={i}>
+            <MenuItem value={option} name={name} key={i}>
               {option}
             </MenuItem>
           ))}

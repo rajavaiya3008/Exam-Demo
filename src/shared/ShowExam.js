@@ -11,12 +11,12 @@ import { validateData } from "../utils/validation";
 import { handleStudentError } from "../redux/slices/student";
 import { useLocation } from "react-router";
 import { EDIT_EXAM } from "../utils/routeConstant";
-import { hasDuplicates } from "../utils/commonFunction";
+import { hasDuplicates, hasObjectLength, isNext, isPrev, isStudent } from "../utils/commonFunction";
 import Button from "./Button";
 
 const question = {
   question: "",
-  answer: " ",
+  answer: "",
   options: ["", "", "", ""],
 };
 
@@ -27,21 +27,18 @@ const ShowExam = ({
   currQuestion,
   validateExamData,
   validate,
-  role,
 }) => {
+  const dispatch = useDispatch();
   const location = useLocation();
   const sameQuestions = useSelector((state) => state.teacher.questions);
   const examData = useSelector((state) => state.teacher.createExam);
   const optionArr = examData?.questions?.[currQuestion]?.options;
   const { answer, sameOption } = error;
-  const isStudent = role === "student";
   const prevDisable = currQuestion === 0;
-  const nextDisabled = currQuestion === 14 || (isStudent && currQuestion === 6);
-
-  const dispatch = useDispatch();
+  const nextDisabled = currQuestion === 14 || (isStudent() && currQuestion === 6);
 
   const handleNavigation = (navigate) => {
-    if(location.pathname === EDIT_EXAM || (navigate === 'next' && !isStudent)){
+    if(location.pathname === EDIT_EXAM || (isNext(navigate) && !isStudent())){
       if (
         (sameQuestions.includes(validateExamData.question) &&
           sameQuestions.length === currQuestion) ||
@@ -51,14 +48,12 @@ const ShowExam = ({
         validateExamData.sameQueMsg = "Question already Exists";
       }
       const error = validateData(validateExamData, validate);
-      if (Object.keys(error).length !== 0) {
+      if (hasObjectLength(error)) {
         dispatch(handleError(error));
         return;
       }
       if (hasDuplicates(optionArr)) {
-        const error = {};
-        error.sameOption = "Two Options are Same Please Check";
-        dispatch(handleError(error));
+        dispatch(handleError({sameOption:"Two Options are Same Please Check"}));
         return;
       }
       dispatch(
@@ -67,37 +62,19 @@ const ShowExam = ({
           queIndex: currQuestion,
         })
       );
-      if(navigate === 'next'){
-        if (
-          examData.questions.length !== 15 &&
-          examData.questions.length < currQuestion + 2
-        ) {
-          dispatch(addNewQuestion(question));
-        }
-      }
-      if(navigate === 'prev'){
-        if (currQuestion === 1) {
-          dispatch(initiateQuestions());
-        }
-      }
+      isNext(navigate) && examData.questions.length !== 15 &&
+      examData.questions.length < currQuestion + 2 && dispatch(addNewQuestion(question))
+      isPrev(navigate) && currQuestion === 1 && dispatch(initiateQuestions());
     }
-    if(isStudent && navigate === 'next'){
+    if(isStudent() && isNext(navigate)){
       const error = validateData(validateExamData, validate);
-      if (Object.keys(error).length !== 0) {
+      if (hasObjectLength(error)) {
         dispatch(handleStudentError(error));
         return;
       }
     }
-    if(isStudent && navigate === 'prev'){
-      dispatch(handleStudentError({}));
-    }else{
-      dispatch(handleError({}));
-    }
-    if(navigate === 'prev'){
-      setCurrQuestion(currQuestion - 1);
-    }else{
-      setCurrQuestion(currQuestion + 1);
-    }
+    dispatch(isStudent() && isPrev(navigate) ? handleStudentError({}) : handleError({}));
+    setCurrQuestion(isPrev(navigate) ? currQuestion - 1 : currQuestion + 1)
   }
 
   return (
@@ -176,7 +153,7 @@ export default ShowExam;
 //       validateExamData.sameQueMsg = "Question already Exists";
 //     }
 //     const error = validateData(validateExamData, validate);
-//     if (Object.keys(error).length !== 0) {
+//     if (Object.keys(error).length) {
 //       dispatch(handleError(error));
 //       return;
 //     }
@@ -201,7 +178,7 @@ export default ShowExam;
 // const handleNextQuestion = () => {
 //   if (isStudent) {
 //     const error = validateData(validateExamData, validate);
-//     if (Object.keys(error).length !== 0) {
+//     if (Object.keys(error).length) {
 //       dispatch(handleStudentError(error));
 //       return;
 //     }
@@ -215,7 +192,7 @@ export default ShowExam;
 //       validateExamData.sameQueMsg = "Question already Exists";
 //     }
 //     const error = validateData(validateExamData, validate);
-//     if (Object.keys(error).length !== 0) {
+//     if (Object.keys(error).length) {
 //       dispatch(handleError(error));
 //       return;
 //     }

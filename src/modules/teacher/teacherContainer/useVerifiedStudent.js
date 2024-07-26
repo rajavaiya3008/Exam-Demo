@@ -44,9 +44,7 @@ export const useVerifiedStudent = () => {
       }
       dispatch(loadVerifiedStudentData(res?.payload?.data));
     };
-    if (verifiedStudentData.length) {
-      fetchAllStudentData();
-    }
+    (verifiedStudentData.length && fetchAllStudentData())
   }, []);
 
   return {

@@ -58,12 +58,10 @@ export const allRouter = [
               element:<Teacher />,
               children:[
                 {
-                  // index:true,
                   path:TEACHER_DASHBOARD,
                   element:<TeacherDashbord />
                 },
                 {
-                  // index:true,
                   path:ALL_STUDENT,
                   element:<AllStudent />
                 },

@@ -18,6 +18,7 @@ import { useNavigate } from "react-router";
 import { LOGIN_PAGE } from "../../../utils/routeConstant";
 import { getStudentProfile, saveStudentProfile } from "../../../utils/apiUrlConstant";
 import { nameValidation } from "../../../utils/validationConstant";
+import { hasObjectLength } from "../../../utils/commonFunction";
 
 const validate = {
   name: nameValidation,
@@ -79,11 +80,7 @@ export const useStudentProfile = () => {
       }
     };
     const student = getLocalStorageItem("student");
-    if (!student) {
-      fetchStudentDetail();
-    } else {
-      dispatch(loadStudentProfile(student));
-    }
+    (!student ? fetchStudentDetail() : dispatch(loadStudentProfile(student)))
   }, []);
 
   const saveProfile = async () => {
@@ -95,8 +92,7 @@ export const useStudentProfile = () => {
         return;
       }
       const error = validateData(studentProfile, validate);
-      console.log("error", error);
-      if (Object.keys(error).length !== 0) {
+      if (hasObjectLength(error)) {
         dispatch(handleStudentError(error));
         return;
       }

@@ -2,6 +2,7 @@ import { TextField } from "@mui/material";
 import React from "react";
 import { useDispatch } from "react-redux";
 import RadioBtn from "./RadioBtn";
+import { hasObjectLength } from "../utils/commonFunction";
 
 const InputField = ({ fieldData }) => {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ const InputField = ({ fieldData }) => {
     disable:disabled,
     variant,
     updateData,
+    clearError,
     error,
     currQuestion,
     opIndex,
@@ -50,7 +52,10 @@ const InputField = ({ fieldData }) => {
             ans: data?.[id],
             ansIndex,
           };
-          dispatch(updateData(Data));
+          if(updateData){
+            dispatch(updateData(Data))
+          }
+          (hasObjectLength(error) && clearError && dispatch(clearError({})))
         }}
       />
       {error?.[name] && (

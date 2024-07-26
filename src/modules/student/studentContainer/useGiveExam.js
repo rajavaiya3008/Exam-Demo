@@ -232,28 +232,24 @@ export const useGiveExam = () => {
   }, []);
 
   const handleSubmitExam = () => {
-    if (ansArr.length === 7) {
-      const submitExam = async () => {
-        try {
-          const config = {
-            method: "post",
-            url: studentSubmitExam,
-            data: ansArr,
-            headers: { "access-token": token },
-            params: { id },
-          };
-          dispatch(loadAllExamData([]));
-          const res = await dispatch(fetchData(config));
-          toastSuccess("Exam Submitted Successfully");
-          navigate(ALL_EXAM);
-        } catch (error) {
-          console.log("error", error);
-        }
-      };
-      submitExam();
-    } else {
-      toastError("Please Fill all Questions");
-    }
+    const submitExam = async () => {
+      try {
+        const config = {
+          method: "post",
+          url: studentSubmitExam,
+          data: ansArr,
+          headers: { "access-token": token },
+          params: { id },
+        };
+        dispatch(loadAllExamData([]));
+        const res = await dispatch(fetchData(config));
+        toastSuccess("Exam Submitted Successfully");
+        navigate(ALL_EXAM);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+    (ansArr.length === 7 ? submitExam() : toastError("Please Fill all Questions"))
   };
 
   const handleCancel = () => {

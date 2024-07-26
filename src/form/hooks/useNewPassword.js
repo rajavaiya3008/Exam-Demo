@@ -2,20 +2,31 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import { getCurrUserData } from "../../utils/currentUser";
-import { handleError, handleNewPassword } from "../../redux/slices/user";
+import { handleError } from "../../redux/slices/user";
 import { validateData } from "../../utils/validation";
 import { fetchData } from "../../redux/slices/api";
-import { LOGIN_PAGE, STUDENT_DASHBOARD, TEACHER_DASHBOARD } from "../../utils/routeConstant";
+import {
+  LOGIN_PAGE,
+  STUDENT_DASHBOARD,
+  TEACHER_DASHBOARD,
+} from "../../utils/routeConstant";
 import { toastSuccess } from "../../utils/toastFunction";
 import { useEffect } from "react";
-import { passwordValidation } from "../../utils/validationConstant";
+import {
+  confirmPasswordValidation,
+  passwordValidation,
+} from "../../utils/validationConstant";
 import { forgetPasswordUrl } from "../../utils/apiUrlConstant";
-import { isStudent } from "../../utils/commonFunction";
+import { hasObjectLength, isStudent } from "../../utils/commonFunction";
+
+const validate = {
+  Password: passwordValidation,
+  ConfirmPassword: confirmPasswordValidation,
+};
 
 export const useNewPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const newPassword = useSelector((state) => state.user.newPassword);
   const error = useSelector((state) => state.user.error);
   const [searchParams, setSearchParams] = useSearchParams();
   const token = searchParams.get("token");
@@ -27,54 +38,56 @@ export const useNewPassword = () => {
       id: "Password",
       name: "Password",
       label: "Password:",
-      data: newPassword,
-      updateData: handleNewPassword,
       error: error,
+      clearError: handleError,
     },
     {
       type: "password",
       id: "ConfirmPassword",
       name: "ConfirmPassword",
       label: "Confirm Password:",
-      data: newPassword,
-      updateData: handleNewPassword,
       error: error,
+      clearError: handleError,
     },
   ];
 
-  const validate = {
-    Password: passwordValidation,
-    ConfirmPassword: [
-      { required: true, message: "Please Enter Password" },
-      { length: 6, message: "Password Must be 6 char" },
-      {
-        match: true,
-        comKey: newPassword.Password,
-        message: "Password Do not Match",
-      },
-    ],
-  };
-
   useEffect(() => {
     if (role) {
-      navigate(isStudent ? STUDENT_DASHBOARD :TEACHER_DASHBOARD, { replace: true });
+      navigate(isStudent() ? STUDENT_DASHBOARD : TEACHER_DASHBOARD, {
+        replace: true,
+      });
     }
   }, []);
 
-  const handleChangePassword = async () => {
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
     try {
-      const error = validateData(newPassword, validate);
-      if (Object.keys(error).length) {
+      const formData = new FormData(e.target);
+      const Password = formData.get("Password");
+      const ConfirmPassword = formData.get("ConfirmPassword");
+      const newPasswordData = {
+        Password,
+        ConfirmPassword,
+      };
+      validate.ConfirmPassword.push({
+        match: true,
+        comKey: Password,
+        message: "Password Do not Match",
+      });
+      const error = validateData(newPasswordData, validate);
+      if (hasObjectLength(error)) {
         dispatch(handleError(error));
+        validate.ConfirmPassword.pop()
         return;
       }
       const config = {
         method: "post",
         url: `${forgetPasswordUrl}/Verify`,
-        data: newPassword,
+        data: newPasswordData,
         params: { token },
       };
       const res = await dispatch(fetchData(config));
+      validate.ConfirmPassword.pop()
       toastSuccess("Password Change Successfully");
       navigate(LOGIN_PAGE);
     } catch (error) {
