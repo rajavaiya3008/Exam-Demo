@@ -39,6 +39,7 @@ export const useCreateExam = () => {
   const Options = validateOptions(examData,currQuestion);
 
   const createExamFields = examFields(examData,error,currQuestion,Options)
+  console.log('createExamFields', createExamFields)
 
   useEffect(() => {
     const handleStorageChange = () => {

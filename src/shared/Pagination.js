@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import Button from "./Button";
 import { isStudent } from "../utils/commonFunction";
+import { getLocalStorageItem, setLocalStorageItem } from "../utils/localStorageFunction";
 
 
 const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
-  const [currPage, setCurrPage] = useState(1);
+  const page = getLocalStorageItem('pageNo')
+  const [currPage, setCurrPage] = useState(page || 1);
 
   useEffect(() => {
     (searchVal && setCurrPage(1))
@@ -50,10 +52,12 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
 
   const handlePrevPage = () => {
     setCurrPage(currPage - 1);
+    setLocalStorageItem('pageNo',currPage-1)
   };
 
   const handleNextPage = () => {
     setCurrPage(currPage + 1);
+    setLocalStorageItem('pageNo',currPage+1)
   };
 
   return (
