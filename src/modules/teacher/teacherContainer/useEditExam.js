@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  handleAns,
   handleEdited,
   handleError,
-  handleOptions,
-  handleQuestion,
-  handleSubject,
   initiateAnsIndex,
   initiateExam,
   initiateQuestions,
@@ -23,7 +19,7 @@ import { useSearchParams } from "react-router-dom";
 import { getEditExam, teacherDeleteExam, teacherEditExam } from "../../../utils/apiUrlConstant";
 import { examValidation } from "../../../utils/validationConstant";
 import { hasDuplicates, hasObjectLength, validateOptions, validationExamData } from "../../../utils/commonFunction";
-import { examFields } from "../../../utils/examDataConstatnt";
+import { editData, examFields } from "../../../utils/examDataConstatnt";
 
 const validate = examValidation
 
@@ -39,127 +35,12 @@ export const useEditExam = () => {
   const error = useSelector((state) => state.teacher.error);
   const edited = useSelector((state) => state.teacher.edited);
   const { token } = getCurrUserData();
-  let editData = {};
 
   const validateExamData = validationExamData(examData,currQuestion);
 
   const Options = validateOptions(examData,currQuestion);
 
   const optionArr = examData?.questions?.[currQuestion]?.options;
-
-  // const createExamFields = [
-  //   {
-  //     type: "text",
-  //     id: "subject",
-  //     name: "subjectName",
-  //     label: "Subject Name",
-  //     data: examData,
-  //     updateData: handleSubject,
-  //     error: error,
-  //   },
-  //   {
-  //     type: "text",
-  //     id: "question",
-  //     name: "question",
-  //     label: `Question ${currQuestion + 1}`,
-  //     data: examData.questions[currQuestion],
-  //     updateData: handleQuestion,
-  //     currQuestion: currQuestion,
-  //     error: error,
-  //   },
-  //   {
-  //     type: "radio",
-  //     name: "ans",
-  //     id: "op1",
-  //     data: Options,
-  //     updateData: handleAns,
-  //     currQuestion: currQuestion,
-  //     ans: examData?.questions?.[currQuestion]?.answer,
-  //     opIndex: 0,
-  //     error: error,
-  //   },
-  //   {
-  //     type: "text",
-  //     id: "op1",
-  //     name: "op1",
-  //     label: "Option 1",
-  //     data: Options,
-  //     updateData: handleOptions,
-  //     optionArr: optionArr,
-  //     currQuestion: currQuestion,
-  //     opIndex: 0,
-  //     error: error,
-  //   },
-  //   {
-  //     type: "radio",
-  //     name: "ans",
-  //     id: "op2",
-  //     data: Options,
-  //     updateData: handleAns,
-  //     currQuestion: currQuestion,
-  //     ans: examData?.questions?.[currQuestion]?.answer,
-  //     opIndex: 1,
-  //     error: error,
-  //   },
-  //   {
-  //     type: "text",
-  //     id: "op2",
-  //     name: "op2",
-  //     label: "Option 2",
-  //     data: Options,
-  //     updateData: handleOptions,
-  //     optionArr: optionArr,
-  //     currQuestion: currQuestion,
-  //     opIndex: 1,
-  //     error: error,
-  //   },
-  //   {
-  //     type: "radio",
-  //     name: "ans",
-  //     id: "op3",
-  //     data: Options,
-  //     updateData: handleAns,
-  //     currQuestion: currQuestion,
-  //     ans: examData?.questions?.[currQuestion]?.answer,
-  //     opIndex: 2,
-  //     error: error,
-  //   },
-  //   {
-  //     type: "text",
-  //     id: "op3",
-  //     name: "op3",
-  //     label: "Option 3",
-  //     data: Options,
-  //     updateData: handleOptions,
-  //     optionArr: optionArr,
-  //     currQuestion: currQuestion,
-  //     opIndex: 2,
-  //     error: error,
-  //   },
-  //   {
-  //     type: "radio",
-  //     name: "ans",
-  //     id: "op4",
-  //     data: Options,
-  //     updateData: handleAns,
-  //     currQuestion: currQuestion,
-  //     ans: examData?.questions?.[currQuestion]?.answer,
-  //     opIndex: 3,
-  //     error: error,
-  //   },
-  //   {
-  //     type: "text",
-  //     id: "op4",
-  //     name: "op4",
-  //     label: "Option 4",
-  //     data: Options,
-  //     updateData: handleOptions,
-  //     optionArr: optionArr,
-  //     currQuestion: currQuestion,
-  //     opIndex: 3,
-  //     error: error,
-  //   },
-  // ];
 
   const createExamFields = examFields(examData,error,currQuestion,Options)
 
@@ -182,18 +63,8 @@ export const useEditExam = () => {
           navigate(VIEW_EXAM);
           return;
         }
-        editData.subjectName = subjectName;
-        editData.notes = ["Exams"];
-        editData.questions = res.payload?.data?.questions;
-        dispatch(loadExamData(editData));
-        const ansArr = editData.questions.reduce((acc, curr) => {
-          const ansIndex = curr.options.findIndex(
-            (option) => option === curr.answer
-          );
-          acc.push(ansIndex);
-          return acc;
-        }, []);
-
+        const {editExamData,ansArr} = editData(subjectName,res.payload?.data?.questions)
+        dispatch(loadExamData(editExamData));
         dispatch(initiateAnsIndex(ansArr));
         dispatch(handleEdited());
         dispatch(initiateQuestions([]));
@@ -230,9 +101,7 @@ export const useEditExam = () => {
         return;
       }
       if (hasDuplicates(optionArr)) {
-        const error = {};
-        error.sameOption = "Two Options are Same Please Check";
-        dispatch(handleError(error));
+        dispatch(handleError({sameOption:"Two Options are Same Please Check"}));
         return;
       }
       const config = {

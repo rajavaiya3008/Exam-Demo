@@ -7,8 +7,6 @@ import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import {
   ALL_EXAM,
-  GIVE_EXAM,
-  SHOW_RESULT,
   STUDENT_DASHBOARD,
   STUDENT_PROFILE,
 } from "../../utils/routeConstant";
@@ -34,16 +32,12 @@ const studentRoutes = [
 
 const Student = () => {
   const location = useLocation();
+  const menu = useSelector((state) => state.user.menu);
 
   useEffect(() => {
     const allExam = location.pathname.split("/")[1];
-    // if (allExam !== "all-exam") {
-    //   removeLocalStorageItem("pageNo");
-    // }
     (allExam !== "all-exam" && removeLocalStorageItem("pageNo"))
   });
-
-  const menu = useSelector((state) => state.user.menu);
 
   return (
     <div className="flex h-[100%] w-[100vw]">

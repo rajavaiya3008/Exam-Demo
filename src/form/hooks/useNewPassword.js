@@ -52,26 +52,17 @@ export const useNewPassword = () => {
   ];
 
   useEffect(() => {
-    if (role) {
-      navigate(isStudent() ? STUDENT_DASHBOARD : TEACHER_DASHBOARD, {
-        replace: true,
-      });
-    }
+    (role && navigate(isStudent() ? STUDENT_DASHBOARD :TEACHER_DASHBOARD, { replace: true }))
   }, []);
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
     try {
       const formData = new FormData(e.target);
-      const Password = formData.get("Password");
-      const ConfirmPassword = formData.get("ConfirmPassword");
-      const newPasswordData = {
-        Password,
-        ConfirmPassword,
-      };
+      const newPasswordData = Object.fromEntries(formData.entries());
       validate.ConfirmPassword.push({
         match: true,
-        comKey: Password,
+        comKey: newPasswordData.Password,
         message: "Password Do not Match",
       });
       const error = validateData(newPasswordData, validate);

@@ -3,11 +3,12 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { hasObjectLength } from "../utils/commonFunction";
 
-const DropDown = ({ dropDownOptions, name, value, updateData,style ,clearError}) => {
+const DropDown = ({ fieldData }) => {
+  const {name,clearError,dropDownOptions,updateData,style} = fieldData || {}
   const dispatch = useDispatch();
   const error = useSelector((state) => state.user.error);
-  const label = name[0].toUpperCase() + name.substring(1);
-  const selectAttribute = { id: name, name, value: value, label };
+  const label = name?.[0]?.toUpperCase() + name?.substring(1);
+  const selectAttribute = { id: name, name:name , label };
 
   return (
     <div className={`w-[250px] mx-auto gap-[10px] ${style}`}>
@@ -15,6 +16,7 @@ const DropDown = ({ dropDownOptions, name, value, updateData,style ,clearError})
         <InputLabel id="demo-simple-select-label">{label}</InputLabel>
         <Select
           labelId="demo-simple-select-label"
+          defaultValue={''}
           {...selectAttribute}
           onChange={(e) => {
             const { name, value } = e?.target || {};
@@ -28,7 +30,7 @@ const DropDown = ({ dropDownOptions, name, value, updateData,style ,clearError})
             (hasObjectLength(error) && clearError && dispatch(clearError({})))
           }}
         >
-          {dropDownOptions.map((option, i) => (
+          {dropDownOptions?.map((option, i) => (
             <MenuItem value={option} name={name} key={i}>
               {option}
             </MenuItem>

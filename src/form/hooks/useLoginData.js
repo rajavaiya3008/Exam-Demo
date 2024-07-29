@@ -49,21 +49,14 @@ export const useLoginData = () => {
 
   useEffect(() => {
     dispatch(handleError({}));
-    if (role) {
-      navigate(isStudent() ? STUDENT_DASHBOARD :TEACHER_DASHBOARD, { replace: true });
-    }
+    (role && navigate(isStudent() ? STUDENT_DASHBOARD :TEACHER_DASHBOARD, { replace: true }))
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
       const formData = new FormData(e.target);
-      const email = formData.get("email");
-      const password = formData.get('password')
-      const loginData = {
-        email,
-        password
-      };
+      const loginData = Object.fromEntries(formData.entries())
       const error = validateData(loginData, validate);
       if (hasObjectLength(error)) {
         dispatch(handleError(error));

@@ -4,8 +4,9 @@ import {
   handleQuestion,
   handleSubject,
 } from "../redux/slices/teacher";
+import { showExam } from "./examPaperConstant";
 
-const radioField = (examData, error, currQuestion, Options,option) => {
+const radioField = (examData, error, currQuestion, Options, option) => {
   return {
     type: "radio",
     name: "ans",
@@ -14,24 +15,25 @@ const radioField = (examData, error, currQuestion, Options,option) => {
     updateData: handleAns,
     currQuestion: currQuestion,
     ans: examData?.questions?.[currQuestion]?.answer,
-    opIndex: option-1,
+    opIndex: option - 1,
     error: error,
   };
 };
 
-const optionField = (currQuestion,Options,error,option) => {
+const optionField = (currQuestion, Options, error, option) => {
   return {
-      type: "text",
-      id: `op${option}`,
-      name: `op${option}`,
-      label: `Option ${option}`,
-      data: Options,
-      updateData: handleOptions,
-      currQuestion: currQuestion,
-      opIndex: option - 1 ,
-      error: error,
-  }
-}
+    type: "text",
+    id: `op${option}`,
+    name: `op${option}`,
+    label: `Option ${option}`,
+    data: Options,
+    updateData: handleOptions,
+    currQuestion: currQuestion,
+    opIndex: option - 1,
+    error: error,
+  };
+};
+
 export const examFields = (examData, error, currQuestion, Options) => {
   return [
     {
@@ -53,17 +55,26 @@ export const examFields = (examData, error, currQuestion, Options) => {
       currQuestion: currQuestion,
       error: error,
     },
-    radioField(examData, error, currQuestion, Options,1),
-    optionField(currQuestion,Options,error,1),
-    radioField(examData, error, currQuestion, Options,2),
-    optionField(currQuestion,Options,error,2),
-    radioField(examData, error, currQuestion, Options,3),
-    optionField(currQuestion,Options,error,3),
-    radioField(examData, error, currQuestion, Options,4),
-    optionField(currQuestion,Options,error,4),
+    radioField(examData, error, currQuestion, Options, 1),
+    optionField(currQuestion, Options, error, 1),
+    radioField(examData, error, currQuestion, Options, 2),
+    optionField(currQuestion, Options, error, 2),
+    radioField(examData, error, currQuestion, Options, 3),
+    optionField(currQuestion, Options, error, 3),
+    radioField(examData, error, currQuestion, Options, 4),
+    optionField(currQuestion, Options, error, 4),
   ];
 };
 
+export const editData = (subjectName, questions) => {
+  const {showExamData:editExamData} = showExam(subjectName, questions)
+  const ansArr = editExamData.questions.reduce((acc, curr) => {
+    const ansIndex = curr.options.findIndex((option) => option === curr.answer);
+    acc.push(ansIndex);
+    return acc;
+  }, []);
+  return {editExamData,ansArr}
+};
 
 // {
 //   type: "radio",

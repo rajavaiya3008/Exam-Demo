@@ -51,30 +51,25 @@ export const useSignupData = () => {
       error: error,
       clearError: handleError
     },
+    {
+      type:'select',
+      style:'mt-[10px]',
+      dropDownOptions:["student", "teacher"],
+      name:"role",
+      clearError:handleError
+    }
   ];
 
   useEffect(() => {
     dispatch(handleError({}));
-    if (role) {
-      navigate(isStudent() ? STUDENT_DASHBOARD :TEACHER_DASHBOARD,{replace:true});
-    }
+    (role && navigate(isStudent() ? STUDENT_DASHBOARD :TEACHER_DASHBOARD, { replace: true }))
   }, []);
 
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
       const formData = new FormData(e.target);
-      const name = formData.get('name');
-      const email = formData.get("email");
-      const password = formData.get('password')
-      const userRole = formData.get('role');
-      const signupData = {
-        name,
-        email,
-        password,
-        role:userRole
-      };
-      console.log('signupData', signupData);
+      const signupData = Object.fromEntries(formData.entries());
       const error = validateData(signupData, validate);
       if (hasObjectLength(error)) {
         dispatch(handleError(error));

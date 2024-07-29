@@ -24,32 +24,27 @@ export const useForgetData = () => {
   const navigate = useNavigate();
   const error = useSelector((state) => state.user.error);
   const { role } = getCurrUserData();
-  const fieldData = {
-    type: "email",
-    id: "email",
-    name: "email",
-    label: "Email",
-    clearError: handleError,
-    error: error,
-  };
+  const fieldData = [
+    {
+      type: "email",
+      id: "email",
+      name: "email",
+      label: "Email",
+      clearError: handleError,
+      error: error,
+    },
+  ];
 
   useEffect(() => {
-    dispatch(handleError({}))
-    if (role) {
-      navigate(isStudent() ? STUDENT_DASHBOARD : TEACHER_DASHBOARD, {
-        replace: true,
-      });
-    }
+    dispatch(handleError({}));
+    (role && navigate(isStudent() ? STUDENT_DASHBOARD :TEACHER_DASHBOARD, { replace: true }))
   }, []);
 
   const sendMail = async (e) => {
     e.preventDefault();
     try {
       const formData = new FormData(e.target);
-      const email = formData.get("email");
-      const forgetData = {
-        email,
-      };
+      const forgetData = Object.fromEntries(formData.entries());
       const error = validateData(forgetData, validate);
       if (hasObjectLength(error)) {
         dispatch(handleError(error));

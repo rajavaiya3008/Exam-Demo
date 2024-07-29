@@ -60,14 +60,7 @@ export const useResetPassword = () => {
     e.preventDefault();
     try {
       const formData = new FormData(e.target);
-      const oldPassword = formData.get("oldPassword");
-      const Password = formData.get("Password");
-      const ConfirmPassword = formData.get("ConfirmPassword");
-      const resetPasswordData = {
-        oldPassword,
-        Password,
-        ConfirmPassword,
-      };
+      const resetPasswordData = Object.fromEntries(formData.entries());
       validate.ConfirmPassword.push({
         match: true,
         comKey: resetPasswordData.Password,

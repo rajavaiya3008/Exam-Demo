@@ -20,7 +20,7 @@ import {
 } from "../../../utils/localStorageFunction";
 import { teacherCreateExam } from "../../../utils/apiUrlConstant";
 import { examValidation } from "../../../utils/validationConstant";
-import { hasObjectLength, validateOptions, validationExamData } from "../../../utils/commonFunction";
+import { hasDuplicates, hasObjectLength, validateOptions, validationExamData } from "../../../utils/commonFunction";
 import { examFields } from "../../../utils/examDataConstatnt";
 
 const validate = examValidation;
@@ -39,7 +39,8 @@ export const useCreateExam = () => {
   const Options = validateOptions(examData,currQuestion);
 
   const createExamFields = examFields(examData,error,currQuestion,Options)
-  console.log('createExamFields', createExamFields)
+
+  const optionArr = examData?.questions?.[currQuestion]?.options;
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -52,9 +53,10 @@ export const useCreateExam = () => {
         setCurrQuestion(0);
       } else {
         dispatch(loadExamData(createExamData));
-        if (ansIndex) {
-          dispatch(initiateAnsIndex(ansIndex));
-        }
+        (ansIndex && dispatch(initiateAnsIndex(ansIndex)))
+        // if (ansIndex) {
+        //   dispatch(initiateAnsIndex(ansIndex));
+        // }
       }
     };
 
@@ -79,6 +81,10 @@ export const useCreateExam = () => {
     const error = validateData(validateExamData, validate);
     if (hasObjectLength(error)) {
       dispatch(handleError(error));
+      return;
+    }
+    if (hasDuplicates(optionArr)) {
+      dispatch(handleError({sameOption:"Two Options are Same Please Check"}));
       return;
     }
     const createExam = async () => {

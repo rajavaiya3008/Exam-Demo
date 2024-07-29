@@ -2,7 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCurrUserData } from "../../../utils/currentUser";
 import {
   cancelExam,
-  handleStudentAns,
   initiateExamPaper,
   loadAllExamData,
   loadExamPaper,
@@ -19,6 +18,8 @@ import {
 import { ALL_EXAM, LOGIN_PAGE } from "../../../utils/routeConstant";
 import { useSearchParams } from "react-router-dom";
 import { studentExamPaper, studentSubmitExam } from "../../../utils/apiUrlConstant";
+import { validateOptions } from "../../../utils/commonFunction";
+import { ansArray, examPaperFields, showExam } from "../../../utils/examPaperConstant";
 
 const validate = {
   answer: [{ required: true, message: "Answer Required" }],
@@ -36,142 +37,15 @@ export const useGiveExam = () => {
   const error = useSelector((state) => state.student.error);
   const { token,role } = getCurrUserData();
 
-  const Options = {
-    op1: examData?.questions?.[currQuestion]?.options[0],
-    op2: examData?.questions?.[currQuestion]?.options[1],
-    op3: examData?.questions?.[currQuestion]?.options[2],
-    op4: examData?.questions?.[currQuestion]?.options[3],
-  };
+  const Options = validateOptions(examData,currQuestion);
 
   const validateExamData = {
     answer: examData?.questions?.[currQuestion]?.answer?.trim(),
   };
 
-  const createExamFields = [
-    {
-      type: "text",
-      id: "subject",
-      name: "subjectName",
-      label: "Subject Name",
-      data: examData,
-      disable: true,
-      error: error,
-    },
-    {
-      type: "text",
-      id: "question",
-      name: "question",
-      label: `Question ${currQuestion + 1}`,
-      data: examData?.questions?.[currQuestion],
-      disable: true,
-      currQuestion: currQuestion,
-      error: error,
-    },
-    {
-      type: "radio",
-      name: "ans",
-      id: "op1",
-      data: Options,
-      examData: examData,
-      updateData: handleStudentAns,
-      currQuestion: currQuestion,
-      ans: examData?.questions?.[currQuestion]?.answer,
-      opIndex: 0,
-      ansIndex: 0,
-      error: error,
-    },
-    {
-      type: "text",
-      id: "op1",
-      name: "op1",
-      label: "Option 1",
-      data: Options,
-      disable: true,
-      currQuestion: currQuestion,
-      opIndex: 0,
-      error: error,
-    },
-    {
-      type: "radio",
-      name: "ans",
-      id: "op2",
-      data: Options,
-      examData: examData,
-      updateData: handleStudentAns,
-      currQuestion: currQuestion,
-      ans: examData?.questions?.[currQuestion]?.answer,
-      opIndex: 1,
-      error: error,
-    },
-    {
-      type: "text",
-      id: "op2",
-      name: "op2",
-      label: "Option 2",
-      data: Options,
-      disable: true,
-      currQuestion: currQuestion,
-      opIndex: 1,
-      error: error,
-    },
-    {
-      type: "radio",
-      name: "ans",
-      id: "op3",
-      data: Options,
-      examData: examData,
-      updateData: handleStudentAns,
-      currQuestion: currQuestion,
-      ans: examData?.questions?.[currQuestion]?.answer,
-      opIndex: 2,
-      error: error,
-    },
-    {
-      type: "text",
-      id: "op3",
-      name: "op3",
-      label: "Option 3",
-      data: Options,
-      disable: true,
-      currQuestion: currQuestion,
-      opIndex: 2,
-      error: error,
-    },
-    {
-      type: "radio",
-      name: "ans",
-      id: "op4",
-      data: Options,
-      examData: examData,
-      updateData: handleStudentAns,
-      currQuestion: currQuestion,
-      ans: examData?.questions?.[currQuestion]?.answer,
-      opIndex: 3,
-      error: error,
-    },
-    {
-      type: "text",
-      id: "op4",
-      name: "op4",
-      label: "Option 4",
-      data: Options,
-      disable: true,
-      currQuestion: currQuestion,
-      opIndex: 3,
-      error: error,
-    },
-  ];
+  const createExamFields = examPaperFields(examData, error, currQuestion, Options)
 
-  const ansArr = examData?.questions?.reduce((acc, curr) => {
-    const obj = {
-      question: curr._id,
-      answer: curr.answer,
-    };
-    if (curr.answer !== undefined) {
-      acc.push(obj);
-    }
-    return acc;
-  }, []);
+  const {ansArr} = ansArray(examData)
 
   useEffect(() => {
     const fetchExamPaper = async () => {
@@ -191,33 +65,26 @@ export const useGiveExam = () => {
         navigate(ALL_EXAM);
         return;
       }
-      let examPaper = {
-        subjectName: subject,
-        notes: [""],
-      };
-      examPaper.questions = res.payload.data;
-      dispatch(loadExamPaper(examPaper));
+      const {showExamData} = showExam(subject,res?.payload?.data)
+      dispatch(loadExamPaper(showExamData));
     };
     const examPaper = getLocalStorageItem("examPaper");
     if (examPaper) {
-      dispatch(loadExamPaper(getLocalStorageItem("examPaper")));
+      dispatch(loadExamPaper(examPaper));
       const ansIndexLocal = getLocalStorageItem("ansIndex");
       dispatch(initiateAnsIndex(ansIndexLocal));
     } else {
       fetchExamPaper();
     }
-  }, []);
-
-  useEffect(() => {
     const handleStorageChange = () => {
       const examPaper = getLocalStorageItem("examPaper");
+      const ansIndexLocal = getLocalStorageItem("ansIndex");
       if (examPaper) {
-        dispatch(loadExamPaper(getLocalStorageItem("examPaper")));
-        const ansIndexLocal = getLocalStorageItem("ansIndex");
-        if (ansIndexLocal && ansIndex.length) {
+        dispatch(loadExamPaper(examPaper));
+        if (ansIndexLocal) {
           dispatch(initiateAnsIndex(ansIndexLocal));
         } else {
-          dispatch(initiateExamPaper({}));
+          dispatch(initiateExamPaper());
           dispatch(initiateAnsIndex(ansIndex));
           navigate(ALL_EXAM);
         }
@@ -227,9 +94,34 @@ export const useGiveExam = () => {
     window.addEventListener("storage", handleStorageChange);
 
     return () => {
+      removeLocalStorageItem('examPaper')
+      removeLocalStorageItem('ansIndex')
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
+
+  // useEffect(() => {
+  //   const handleStorageChange = () => {
+  //     const examPaper = getLocalStorageItem("examPaper");
+  //     if (examPaper) {
+  //       dispatch(loadExamPaper(getLocalStorageItem("examPaper")));
+  //       const ansIndexLocal = getLocalStorageItem("ansIndex");
+  //       if (ansIndexLocal && ansIndex.length) {
+  //         dispatch(initiateAnsIndex(ansIndexLocal));
+  //       } else {
+  //         dispatch(initiateExamPaper({}));
+  //         dispatch(initiateAnsIndex(ansIndex));
+  //         navigate(ALL_EXAM);
+  //       }
+  //     }
+  //   };
+
+  //   window.addEventListener("storage", handleStorageChange);
+
+  //   return () => {
+  //     window.removeEventListener("storage", handleStorageChange);
+  //   };
+  // }, []);
 
   const handleSubmitExam = () => {
     const submitExam = async () => {

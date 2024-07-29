@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import Button from "./Button";
-import { isStudent } from "../utils/commonFunction";
-import { getLocalStorageItem, setLocalStorageItem } from "../utils/localStorageFunction";
-
+import { isPrev, isStudent } from "../utils/commonFunction";
+import {
+  getLocalStorageItem,
+  removeLocalStorageItem,
+  setLocalStorageItem,
+} from "../utils/localStorageFunction";
 
 const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
-  const page = getLocalStorageItem('pageNo')
+  const location = useLocation();
+  const isViewStudent = location.pathname.split('/')[2]?.startsWith('view-student-detail')
+  const page = isViewStudent ? 1 : getLocalStorageItem("pageNo");
   const [currPage, setCurrPage] = useState(page || 1);
 
   useEffect(() => {
-    (searchVal && setCurrPage(1))
+    if (searchVal) {
+      setCurrPage(1);
+      removeLocalStorageItem("pageNo");
+    }
   }, [searchVal]);
 
   const dataFilter = () => {
@@ -29,7 +37,7 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
     );
   };
 
-  (searchVal?.trim() && dataFilter())
+  (searchVal?.trim() && dataFilter());
 
   let recordsPerPage = 10;
   let totalPage = Math.ceil(data?.length / recordsPerPage);
@@ -50,15 +58,10 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
     (item, i) => i >= indexOfFirstRecord && i < indexOfLastRecord
   );
 
-  const handlePrevPage = () => {
-    setCurrPage(currPage - 1);
-    setLocalStorageItem('pageNo',currPage-1)
-  };
-
-  const handleNextPage = () => {
-    setCurrPage(currPage + 1);
-    setLocalStorageItem('pageNo',currPage+1)
-  };
+  const handleNavigation = (navigation) => {
+    setCurrPage(isPrev(navigation)?currPage -1 : currPage +1)
+    setLocalStorageItem('pageNo',isPrev(navigation)?currPage-1:currPage+1)
+  }
 
   return (
     <div className="relative overflow-x-auto dark:bg-gray-800">
@@ -103,15 +106,23 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
                   </NavLink>
                 </td>
               ))}
-              {isStudent() &&
-                <td className={`px-6 py-3 ${item?.Result?.length ?'text-blue-200':'text-blue-500'}`}>
+              {isStudent() && (
+                <td
+                  className={`px-6 py-3 ${
+                    item?.Result?.length ? "text-blue-200" : "text-blue-500"
+                  }`}
+                >
                   <NavLink
-                    to={`${item?.Result?.length ?btn.showResultBtn:btn?.giveExamBtn }?id=${item._id}&subject=${item.subjectName}`}
+                    to={`${
+                      item?.Result?.length
+                        ? btn.showResultBtn
+                        : btn?.giveExamBtn
+                    }?id=${item._id}&subject=${item.subjectName}`}
                   >
-                    {item?.Result?.length ? 'Result' : 'Give'}
+                    {item?.Result?.length ? "Result" : "Give"}
                   </NavLink>
                 </td>
-              }
+              )}
             </tr>
           ))}
         </tbody>
@@ -124,7 +135,7 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
           </pre>
           <div className="flex gap-2 pb-2">
             <Button
-              onSubmit={handlePrevPage}
+              onSubmit={() => handleNavigation('prev')}
               disable={prevDisable()}
               customStyle={
                 "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline rounded-full"
@@ -136,7 +147,7 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
               {currPage}
             </span>
             <Button
-              onSubmit={handleNextPage}
+              onSubmit={() => handleNavigation('next')}
               disable={nextDisable()}
               customStyle={
                 "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline rounded-full"
