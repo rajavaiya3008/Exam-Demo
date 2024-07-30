@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
-  handleError,
+  handleTeacherError,
   initiateAnsIndex,
   initiateExam,
   initiateQuestions,
@@ -18,10 +18,11 @@ import {
   getLocalStorageItem,
   removeLocalStorageItem,
 } from "../../../utils/localStorageFunction";
-import { teacherCreateExam } from "../../../utils/apiUrlConstant";
+import { TEACHER_CREATE_EXAM } from "../../../utils/apiUrlConstant";
 import { examValidation } from "../../../utils/validationConstant";
 import { hasDuplicates, hasObjectLength, validateOptions, validationExamData } from "../../../utils/commonFunction";
-import { examFields } from "../../../utils/examDataConstatnt";
+import { examFields, sameOptionMsg, sameQuestionMsg } from "../../../utils/examDataConstatnt";
+import { ANS_INDEX, CREATE_EXAM_CONST } from "../../../utils/localStorageConstant";
 
 const validate = examValidation;
 
@@ -38,14 +39,14 @@ export const useCreateExam = () => {
 
   const Options = validateOptions(examData,currQuestion);
 
-  const createExamFields = examFields(examData,error,currQuestion,Options)
+  const createExamFields = examFields(examData,currQuestion,Options)
 
   const optionArr = examData?.questions?.[currQuestion]?.options;
 
   useEffect(() => {
     const handleStorageChange = () => {
-      const createExamData = getLocalStorageItem("createExam");
-      const ansIndex = getLocalStorageItem("ansIndex");
+      const createExamData = getLocalStorageItem(CREATE_EXAM_CONST);
+      const ansIndex = getLocalStorageItem(ANS_INDEX);
 
       if (!createExamData) {
         dispatch(initiateExam());
@@ -54,9 +55,6 @@ export const useCreateExam = () => {
       } else {
         dispatch(loadExamData(createExamData));
         (ansIndex && dispatch(initiateAnsIndex(ansIndex)))
-        // if (ansIndex) {
-        //   dispatch(initiateAnsIndex(ansIndex));
-        // }
       }
     };
 
@@ -75,23 +73,23 @@ export const useCreateExam = () => {
       sameQuestions[currQuestion] !== validateExamData.question
     ) {
       validateExamData.questions = sameQuestions;
-      validateExamData.sameQueMsg = "Question already Exists";
+      validateExamData.sameQueMsg = sameQuestionMsg;
     }
 
     const error = validateData(validateExamData, validate);
     if (hasObjectLength(error)) {
-      dispatch(handleError(error));
+      dispatch(handleTeacherError(error));
       return;
     }
     if (hasDuplicates(optionArr)) {
-      dispatch(handleError({sameOption:"Two Options are Same Please Check"}));
+      dispatch(handleTeacherError({sameOption:sameOptionMsg}));
       return;
     }
     const createExam = async () => {
       try {
         const config = {
           method: "post",
-          url: teacherCreateExam,
+          url: TEACHER_CREATE_EXAM,
           data: examData,
           headers: { "access-token": token },
         };
@@ -112,8 +110,8 @@ export const useCreateExam = () => {
     dispatch(initiateExam());
     dispatch(initiateQuestions());
     dispatch(initiateAnsIndex([]));
-    removeLocalStorageItem("ansIndex");
-    removeLocalStorageItem("createExam");
+    removeLocalStorageItem(ANS_INDEX);
+    removeLocalStorageItem(CREATE_EXAM_CONST);
     setCurrQuestion(0);
   };
 

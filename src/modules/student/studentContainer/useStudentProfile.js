@@ -16,9 +16,10 @@ import {
 import { toastSuccess } from "../../../utils/toastFunction";
 import { useNavigate } from "react-router";
 import { LOGIN_PAGE } from "../../../utils/routeConstant";
-import { getStudentProfile, saveStudentProfile } from "../../../utils/apiUrlConstant";
+import { GET_STUDENT_PROFILE, SAVE_STUDENT_PROFILE } from "../../../utils/apiUrlConstant";
 import { nameValidation } from "../../../utils/validationConstant";
 import { hasObjectLength } from "../../../utils/commonFunction";
+import { STUDENT, USER_DATA } from "../../../utils/localStorageConstant";
 
 const validate = {
   name: nameValidation,
@@ -64,28 +65,28 @@ export const useStudentProfile = () => {
       try {
         const config = {
           method: "get",
-          url: getStudentProfile,
+          url: GET_STUDENT_PROFILE,
           headers: { "access-token": getCurrUserData().token },
         };
         const res = await dispatch(fetchData(config));
         if (res?.payload?.statusCode === 401) {
-          removeLocalStorageItem("userData");
+          removeLocalStorageItem(USER_DATA);
           navigate(LOGIN_PAGE);
           return;
         }
         dispatch(loadStudentProfile(res.payload.data));
-        setLocalStorageItem("student", res.payload.data);
+        setLocalStorageItem(STUDENT, res.payload.data);
       } catch (error) {
         console.log("error", error);
       }
     };
-    const student = getLocalStorageItem("student");
+    const student = getLocalStorageItem(STUDENT);
     (!student ? fetchStudentDetail() : dispatch(loadStudentProfile(student)))
   }, []);
 
   const saveProfile = async () => {
     try {
-      const student = getLocalStorageItem("student");
+      const student = getLocalStorageItem(STUDENT);
       if (student.name === studentProfile.name) {
         setDisable(true);
         dispatch(loadStudentProfile(student));
@@ -98,12 +99,12 @@ export const useStudentProfile = () => {
       }
       const config = {
         method: "put",
-        url: saveStudentProfile,
+        url: SAVE_STUDENT_PROFILE,
         data: updatedData,
         headers: { "access-token": getCurrUserData().token },
       };
       const res = await dispatch(fetchData(config));
-      setLocalStorageItem("student", res.payload.data);
+      setLocalStorageItem(STUDENT, res.payload.data);
       toastSuccess("Profile Updated Successfully");
       setDisable(true);
     } catch (error) {
@@ -113,7 +114,7 @@ export const useStudentProfile = () => {
 
   const handleCancel = () => {
     setDisable(true);
-    dispatch(loadStudentProfile(getLocalStorageItem("student")));
+    dispatch(loadStudentProfile(getLocalStorageItem(STUDENT)));
   };
 
   return {

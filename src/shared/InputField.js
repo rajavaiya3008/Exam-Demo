@@ -1,11 +1,12 @@
 import { TextField } from "@mui/material";
 import React from "react";
 import { useDispatch } from "react-redux";
-import RadioBtn from "./RadioBtn";
 import { hasObjectLength } from "../utils/commonFunction";
+import { useGetError } from "../form/hooks/useError";
 
 const InputField = ({ fieldData }) => {
   const dispatch = useDispatch();
+  const {error,handleError} = useGetError()
   const {
     label,
     type,
@@ -16,8 +17,6 @@ const InputField = ({ fieldData }) => {
     disable:disabled,
     variant,
     updateData,
-    clearError,
-    error,
     currQuestion,
     opIndex,
     ansIndex,
@@ -33,10 +32,6 @@ const InputField = ({ fieldData }) => {
     variant: variant || "outlined",
     InputLabelProps:{ shrink: true }
   };
-
-  if (type === "radio") {
-    return <RadioBtn fieldData={fieldData} />;
-  }
 
   return (
     <div className="flex flex-col gap-2 w-[250px] mt-[10px]">
@@ -55,7 +50,7 @@ const InputField = ({ fieldData }) => {
           if(updateData){
             dispatch(updateData(Data))
           }
-          (hasObjectLength(error) && clearError && dispatch(clearError({})))
+          (hasObjectLength(error) && dispatch(handleError({})))
         }}
       />
       {error?.[name] && (

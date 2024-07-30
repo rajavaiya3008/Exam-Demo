@@ -6,7 +6,8 @@ import { fetchData } from "../../../redux/slices/api";
 import { removeLocalStorageItem } from "../../../utils/localStorageFunction";
 import { loadViewExamData } from "../../../redux/slices/teacher";
 import { EDIT_EXAM, LOGIN_PAGE } from "../../../utils/routeConstant";
-import { teacherViewExam } from "../../../utils/apiUrlConstant";
+import { TEACHER_VIEW_EXAM } from "../../../utils/apiUrlConstant";
+import { USER_DATA } from "../../../utils/localStorageConstant";
 
 const keys = ["subjectName", "email"];
 const newBtn = [{
@@ -24,12 +25,12 @@ export const useViewExam = () => {
       try {
         const config = {
           method: "get",
-          url: teacherViewExam,
+          url: TEACHER_VIEW_EXAM,
           headers: { "access-token": getCurrUserData().token },
         };
         const res = await dispatch(fetchData(config));
         if (res?.payload?.statusCode === 401) {
-          removeLocalStorageItem("userData");
+          removeLocalStorageItem(USER_DATA);
           navigate(LOGIN_PAGE);
           return;
         }

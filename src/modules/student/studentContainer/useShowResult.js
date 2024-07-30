@@ -6,26 +6,27 @@ import { getCurrUserData } from "../../../utils/currentUser";
 import { fetchData } from "../../../redux/slices/api";
 import { removeLocalStorageItem } from "../../../utils/localStorageFunction";
 import { ALL_EXAM, LOGIN_PAGE } from "../../../utils/routeConstant";
-import { studentAllExam } from "../../../utils/apiUrlConstant";
+import { STUDENT_ALL_EXAM } from "../../../utils/apiUrlConstant";
+import { USER_DATA } from "../../../utils/localStorageConstant";
 
 export const useShowResult = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
+  const {id} = Object.fromEntries(searchParams.entries())
   const [result, setResult] = useState([]);
-  const id = searchParams.get("id");
   const {token} = getCurrUserData()
 
   useEffect(() => {
     const fetchAllExam = async () => {
       const config = {
         method: "get",
-        url: studentAllExam,
+        url: STUDENT_ALL_EXAM,
         headers: { "access-token": token },
       };
       const res = await dispatch(fetchData(config));
       if (res?.payload?.statusCode === 401) {
-        removeLocalStorageItem("userData");
+        removeLocalStorageItem(USER_DATA);
         navigate(LOGIN_PAGE);
         return;
       }

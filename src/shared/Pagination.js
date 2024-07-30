@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import Button from "./Button";
 import { isPrev, isStudent } from "../utils/commonFunction";
@@ -7,19 +7,16 @@ import {
   removeLocalStorageItem,
   setLocalStorageItem,
 } from "../utils/localStorageFunction";
+import { PAGE_NO } from "../utils/localStorageConstant";
+
+let recordsPerPage = 10;
+let sliceData;
 
 const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
   const location = useLocation();
   const isViewStudent = location.pathname.split('/')[2]?.startsWith('view-student-detail')
-  const page = isViewStudent ? 1 : getLocalStorageItem("pageNo");
+  const page = isViewStudent ? 1 : getLocalStorageItem(PAGE_NO);
   const [currPage, setCurrPage] = useState(page || 1);
-
-  useEffect(() => {
-    if (searchVal) {
-      setCurrPage(1);
-      removeLocalStorageItem("pageNo");
-    }
-  }, [searchVal]);
 
   const dataFilter = () => {
     data = data.filter(
@@ -37,9 +34,24 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
     );
   };
 
-  (searchVal?.trim() && dataFilter());
+  useEffect(() => {
+    if (searchVal) {
+      setCurrPage(1);
+      removeLocalStorageItem(PAGE_NO);
+    }
+  }, [searchVal]);
 
-  let recordsPerPage = 10;
+  useMemo(() => {
+    (searchVal?.trim() && dataFilter())
+  },[searchVal,currPage])
+
+  const filterData = (data) => {
+    console.log('Filter data is calling')
+    return data?.filter(
+      (item, i) => i >= indexOfFirstRecord && i < indexOfLastRecord
+    )
+  }
+
   let totalPage = Math.ceil(data?.length / recordsPerPage);
 
   const prevDisable = () => {
@@ -52,15 +64,14 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
 
   const indexOfLastRecord = currPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  let sliceData;
-
-  sliceData = data?.filter(
-    (item, i) => i >= indexOfFirstRecord && i < indexOfLastRecord
-  );
+  
+  useMemo(() => {
+    sliceData = filterData(data);
+  },[data,currPage])
 
   const handleNavigation = (navigation) => {
     setCurrPage(isPrev(navigation)?currPage -1 : currPage +1)
-    setLocalStorageItem('pageNo',isPrev(navigation)?currPage-1:currPage+1)
+    setLocalStorageItem(PAGE_NO,isPrev(navigation)?currPage-1:currPage+1)
   }
 
   return (
@@ -128,7 +139,7 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
         </tbody>
       </table>
 
-      {data.length > 10 && (
+      {data.length > recordsPerPage && (
         <div className="text-white flex w-[850px] gap-[50px] px-[5px] mt-[20px] mb-[10px]">
           <pre className="mt-[8px] w-[116px]">
             {currPage} Out of {totalPage}

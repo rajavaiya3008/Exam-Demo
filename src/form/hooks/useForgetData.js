@@ -12,7 +12,7 @@ import {
 } from "../../utils/routeConstant";
 import { getCurrUserData } from "../../utils/currentUser";
 import { emailValidation } from "../../utils/validationConstant";
-import { forgetPasswordUrl } from "../../utils/apiUrlConstant";
+import { FORGET_PASS_URL } from "../../utils/apiUrlConstant";
 import { hasObjectLength, isStudent } from "../../utils/commonFunction";
 
 const validate = {
@@ -22,7 +22,7 @@ const validate = {
 export const useForgetData = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const error = useSelector((state) => state.user.error);
+  // const error = useSelector((state) => state.user.error);
   const { role } = getCurrUserData();
   const fieldData = [
     {
@@ -30,8 +30,6 @@ export const useForgetData = () => {
       id: "email",
       name: "email",
       label: "Email",
-      clearError: handleError,
-      error: error,
     },
   ];
 
@@ -52,7 +50,7 @@ export const useForgetData = () => {
       }
       const config = {
         method: "post",
-        url: forgetPasswordUrl,
+        url: FORGET_PASS_URL,
         data: forgetData,
       };
       const res = await dispatch(fetchData(config));

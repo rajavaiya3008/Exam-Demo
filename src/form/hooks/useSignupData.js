@@ -8,7 +8,7 @@ import { useNavigate } from "react-router";
 import { toastError, toastSuccess } from "../../utils/toastFunction";
 import { LOGIN_PAGE, STUDENT_DASHBOARD, TEACHER_DASHBOARD } from "../../utils/routeConstant";
 import { emailValidation, nameValidation, passwordValidation } from "../../utils/validationConstant";
-import { signupUrl } from "../../utils/apiUrlConstant";
+import { SIGNUP_URL } from "../../utils/apiUrlConstant";
 import { getCurrUserData } from "../../utils/currentUser";
 import { useEffect } from "react";
 import { hasObjectLength, isStudent } from "../../utils/commonFunction";
@@ -23,7 +23,7 @@ const validate = {
 export const useSignupData = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const error = useSelector((state) => state.user.error);
+  // const error = useSelector((state) => state.user.error);
   const {role} = getCurrUserData();
 
   const signupField = [
@@ -32,31 +32,24 @@ export const useSignupData = () => {
       id: "name",
       name: "name",
       label: "Enter Name",
-      error: error,
-      clearError: handleError
     },
     {
       type: "email",
       id: "email",
       name: "email",
       label: "Enter Email",
-      error: error,
-      clearError: handleError
     },
     {
       type: "password",
       id: "password",
       name: "password",
       label: "Enter Password",
-      error: error,
-      clearError: handleError
     },
     {
       type:'select',
       style:'mt-[10px]',
       dropDownOptions:["student", "teacher"],
       name:"role",
-      clearError:handleError
     }
   ];
 
@@ -77,7 +70,7 @@ export const useSignupData = () => {
       }
       const config = {
         method: "post",
-        url: signupUrl,
+        url: SIGNUP_URL,
         data: signupData,
       };
       const res = await dispatch(fetchData(config));

@@ -16,6 +16,7 @@ import {
   STUDENT_DASHBOARD,
   TEACHER_DASHBOARD,
 } from "../../utils/routeConstant";
+import { RESET_PASS_URL } from "../../utils/apiUrlConstant";
 
 const validate = {
   oldPassword: passwordValidation,
@@ -26,7 +27,7 @@ const validate = {
 export const useResetPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const error = useSelector((state) => state.user.error);
+  // const error = useSelector((state) => state.user.error);
   const { token } = getCurrUserData();
 
   const ResetPasswordFields = [
@@ -35,24 +36,18 @@ export const useResetPassword = () => {
       id: "oldPassword",
       name: "oldPassword",
       label: "Old Password",
-      error: error,
-      clearError: handleError,
     },
     {
       type: "password",
       id: "Password",
       name: "Password",
       label: "Password",
-      error: error,
-      clearError: handleError,
     },
     {
       type: "password",
       id: "ConfirmPassword",
       name: "ConfirmPassword",
       label: "Confirm Password",
-      error: error,
-      clearError: handleError,
     },
   ];
 
@@ -74,7 +69,7 @@ export const useResetPassword = () => {
       }
       const config = {
         method: "post",
-        url: "users/ResetPassword",
+        url: RESET_PASS_URL,
         data: resetPasswordData,
         headers: { "access-token": `${token}` },
       };

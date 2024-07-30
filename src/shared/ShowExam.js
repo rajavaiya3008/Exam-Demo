@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import InputField from "./InputField";
 import {
   addNewQuestion,
-  handleError,
+  handleTeacherError,
   handleSameQuestions,
   initiateQuestions,
 } from "../redux/slices/teacher";
@@ -13,6 +13,8 @@ import { useLocation } from "react-router";
 import { EDIT_EXAM } from "../utils/routeConstant";
 import { hasDuplicates, hasObjectLength, isNext, isPrev, isStudent } from "../utils/commonFunction";
 import Button from "./Button";
+import RadioBtn from "./RadioBtn";
+import { sameOptionMsg, sameQuestionMsg } from "../utils/examDataConstatnt";
 
 const question = {
   question: "",
@@ -45,15 +47,15 @@ const ShowExam = ({
         sameQuestions[currQuestion] !== validateExamData.question
       ) {
         validateExamData.questions = sameQuestions;
-        validateExamData.sameQueMsg = "Question already Exists";
+        validateExamData.sameQueMsg = sameQuestionMsg;
       }
       const error = validateData(validateExamData, validate);
       if (hasObjectLength(error)) {
-        dispatch(handleError(error));
+        dispatch(handleTeacherError(error));
         return;
       }
       if (hasDuplicates(optionArr)) {
-        dispatch(handleError({sameOption:"Two Options are Same Please Check"}));
+        dispatch(handleTeacherError({sameOption:sameOptionMsg}));
         return;
       }
       dispatch(
@@ -73,16 +75,16 @@ const ShowExam = ({
         return;
       }
     }
-    dispatch(isStudent() && isPrev(navigate) ? handleStudentError({}) : handleError({}));
+    dispatch(isStudent() && isPrev(navigate) ? handleStudentError({}) : handleTeacherError({}));
     setCurrQuestion(isPrev(navigate) ? currQuestion - 1 : currQuestion + 1)
   }
 
   return (
     <div>
       <div>
-        {createExamFields.map((field, i) => (
-          <InputField fieldData={field} key={i} />
-        ))}
+        {createExamFields.map((field, i) => {
+          return (field.type === 'radio' ? <RadioBtn fieldData={field} key={i}/> : <InputField fieldData={field} key={i} />)
+        })}
       </div>
 
       {answer && <span className="text-red-500 text-sm">{answer}</span>}

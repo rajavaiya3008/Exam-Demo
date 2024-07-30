@@ -8,8 +8,9 @@ import {
   handleSearchField,
   loadAllStudentData,
 } from "../../../redux/slices/teacher";
-import { teacherAllStudent } from "../../../utils/apiUrlConstant";
+import { TEACHER_ALL_STUDENT } from "../../../utils/apiUrlConstant";
 import { LOGIN_PAGE } from "../../../utils/routeConstant";
+import { USER_DATA } from "../../../utils/localStorageConstant";
 
 const keys = ["name", "email", "status"];
 
@@ -33,12 +34,12 @@ export const useAllStudent = () => {
     const fetchAllStudentData = async () => {
       const config = {
         method: "get",
-        url: teacherAllStudent,
+        url: TEACHER_ALL_STUDENT,
         headers: { "access-token": token },
       };
       const res = await dispatch(fetchData(config));
       if (res?.payload?.statusCode === 401) {
-        removeLocalStorageItem("userData");
+        removeLocalStorageItem(USER_DATA);
         navigate(LOGIN_PAGE);
         return;
       }

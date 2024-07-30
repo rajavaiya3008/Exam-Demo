@@ -8,8 +8,9 @@ import {
   loadVerifiedStudentData,
 } from "../../../redux/slices/teacher";
 import { useEffect } from "react";
-import { teacherVerifiedStudent } from "../../../utils/apiUrlConstant";
+import { TEACHER_VERIFIED_STUDENT } from "../../../utils/apiUrlConstant";
 import { LOGIN_PAGE } from "../../../utils/routeConstant";
+import { USER_DATA } from "../../../utils/localStorageConstant";
 
 const keys = ["name", "email", "status"];
 
@@ -33,12 +34,12 @@ export const useVerifiedStudent = () => {
     const fetchAllStudentData = async () => {
       const config = {
         method: "get",
-        url: teacherVerifiedStudent,
+        url: TEACHER_VERIFIED_STUDENT,
         headers: { "access-token": getCurrUserData().token },
       };
       const res = await dispatch(fetchData(config));
       if (res?.payload?.statusCode === 401) {
-        removeLocalStorageItem("userData");
+        removeLocalStorageItem(USER_DATA);
         navigate(LOGIN_PAGE);
         return;
       }

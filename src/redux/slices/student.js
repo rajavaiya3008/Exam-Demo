@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { setLocalStorageItem } from "../../utils/localStorageFunction";
+import { EXAM_PAPER } from "../../utils/localStorageConstant";
 
 const initialState = {
   allExamData: [],
@@ -26,7 +27,7 @@ export const studentSlice = createSlice({
       const { queIndex, ans } = action.payload;
       state.error = {};
       state.examPaper.questions[queIndex].answer = ans;
-      setLocalStorageItem("examPaper", state.examPaper);
+      setLocalStorageItem(EXAM_PAPER, state.examPaper);
     },
     handleStudentError: (state, action) => {
       state.error = action.payload;

@@ -9,7 +9,6 @@ const GiveExam = () => {
     createExamFields,
     currQuestion,
     examData,
-    role,
     validateExamData,
     validate,
     error,
@@ -33,7 +32,6 @@ const GiveExam = () => {
             totalQue={examData?.questions?.length - 1}
             validate={validate}
             error={error}
-            role={role}
           />
 
           <div className="flex justify-center mt-2">

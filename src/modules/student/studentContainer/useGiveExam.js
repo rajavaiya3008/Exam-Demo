@@ -17,9 +17,17 @@ import {
 } from "../../../utils/localStorageFunction";
 import { ALL_EXAM, LOGIN_PAGE } from "../../../utils/routeConstant";
 import { useSearchParams } from "react-router-dom";
-import { studentExamPaper, studentSubmitExam } from "../../../utils/apiUrlConstant";
+import {
+  STUDENT_EXAM_PAPER,
+  STUDENT_SUBMIT_EXAM,
+} from "../../../utils/apiUrlConstant";
 import { validateOptions } from "../../../utils/commonFunction";
-import { ansArray, examPaperFields, showExam } from "../../../utils/examPaperConstant";
+import {
+  ansArray,
+  showExam,
+} from "../../../utils/examPaperConstant";
+import { examFields } from "../../../utils/examDataConstatnt";
+import { ANS_INDEX, EXAM_PAPER, USER_DATA } from "../../../utils/localStorageConstant";
 
 const validate = {
   answer: [{ required: true, message: "Answer Required" }],
@@ -29,35 +37,38 @@ export const useGiveExam = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const id = searchParams.get("id");
-  const subject = searchParams.get("subject");
+  const {id,subject} = Object.fromEntries(searchParams.entries())
   const [currQuestion, setCurrQuestion] = useState(0);
   const examData = useSelector((state) => state.student.examPaper);
   const ansIndex = useSelector((state) => state.teacher.ansIndex);
   const error = useSelector((state) => state.student.error);
-  const { token,role } = getCurrUserData();
+  const { token } = getCurrUserData();
 
-  const Options = validateOptions(examData,currQuestion);
+  const Options = validateOptions(examData, currQuestion);
 
   const validateExamData = {
     answer: examData?.questions?.[currQuestion]?.answer?.trim(),
   };
 
-  const createExamFields = examPaperFields(examData, error, currQuestion, Options)
+  const createExamFields = examFields(
+    examData,
+    currQuestion,
+    Options
+  );
 
-  const {ansArr} = ansArray(examData)
+  const { ansArr } = ansArray(examData);
 
   useEffect(() => {
     const fetchExamPaper = async () => {
       const config = {
         method: "get",
-        url: studentExamPaper,
-        headers: { "access-token": getCurrUserData().token },
+        url: STUDENT_EXAM_PAPER,
+        headers: { "access-token": token },
         params: { id },
       };
       const res = await dispatch(fetchData(config));
       if (res?.payload?.statusCode === 401) {
-        removeLocalStorageItem("userData");
+        removeLocalStorageItem(USER_DATA);
         navigate(LOGIN_PAGE);
         return;
       }
@@ -65,20 +76,20 @@ export const useGiveExam = () => {
         navigate(ALL_EXAM);
         return;
       }
-      const {showExamData} = showExam(subject,res?.payload?.data)
+      const { showExamData } = showExam(subject, res?.payload?.data);
       dispatch(loadExamPaper(showExamData));
     };
-    const examPaper = getLocalStorageItem("examPaper");
+    const examPaper = getLocalStorageItem(EXAM_PAPER);
     if (examPaper) {
       dispatch(loadExamPaper(examPaper));
-      const ansIndexLocal = getLocalStorageItem("ansIndex");
+      const ansIndexLocal = getLocalStorageItem(ANS_INDEX);
       dispatch(initiateAnsIndex(ansIndexLocal));
     } else {
       fetchExamPaper();
     }
     const handleStorageChange = () => {
-      const examPaper = getLocalStorageItem("examPaper");
-      const ansIndexLocal = getLocalStorageItem("ansIndex");
+      const examPaper = getLocalStorageItem(EXAM_PAPER);
+      const ansIndexLocal = getLocalStorageItem(ANS_INDEX);
       if (examPaper) {
         dispatch(loadExamPaper(examPaper));
         if (ansIndexLocal) {
@@ -94,8 +105,8 @@ export const useGiveExam = () => {
     window.addEventListener("storage", handleStorageChange);
 
     return () => {
-      removeLocalStorageItem('examPaper')
-      removeLocalStorageItem('ansIndex')
+      removeLocalStorageItem(EXAM_PAPER);
+      removeLocalStorageItem(ANS_INDEX);
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
@@ -128,7 +139,7 @@ export const useGiveExam = () => {
       try {
         const config = {
           method: "post",
-          url: studentSubmitExam,
+          url: STUDENT_SUBMIT_EXAM,
           data: ansArr,
           headers: { "access-token": token },
           params: { id },
@@ -141,14 +152,16 @@ export const useGiveExam = () => {
         console.log("error", error);
       }
     };
-    (ansArr.length === 7 ? submitExam() : toastError("Please Fill all Questions"))
+    ansArr.length === 7
+      ? submitExam()
+      : toastError("Please Fill all Questions");
   };
 
   const handleCancel = () => {
     dispatch(cancelExam());
     dispatch(initiateAnsIndex([]));
-    removeLocalStorageItem("ansIndex");
-    removeLocalStorageItem("examPaper");
+    removeLocalStorageItem(ANS_INDEX);
+    removeLocalStorageItem(EXAM_PAPER);
     navigate(ALL_EXAM);
   };
 
@@ -156,7 +169,6 @@ export const useGiveExam = () => {
     createExamFields,
     currQuestion,
     examData,
-    role,
     validateExamData,
     validate,
     error,

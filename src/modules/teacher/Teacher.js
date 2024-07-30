@@ -12,6 +12,7 @@ import {
   VIEW_EXAM,
 } from "../../utils/routeConstant";
 import { removeLocalStorageItem } from "../../utils/localStorageFunction";
+import { PAGE_NO } from "../../utils/localStorageConstant";
 
 const teacherRoutes = [
   {
@@ -42,7 +43,7 @@ const Teacher = () => {
 
   useEffect(() => {
     const allStudent = location.pathname.split("/")[1];
-    (allStudent !== "all-student" && removeLocalStorageItem("pageNo"))
+    (allStudent !== "all-student" && removeLocalStorageItem(PAGE_NO))
   })
 
   return (

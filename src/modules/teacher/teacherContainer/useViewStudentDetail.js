@@ -6,16 +6,17 @@ import { removeLocalStorageItem } from "../../../utils/localStorageFunction";
 import { ALL_STUDENT, LOGIN_PAGE } from "../../../utils/routeConstant";
 import { loadCurrStudentDetail } from "../../../redux/slices/teacher";
 import { useEffect } from "react";
-import { teacherViewStudentDetail } from "../../../utils/apiUrlConstant";
+import { TEACHER_VIEW_STUDENT_DETAIL } from "../../../utils/apiUrlConstant";
+import { USER_DATA } from "../../../utils/localStorageConstant";
 
 export const useViewStudentDetail = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const {id} = Object.fromEntries(searchParams.entries())
   const currStudentDetail = useSelector(
     (state) => state.teacher.currStudentDetail
   );
-  const id = searchParams.get("id");
   const {token} = getCurrUserData()
 
   useEffect(() => {
@@ -23,13 +24,13 @@ export const useViewStudentDetail = () => {
       const fetchStudentDetail = async () => {
         const config = {
           method: "get",
-          url: teacherViewStudentDetail,
+          url: TEACHER_VIEW_STUDENT_DETAIL,
           headers: { "access-token": token },
           params: { id },
         };
         const res = await dispatch(fetchData(config));
         if (res?.payload?.statusCode === 401) {
-          removeLocalStorageItem("userData");
+          removeLocalStorageItem(USER_DATA);
           navigate(LOGIN_PAGE);
           return;
         }

@@ -16,7 +16,7 @@ import {
   confirmPasswordValidation,
   passwordValidation,
 } from "../../utils/validationConstant";
-import { forgetPasswordUrl } from "../../utils/apiUrlConstant";
+import { FORGET_PASS_URL } from "../../utils/apiUrlConstant";
 import { hasObjectLength, isStudent } from "../../utils/commonFunction";
 
 const validate = {
@@ -24,32 +24,27 @@ const validate = {
   ConfirmPassword: confirmPasswordValidation,
 };
 
+const createNewPasswordField = [
+  {
+    type: "password",
+    id: "Password",
+    name: "Password",
+    label: "Password",
+  },
+  {
+    type: "password",
+    id: "ConfirmPassword",
+    name: "ConfirmPassword",
+    label: "Confirm Password",
+  },
+];
+
 export const useNewPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const error = useSelector((state) => state.user.error);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const token = searchParams.get("token");
+ const [searchParams, setSearchParams] = useSearchParams();
+  const {token} = Object.fromEntries(searchParams.entries())
   const { role } = getCurrUserData() || {};
-
-  const createNewPasswordField = [
-    {
-      type: "password",
-      id: "Password",
-      name: "Password",
-      label: "Password:",
-      error: error,
-      clearError: handleError,
-    },
-    {
-      type: "password",
-      id: "ConfirmPassword",
-      name: "ConfirmPassword",
-      label: "Confirm Password:",
-      error: error,
-      clearError: handleError,
-    },
-  ];
 
   useEffect(() => {
     (role && navigate(isStudent() ? STUDENT_DASHBOARD :TEACHER_DASHBOARD, { replace: true }))
@@ -73,7 +68,7 @@ export const useNewPassword = () => {
       }
       const config = {
         method: "post",
-        url: `${forgetPasswordUrl}/Verify`,
+        url: `${FORGET_PASS_URL}/Verify`,
         data: newPasswordData,
         params: { token },
       };

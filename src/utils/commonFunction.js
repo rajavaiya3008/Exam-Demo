@@ -25,14 +25,14 @@ export const validationExamData = (examData,currQuestion) => {
   }
 }
 
-export const validateOptions = (examData,currQuestion) => {
-  return {
-    op1: examData?.questions?.[currQuestion]?.options?.[0],
-    op2: examData?.questions?.[currQuestion]?.options?.[1],
-    op3: examData?.questions?.[currQuestion]?.options?.[2],
-    op4: examData?.questions?.[currQuestion]?.options?.[3],
-  }
-}
+export const validateOptions = (examData, currQuestion) => {
+  const options = examData?.questions?.[currQuestion]?.options || [];
+
+  return options.reduce((acc, option, index) => {
+    acc[`op${index + 1}`] = option;
+    return acc;
+  }, {});
+};
 
 export const isStudent = () => {
   return getCurrUserData()?.role === 'student' 

@@ -11,6 +11,7 @@ import {
   STUDENT_PROFILE,
 } from "../../utils/routeConstant";
 import { removeLocalStorageItem } from "../../utils/localStorageFunction";
+import { PAGE_NO } from "../../utils/localStorageConstant";
 
 const studentRoutes = [
   {
@@ -36,7 +37,7 @@ const Student = () => {
 
   useEffect(() => {
     const allExam = location.pathname.split("/")[1];
-    (allExam !== "all-exam" && removeLocalStorageItem("pageNo"))
+    (allExam !== "all-exam" && removeLocalStorageItem(PAGE_NO))
   });
 
   return (

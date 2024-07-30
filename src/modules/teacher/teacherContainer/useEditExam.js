@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleEdited,
-  handleError,
+  handleTeacherError,
   initiateAnsIndex,
   initiateExam,
   initiateQuestions,
   loadExamData,
+  loadViewExamData,
 } from "../../../redux/slices/teacher";
 import { validateData } from "../../../utils/validation";
 import { getCurrUserData } from "../../../utils/currentUser";
@@ -16,10 +17,11 @@ import { LOGIN_PAGE, VIEW_EXAM } from "../../../utils/routeConstant";
 import { toastSuccess } from "../../../utils/toastFunction";
 import { removeLocalStorageItem } from "../../../utils/localStorageFunction";
 import { useSearchParams } from "react-router-dom";
-import { getEditExam, teacherDeleteExam, teacherEditExam } from "../../../utils/apiUrlConstant";
+import { GET_EDIT_EXAM, TEACHER_DELETE_EXAM, TEACHER_EDIT_EXAM } from "../../../utils/apiUrlConstant";
 import { examValidation } from "../../../utils/validationConstant";
 import { hasDuplicates, hasObjectLength, validateOptions, validationExamData } from "../../../utils/commonFunction";
-import { editData, examFields } from "../../../utils/examDataConstatnt";
+import { editData, examFields, sameOptionMsg, sameQuestionMsg } from "../../../utils/examDataConstatnt";
+import { ANS_INDEX, CREATE_EXAM_CONST, USER_DATA } from "../../../utils/localStorageConstant";
 
 const validate = examValidation
 
@@ -27,8 +29,7 @@ export const useEditExam = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const id = searchParams.get("id");
-  const subjectName = searchParams.get("subject");
+  const {id,subject:subjectName} = Object.fromEntries(searchParams.entries())
   const examData = useSelector((state) => state.teacher.createExam);
   const sameQuestions = useSelector((state) => state.teacher.questions);
   const [currQuestion, setCurrQuestion] = useState(0);
@@ -42,20 +43,20 @@ export const useEditExam = () => {
 
   const optionArr = examData?.questions?.[currQuestion]?.options;
 
-  const createExamFields = examFields(examData,error,currQuestion,Options)
+  const createExamFields = examFields(examData,currQuestion,Options)
 
   useEffect(() => {
     try {
       const fetchEditExamData = async () => {
         const config = {
           method: "get",
-          url: getEditExam,
+          url: GET_EDIT_EXAM,
           headers: { "access-token": token },
           params: { id },
         };
         const res = await dispatch(fetchData(config));
         if (res?.payload?.statusCode === 401) {
-          removeLocalStorageItem("userData");
+          removeLocalStorageItem(USER_DATA);
           navigate(LOGIN_PAGE);
           return;
         }
@@ -79,8 +80,8 @@ export const useEditExam = () => {
       dispatch(initiateAnsIndex([]));
       dispatch(initiateQuestions([]));
       dispatch(handleEdited());
-      removeLocalStorageItem("createExam");
-      removeLocalStorageItem("ansIndex");
+      removeLocalStorageItem(CREATE_EXAM_CONST);
+      removeLocalStorageItem(ANS_INDEX);
     };
   }, []);
 
@@ -92,21 +93,21 @@ export const useEditExam = () => {
         sameQuestions[currQuestion] !== validateExamData.question
       ) {
         validateExamData.questions = sameQuestions;
-        validateExamData.sameQueMsg = "Question already Exists";
+        validateExamData.sameQueMsg = sameQuestionMsg;
       }
 
       const error = validateData(validateExamData, validate);
       if (hasObjectLength(error)) {
-        dispatch(handleError(error));
+        dispatch(handleTeacherError(error));
         return;
       }
       if (hasDuplicates(optionArr)) {
-        dispatch(handleError({sameOption:"Two Options are Same Please Check"}));
+        dispatch(handleTeacherError({sameOption:sameOptionMsg}));
         return;
       }
       const config = {
         method: "put",
-        url: teacherEditExam,
+        url: TEACHER_EDIT_EXAM,
         data: examData,
         headers: { "access-token": token },
         params: { id },
@@ -128,12 +129,13 @@ export const useEditExam = () => {
       const deleteExam = async () => {
         const config = {
           method: "delete",
-          url: teacherDeleteExam,
+          url: TEACHER_DELETE_EXAM,
           headers: { "access-token": token },
           params: { id },
         };
         const res = await dispatch(fetchData(config));
         toastSuccess("exam deleted successfully");
+        dispatch(loadViewExamData([]))
         navigate(VIEW_EXAM);
       };
       deleteExam();

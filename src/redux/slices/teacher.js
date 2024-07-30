@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { setLocalStorageItem } from "../../utils/localStorageFunction";
+import { ANS_INDEX, CREATE_EXAM_CONST } from "../../utils/localStorageConstant";
 
 const initialState = {
   allStudentData: [],
@@ -40,14 +41,14 @@ export const teacherSlice = createSlice({
       const { name, value } = action.payload;
       state.error = {};
       state.createExam[name] = value;
-      setLocalStorageItem("createExam", state.createExam);
+      setLocalStorageItem(CREATE_EXAM_CONST, state.createExam);
     },
     handleQuestion: (state, action) => {
       state.edited = true;
       const { name, value, queIndex } = action.payload;
       state.error = {};
       state.createExam.questions[queIndex][name] = value;
-      setLocalStorageItem("createExam", state.createExam);
+      setLocalStorageItem(CREATE_EXAM_CONST, state.createExam);
     },
     handleOptions: (state, action) => {
       state.edited = true;
@@ -61,19 +62,19 @@ export const teacherSlice = createSlice({
         state.createExam.questions[queIndex].answer = value;
       }
       state.createExam.questions[queIndex].options[opIndex] = value;
-      setLocalStorageItem("createExam", state.createExam);
+      setLocalStorageItem(CREATE_EXAM_CONST, state.createExam);
     },
     handleAns: (state, action) => {
       state.edited = true;
       const { queIndex, ans } = action.payload;
       state.error = {};
       state.createExam.questions[queIndex].answer = ans;
-      setLocalStorageItem("createExam", state.createExam);
+      setLocalStorageItem(CREATE_EXAM_CONST, state.createExam);
     },
     addNewQuestion: (state, action) => {
       state.createExam.questions.push(action.payload);
     },
-    handleError: (state, action) => {
+    handleTeacherError: (state, action) => {
       state.error = action.payload;
     },
     initiateExam: (state) => {
@@ -104,7 +105,7 @@ export const teacherSlice = createSlice({
     },
     handleAnsIndexes: (state, action) => {
       state.ansIndex[action.payload.currQuestion] = action.payload.ansIndex;
-      setLocalStorageItem("ansIndex", state.ansIndex);
+      setLocalStorageItem(ANS_INDEX, state.ansIndex);
     },
     initiateAnsIndex: (state, action) => {
       state.ansIndex = action.payload;
@@ -123,7 +124,7 @@ export const {
   handleOptions,
   handleAns,
   addNewQuestion,
-  handleError,
+  handleTeacherError,
   initiateExam,
   loadViewExamData,
   loadCurrStudentDetail,

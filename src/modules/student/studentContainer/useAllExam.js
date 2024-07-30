@@ -13,7 +13,8 @@ import {
   LOGIN_PAGE,
   SHOW_RESULT,
 } from "../../../utils/routeConstant";
-import { studentAllExam } from "../../../utils/apiUrlConstant";
+import { STUDENT_ALL_EXAM } from "../../../utils/apiUrlConstant";
+import { USER_DATA } from "../../../utils/localStorageConstant";
 
 const keys = ["subjectName", "email"];
 const btn = {
@@ -41,18 +42,18 @@ export const useAllExam = () => {
     const fetchAllExam = async () => {
       const config = {
         method: "get",
-        url: studentAllExam,
+        url: STUDENT_ALL_EXAM,
         headers: { "access-token": token },
       };
       const res = await dispatch(fetchData(config));
       if (res?.payload?.statusCode === 401) {
-        removeLocalStorageItem("userData");
+        removeLocalStorageItem(USER_DATA);
         navigate(LOGIN_PAGE);
         return;
       }
       dispatch(loadAllExamData(res?.payload?.data));
     };
-    (!allExamData.length && fetchAllExam())
+    !allExamData.length && fetchAllExam();
 
     return () => {
       dispatch(handleSearchField(""));

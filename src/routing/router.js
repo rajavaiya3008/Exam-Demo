@@ -21,113 +21,132 @@ import ViewExam from "../modules/teacher/teacherPresentation/ViewExam";
 import ViewStudentDetail from "../modules/teacher/teacherPresentation/ViewStudentDetail";
 import Login from "../modules/user/Login";
 import SignUp from "../modules/user/SignUp";
-import { ALL_EXAM, ALL_STUDENT, CREATE_EXAM, EDIT_EXAM, FORGET_PASSWORD, GIVE_EXAM, HOME_PAGE, LOGIN_PAGE, NEW_PASSWORD, RESET_PASSWORD, SHOW_RESULT, SIGNUP_PAGE, STUDENT, STUDENT_DASHBOARD, STUDENT_DETAIL, STUDENT_PROFILE, STUDENT_RESET_PASS, TEACHER, TEACHER_DASHBOARD, TEACHER_RESET_PASS, VERIFIED_STUDENT, VIEW_EXAM } from "../utils/routeConstant";
-
+import {
+  ALL_EXAM,
+  ALL_STUDENT,
+  CREATE_EXAM,
+  EDIT_EXAM,
+  FORGET_PASSWORD,
+  GIVE_EXAM,
+  HOME_PAGE,
+  LOGIN_PAGE,
+  NEW_PASSWORD,
+  SHOW_RESULT,
+  SIGNUP_PAGE,
+  STUDENT_DASHBOARD,
+  STUDENT_DETAIL,
+  STUDENT_PROFILE,
+  STUDENT_RESET_PASS,
+  TEACHER_DASHBOARD,
+  TEACHER_RESET_PASS,
+  VERIFIED_STUDENT,
+  VIEW_EXAM,
+} from "../utils/routeConstant";
 
 export const allRouter = [
-    {
-      path:HOME_PAGE,
-      errorElement:<ErrorPage />,
-      element:<App />,
-      children:[
-        {
-            index:true,
-            element:<Home />
-        },
-        {
-          path:LOGIN_PAGE,
-          element:<Login />
-        },
-        {
-          path:SIGNUP_PAGE,
-          element:<SignUp />
-        },
-        {
-          path:FORGET_PASSWORD,
-          element:<ForgetPassword />
-        },
-        {
-          path:NEW_PASSWORD,
-          element:<NewPassword />
-        },
-        {
-          element:<Auth role={["teacher"]}/>,
-          children:[
-            {
-              // path:TEACHER,
-              element:<Teacher />,
-              children:[
-                {
-                  path:TEACHER_DASHBOARD,
-                  element:<TeacherDashbord />
-                },
-                {
-                  path:ALL_STUDENT,
-                  element:<AllStudent />
-                },
-                {
-                  path:VERIFIED_STUDENT,
-                  element:<VerifiedStudent />
-                },
-                {
-                  path:STUDENT_DETAIL,
-                  element:<ViewStudentDetail />
-                },
-                {
-                  path:CREATE_EXAM,
-                  element:<CreateExam />
-                },
-                {
-                  path:VIEW_EXAM,
-                  element:<ViewExam />
-                },
-                {
-                  path:EDIT_EXAM,
-                  element:<EditExam />
-                },
-                {
-                  path:TEACHER_RESET_PASS,
-                  element:<ResetPassword />
-                },
-              ]
-            }
-          ]
-        },
-        {
-          element:<Auth role={['student']}/>,
-          children:[
-            {
-              // path:STUDENT,
-              element:<Student />,
-              children:[
-                {
-                  path:STUDENT_DASHBOARD,
-                  element:<StudentDashboard />
-                },
-                {
-                  path:ALL_EXAM,
-                  element:<AllExam />,
-                },
-                {
-                  path:GIVE_EXAM,
-                  element:<GiveExam />
-                },
-                {
-                  path:STUDENT_PROFILE,
-                  element:<StudentProfile />
-                },
-                {
-                  path:STUDENT_RESET_PASS,
-                  element:<ResetPassword />
-                },
-                {
-                  path:SHOW_RESULT,
-                  element:<ShowResult />
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  {
+    path: HOME_PAGE,
+    errorElement: <ErrorPage />,
+    element: <App />,
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: LOGIN_PAGE,
+        element: <Login />,
+      },
+      {
+        path: SIGNUP_PAGE,
+        element: <SignUp />,
+      },
+      {
+        path: FORGET_PASSWORD,
+        element: <ForgetPassword />,
+      },
+      {
+        path: NEW_PASSWORD,
+        element: <NewPassword />,
+      },
+      {
+        element: <Auth role={["teacher"]} />,
+        children: [
+          {
+            // path:TEACHER,
+            element: <Teacher />,
+            children: [
+              {
+                path: TEACHER_DASHBOARD,
+                element: <TeacherDashbord />,
+              },
+              {
+                path: ALL_STUDENT,
+                element: <AllStudent />,
+              },
+              {
+                path: VERIFIED_STUDENT,
+                element: <VerifiedStudent />,
+              },
+              {
+                path: STUDENT_DETAIL,
+                element: <ViewStudentDetail />,
+              },
+              {
+                path: CREATE_EXAM,
+                element: <CreateExam />,
+              },
+              {
+                path: VIEW_EXAM,
+                element: <ViewExam />,
+              },
+              {
+                path: EDIT_EXAM,
+                element: <EditExam />,
+              },
+              {
+                path: TEACHER_RESET_PASS,
+                element: <ResetPassword />,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        element: <Auth role={["student"]} />,
+        children: [
+          {
+            // path:STUDENT,
+            element: <Student />,
+            children: [
+              {
+                path: STUDENT_DASHBOARD,
+                element: <StudentDashboard />,
+              },
+              {
+                path: ALL_EXAM,
+                element: <AllExam />,
+              },
+              {
+                path: GIVE_EXAM,
+                element: <GiveExam />,
+              },
+              {
+                path: STUDENT_PROFILE,
+                element: <StudentProfile />,
+              },
+              {
+                path: STUDENT_RESET_PASS,
+                element: <ResetPassword />,
+              },
+              {
+                path: SHOW_RESULT,
+                element: <ShowResult />,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+];
