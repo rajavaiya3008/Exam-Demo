@@ -35,7 +35,7 @@ const GiveExam = () => {
           />
 
           <div className="flex justify-center mt-2">
-            <Button onSubmit={handleSubmitExam} style={'mr-[-5px]'}>
+            <Button onSubmit={handleSubmitExam} style='mr-[-5px]'>
               Submit
             </Button>
             <Button onSubmit={handleCancel}>

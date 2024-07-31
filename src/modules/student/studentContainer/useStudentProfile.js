@@ -3,10 +3,10 @@ import { validateData } from "../../../utils/validation";
 import {
   handleStudentError,
   loadStudentProfile,
-  updateProfile,
+  // updateProfile,
 } from "../../../redux/slices/student";
 import { getCurrUserData } from "../../../utils/currentUser";
-import { fetchData } from "../../../redux/slices/api";
+import { cancelFetchData, currAbortController, fetchData } from "../../../redux/slices/api";
 import { useEffect, useState } from "react";
 import {
   getLocalStorageItem,
@@ -20,6 +20,7 @@ import { GET_STUDENT_PROFILE, SAVE_STUDENT_PROFILE } from "../../../utils/apiUrl
 import { nameValidation } from "../../../utils/validationConstant";
 import { hasObjectLength } from "../../../utils/commonFunction";
 import { STUDENT, USER_DATA } from "../../../utils/localStorageConstant";
+import { useProfile } from "../../../form/hooks/useProfile";
 
 const validate = {
   name: nameValidation,
@@ -28,10 +29,9 @@ const validate = {
 export const useStudentProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const {updateProfile} = useProfile()
   const [disable, setDisable] = useState(true);
   const studentProfile = useSelector((state) => state.student.studentProfile);
-  const error = useSelector((state) => state.student.error);
 
   const createStudentFields = [
     {
@@ -42,7 +42,6 @@ export const useStudentProfile = () => {
       data: studentProfile,
       updateData: updateProfile,
       disable: disable,
-      error: error,
     },
     {
       type: "text",
@@ -52,7 +51,6 @@ export const useStudentProfile = () => {
       data: studentProfile,
       updateData: updateProfile,
       disable: true,
-      error: error,
     },
   ];
 
@@ -82,6 +80,10 @@ export const useStudentProfile = () => {
     };
     const student = getLocalStorageItem(STUDENT);
     (!student ? fetchStudentDetail() : dispatch(loadStudentProfile(student)))
+
+    return () => {
+      cancelFetchData(currAbortController);
+    }
   }, []);
 
   const saveProfile = async () => {

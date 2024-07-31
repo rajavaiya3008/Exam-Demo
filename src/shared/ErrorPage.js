@@ -17,7 +17,7 @@ const ErrorPage = () => {
     <div className="h-[100vh] flex justify-center items-center">
       <div>
         <p className="text-lg">Opps! Something went Wrong!</p>
-        <Button onSubmit={handleBack} style={'mt-[20px]'}>
+        <Button onSubmit={handleBack} style='mt-[20px]'>
           Back
         </Button>
       </div>

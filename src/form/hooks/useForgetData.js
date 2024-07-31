@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { handleError } from "../../redux/slices/user";
 import { validateData } from "../../utils/validation";
-import { fetchData } from "../../redux/slices/api";
+import { cancelFetchData, currAbortController, fetchData } from "../../redux/slices/api";
 import { toastError, toastSuccess } from "../../utils/toastFunction";
 import {
   LOGIN_PAGE,
@@ -19,23 +19,27 @@ const validate = {
   email: emailValidation,
 };
 
+const fieldData = [
+  {
+    type: "email",
+    id: "email",
+    name: "email",
+    label: "Email",
+  },
+];
+
 export const useForgetData = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const error = useSelector((state) => state.user.error);
   const { role } = getCurrUserData();
-  const fieldData = [
-    {
-      type: "email",
-      id: "email",
-      name: "email",
-      label: "Email",
-    },
-  ];
 
   useEffect(() => {
     dispatch(handleError({}));
     (role && navigate(isStudent() ? STUDENT_DASHBOARD :TEACHER_DASHBOARD, { replace: true }))
+
+    return () => {
+      cancelFetchData(currAbortController);
+    }
   }, []);
 
   const sendMail = async (e) => {

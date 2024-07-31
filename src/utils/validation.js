@@ -26,28 +26,6 @@ export const validateData = (data,validate) => {
             }
         })
     }
-
-    // formField.forEach((field) => {
-    //     if(data[field.name].length < 3){
-    //         error[field.name] = "Please Enter atleast 3 character";
-    //     }
-    // })
-
-    // if(data.userName.length < 3){
-    //     error.userName = 'User Name Must be at least 3 character';
-    // }
-
-    // if(!data.email.match(pattern)){
-    //     error.email = 'Email is not Valid Formate'
-    // }
-
-    // if(data.password.length < 5){
-    //     error.password = 'Password must be at least 5 character'
-    // }
-
-    // if(data.confirmPassword !== data.password){
-    //     error.confirmPassword = 'Conform password did not match with password';
-    // }
     
     return error;
 }

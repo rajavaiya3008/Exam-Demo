@@ -1,10 +1,10 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import { getCurrUserData } from "../../utils/currentUser";
 import { handleError } from "../../redux/slices/user";
 import { validateData } from "../../utils/validation";
-import { fetchData } from "../../redux/slices/api";
+import { cancelFetchData, currAbortController, fetchData } from "../../redux/slices/api";
 import {
   LOGIN_PAGE,
   STUDENT_DASHBOARD,
@@ -16,8 +16,9 @@ import {
   confirmPasswordValidation,
   passwordValidation,
 } from "../../utils/validationConstant";
-import { FORGET_PASS_URL } from "../../utils/apiUrlConstant";
+import { FORGET_PASS_VERIFY } from "../../utils/apiUrlConstant";
 import { hasObjectLength, isStudent } from "../../utils/commonFunction";
+import { PASS_NOT_MATCH } from "../../utils/constant";
 
 const validate = {
   Password: passwordValidation,
@@ -48,6 +49,10 @@ export const useNewPassword = () => {
 
   useEffect(() => {
     (role && navigate(isStudent() ? STUDENT_DASHBOARD :TEACHER_DASHBOARD, { replace: true }))
+
+    return () => {
+      cancelFetchData(currAbortController);
+    }
   }, []);
 
   const handleChangePassword = async (e) => {
@@ -58,7 +63,7 @@ export const useNewPassword = () => {
       validate.ConfirmPassword.push({
         match: true,
         comKey: newPasswordData.Password,
-        message: "Password Do not Match",
+        message: PASS_NOT_MATCH,
       });
       const error = validateData(newPasswordData, validate);
       if (hasObjectLength(error)) {
@@ -68,7 +73,7 @@ export const useNewPassword = () => {
       }
       const config = {
         method: "post",
-        url: `${FORGET_PASS_URL}/Verify`,
+        url: FORGET_PASS_VERIFY,
         data: newPasswordData,
         params: { token },
       };

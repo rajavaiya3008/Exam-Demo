@@ -11,7 +11,7 @@ import {
 } from "../../../redux/slices/teacher";
 import { validateData } from "../../../utils/validation";
 import { getCurrUserData } from "../../../utils/currentUser";
-import { fetchData } from "../../../redux/slices/api";
+import { cancelFetchData, currAbortController, fetchData } from "../../../redux/slices/api";
 import { useNavigate } from "react-router";
 import { LOGIN_PAGE, VIEW_EXAM } from "../../../utils/routeConstant";
 import { toastSuccess } from "../../../utils/toastFunction";
@@ -20,7 +20,7 @@ import { useSearchParams } from "react-router-dom";
 import { GET_EDIT_EXAM, TEACHER_DELETE_EXAM, TEACHER_EDIT_EXAM } from "../../../utils/apiUrlConstant";
 import { examValidation } from "../../../utils/validationConstant";
 import { hasDuplicates, hasObjectLength, validateOptions, validationExamData } from "../../../utils/commonFunction";
-import { editData, examFields, sameOptionMsg, sameQuestionMsg } from "../../../utils/examDataConstatnt";
+import { editData, useExamFields, sameOptionMsg, sameQuestionMsg } from "../../../utils/examDataConstatnt";
 import { ANS_INDEX, CREATE_EXAM_CONST, USER_DATA } from "../../../utils/localStorageConstant";
 
 const validate = examValidation
@@ -43,7 +43,7 @@ export const useEditExam = () => {
 
   const optionArr = examData?.questions?.[currQuestion]?.options;
 
-  const createExamFields = examFields(examData,currQuestion,Options)
+  const createExamFields = useExamFields(examData,currQuestion,Options)
 
   useEffect(() => {
     try {
@@ -76,6 +76,7 @@ export const useEditExam = () => {
     }
 
     return () => {
+      cancelFetchData(currAbortController);
       dispatch(initiateExam());
       dispatch(initiateAnsIndex([]));
       dispatch(initiateQuestions([]));

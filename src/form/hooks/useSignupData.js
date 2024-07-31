@@ -1,9 +1,9 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   handleError,
 } from "../../redux/slices/user";
 import { validateData } from "../../utils/validation";
-import { fetchData } from "../../redux/slices/api";
+import { cancelFetchData, currAbortController, fetchData } from "../../redux/slices/api";
 import { useNavigate } from "react-router";
 import { toastError, toastSuccess } from "../../utils/toastFunction";
 import { LOGIN_PAGE, STUDENT_DASHBOARD, TEACHER_DASHBOARD } from "../../utils/routeConstant";
@@ -20,42 +20,45 @@ const validate = {
   role: [{ required: true, message: "Please Select Role" }],
 };
 
+const signupField = [
+  {
+    type: "text",
+    id: "name",
+    name: "name",
+    label: "Enter Name",
+  },
+  {
+    type: "email",
+    id: "email",
+    name: "email",
+    label: "Enter Email",
+  },
+  {
+    type: "password",
+    id: "password",
+    name: "password",
+    label: "Enter Password",
+  },
+  {
+    type:'select',
+    style:'mt-[10px]',
+    dropDownOptions:["student", "teacher"],
+    name:"role",
+  }
+];
+
 export const useSignupData = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const error = useSelector((state) => state.user.error);
   const {role} = getCurrUserData();
-
-  const signupField = [
-    {
-      type: "text",
-      id: "name",
-      name: "name",
-      label: "Enter Name",
-    },
-    {
-      type: "email",
-      id: "email",
-      name: "email",
-      label: "Enter Email",
-    },
-    {
-      type: "password",
-      id: "password",
-      name: "password",
-      label: "Enter Password",
-    },
-    {
-      type:'select',
-      style:'mt-[10px]',
-      dropDownOptions:["student", "teacher"],
-      name:"role",
-    }
-  ];
 
   useEffect(() => {
     dispatch(handleError({}));
     (role && navigate(isStudent() ? STUDENT_DASHBOARD :TEACHER_DASHBOARD, { replace: true }))
+
+    return () => {
+      cancelFetchData(currAbortController);
+    }
   }, []);
 
   const handleSignup = async (e) => {

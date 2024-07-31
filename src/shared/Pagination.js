@@ -8,6 +8,7 @@ import {
   setLocalStorageItem,
 } from "../utils/localStorageFunction";
 import { PAGE_NO } from "../utils/localStorageConstant";
+import { NEXT, PREV } from "../utils/constant";
 
 let recordsPerPage = 10;
 let sliceData;
@@ -46,7 +47,6 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
   },[searchVal,currPage])
 
   const filterData = (data) => {
-    console.log('Filter data is calling')
     return data?.filter(
       (item, i) => i >= indexOfFirstRecord && i < indexOfLastRecord
     )
@@ -146,7 +146,7 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
           </pre>
           <div className="flex gap-2 pb-2">
             <Button
-              onSubmit={() => handleNavigation('prev')}
+              onSubmit={() => handleNavigation(PREV)}
               disable={prevDisable()}
               customStyle={
                 "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline rounded-full"
@@ -158,7 +158,7 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
               {currPage}
             </span>
             <Button
-              onSubmit={() => handleNavigation('next')}
+              onSubmit={() => handleNavigation(NEXT)}
               disable={nextDisable()}
               customStyle={
                 "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline rounded-full"

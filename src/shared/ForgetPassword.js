@@ -10,7 +10,7 @@ const ForgetPassword = () => {
     <>
       <div className="flex items-center flex-col mt-[70px]">
         <p className="text-center mb-4 text-4xl">Forget Password</p>
-        <Form onSubmit={sendMail} fieldData={fieldData} btnName={'Submit'} btnStyle={`mt-[10px]`}/>
+        <Form onSubmit={sendMail} fieldData={fieldData} btnName='Submit' btnStyle='mt-[10px]'/>
       </div>
     </>
   );

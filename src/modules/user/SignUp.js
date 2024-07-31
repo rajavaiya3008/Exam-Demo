@@ -17,8 +17,8 @@ const SignUp = () => {
         <Form
           onSubmit={handleSignup}
           fieldData={signupField}
-          btnName={"Signup"}
-          btnStyle={"w-[270px] mt-[30px]"}
+          btnName="Signup"
+          btnStyle="w-[270px] mt-[30px]"
         />
 
         <div className="text-center">

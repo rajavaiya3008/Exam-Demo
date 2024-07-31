@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { validateData } from "../../../utils/validation";
 import { getCurrUserData } from "../../../utils/currentUser";
-import { fetchData } from "../../../redux/slices/api";
+import { cancelFetchData, currAbortController, fetchData } from "../../../redux/slices/api";
 import { useNavigate } from "react-router";
 import { VIEW_EXAM } from "../../../utils/routeConstant";
 import { toastSuccess } from "../../../utils/toastFunction";
@@ -21,7 +21,7 @@ import {
 import { TEACHER_CREATE_EXAM } from "../../../utils/apiUrlConstant";
 import { examValidation } from "../../../utils/validationConstant";
 import { hasDuplicates, hasObjectLength, validateOptions, validationExamData } from "../../../utils/commonFunction";
-import { examFields, sameOptionMsg, sameQuestionMsg } from "../../../utils/examDataConstatnt";
+import { useExamFields, sameOptionMsg, sameQuestionMsg } from "../../../utils/examDataConstatnt";
 import { ANS_INDEX, CREATE_EXAM_CONST } from "../../../utils/localStorageConstant";
 
 const validate = examValidation;
@@ -39,7 +39,7 @@ export const useCreateExam = () => {
 
   const Options = validateOptions(examData,currQuestion);
 
-  const createExamFields = examFields(examData,currQuestion,Options)
+  const createExamFields = useExamFields(examData,currQuestion,Options)
 
   const optionArr = examData?.questions?.[currQuestion]?.options;
 
@@ -62,6 +62,7 @@ export const useCreateExam = () => {
     window.addEventListener("storage", handleStorageChange);
 
     return () => {
+      cancelFetchData(currAbortController);
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []);

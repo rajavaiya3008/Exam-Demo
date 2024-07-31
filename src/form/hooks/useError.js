@@ -33,13 +33,3 @@ export const useGetError = () => {
 
     return { error, handleError: handleErrorFunction };
   };
-// export const useGetError = () => {
-//     const {role} = getCurrUserData()
-//     if(!role){
-//       return {error:useSelector(state => state.user.error),handleError:handleError}
-//     }else if(isStudent()){
-//       return {error:useSelector(state => state.student.error),handleError:handleStudentError}
-//     }else{
-//       return {error:useSelector(state => state.teacher.error),handleError:handleTeacherError}
-//     }
-//   }

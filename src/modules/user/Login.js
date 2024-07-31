@@ -18,8 +18,8 @@ const Login = () => {
           <Form
             onSubmit={handleSubmit}
             fieldData={loginField}
-            btnName={"Login"}
-            btnStyle={"w-[270px] mt-[30px]"}
+            btnName="Login"
+            btnStyle="w-[270px] mt-[30px]"
           />
 
           <div className="absolute bottom-[125px] right-[45px]">

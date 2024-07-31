@@ -25,7 +25,7 @@ const AllExam = () => {
         {useLoading() ? (
           <div className="spinner mx-auto"></div>
         ) : (
-          <div className="">
+          <div>
             <p className="text-center text-4xl mb-4">All Exams</p>
             <Pagination
               data={allExamData}

@@ -37,6 +37,7 @@ const InputField = ({ fieldData }) => {
     <div className="flex flex-col gap-2 w-[250px] mt-[10px]">
       <TextField
         {...fieldAttribute}
+        defaultValue={''}
         onChange={(e) => {
           const { name, value } = e?.target || {};
           let Data = {
@@ -48,7 +49,8 @@ const InputField = ({ fieldData }) => {
             ansIndex,
           };
           if(updateData){
-            dispatch(updateData(Data))
+            updateData(Data)
+            // dispatch(updateData(Data))
           }
           (hasObjectLength(error) && dispatch(handleError({})))
         }}

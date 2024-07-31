@@ -6,7 +6,7 @@ import {
   loadAllExamData,
   loadExamPaper,
 } from "../../../redux/slices/student";
-import { fetchData } from "../../../redux/slices/api";
+import { cancelFetchData, currAbortController, fetchData } from "../../../redux/slices/api";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { initiateAnsIndex } from "../../../redux/slices/teacher";
@@ -26,7 +26,7 @@ import {
   ansArray,
   showExam,
 } from "../../../utils/examPaperConstant";
-import { examFields } from "../../../utils/examDataConstatnt";
+import { useExamFields } from "../../../utils/examDataConstatnt";
 import { ANS_INDEX, EXAM_PAPER, USER_DATA } from "../../../utils/localStorageConstant";
 
 const validate = {
@@ -50,7 +50,7 @@ export const useGiveExam = () => {
     answer: examData?.questions?.[currQuestion]?.answer?.trim(),
   };
 
-  const createExamFields = examFields(
+  const createExamFields = useExamFields(
     examData,
     currQuestion,
     Options
@@ -105,34 +105,12 @@ export const useGiveExam = () => {
     window.addEventListener("storage", handleStorageChange);
 
     return () => {
+      cancelFetchData(currAbortController);
       removeLocalStorageItem(EXAM_PAPER);
       removeLocalStorageItem(ANS_INDEX);
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
-
-  // useEffect(() => {
-  //   const handleStorageChange = () => {
-  //     const examPaper = getLocalStorageItem("examPaper");
-  //     if (examPaper) {
-  //       dispatch(loadExamPaper(getLocalStorageItem("examPaper")));
-  //       const ansIndexLocal = getLocalStorageItem("ansIndex");
-  //       if (ansIndexLocal && ansIndex.length) {
-  //         dispatch(initiateAnsIndex(ansIndexLocal));
-  //       } else {
-  //         dispatch(initiateExamPaper({}));
-  //         dispatch(initiateAnsIndex(ansIndex));
-  //         navigate(ALL_EXAM);
-  //       }
-  //     }
-  //   };
-
-  //   window.addEventListener("storage", handleStorageChange);
-
-  //   return () => {
-  //     window.removeEventListener("storage", handleStorageChange);
-  //   };
-  // }, []);
 
   const handleSubmitExam = () => {
     const submitExam = async () => {

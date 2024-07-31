@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { axiosInstance } from "../../utils/api";
 
-let currAbortController = null;
+export let currAbortController = null;
 
 const initialState = {
   data: {},
@@ -12,9 +12,7 @@ const initialState = {
 export const fetchData = createAsyncThunk(
   "data/fetchData",
   async (config) => {
-    if (currAbortController) {
-      currAbortController.abort();
-    }
+    cancelFetchData(currAbortController)
     currAbortController = new AbortController();
     const signal = currAbortController.signal;
     config.signal = signal;
@@ -27,9 +25,10 @@ export const fetchData = createAsyncThunk(
   }
 );
 
-export const cancelFetchData = () => {
-  const controller = new AbortController();
-  controller.abort();
+export const cancelFetchData = (currAbortController) => {
+  if (currAbortController) {
+      currAbortController.abort();
+    }
 };
 
 const apiSlice = createSlice({

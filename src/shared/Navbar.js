@@ -36,7 +36,7 @@ const Navbar = ({ navItems }) => {
             <li key={i} onClick={() => dispatch(handleMenu())}>
               <NavLink
                 to={item.path}
-                className={`flex gap-[20px] text-[20px] items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
+                className='flex gap-[20px] text-[20px] items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group'
               >
                 {item.icon} {item.name}
               </NavLink>
@@ -51,7 +51,7 @@ const Navbar = ({ navItems }) => {
             </NavLink>
           </li>
           <li onClick={() => dispatch(handleMenu())}>
-            <Button onSubmit={handleLogout} customStyle={"flex gap-[20px] text-[20px] items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group w-full"}>
+            <Button onSubmit={handleLogout} customStyle="flex gap-[20px] text-[20px] items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group w-full">
               <TbLogout style={{ fontSize: 25 }} /> Logout
             </Button>
           </li>

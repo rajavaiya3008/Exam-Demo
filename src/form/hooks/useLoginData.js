@@ -1,7 +1,7 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { handleError } from "../../redux/slices/user";
 import { validateData } from "../../utils/validation";
-import { fetchData } from "../../redux/slices/api";
+import { cancelFetchData, currAbortController, fetchData } from "../../redux/slices/api";
 import { useNavigate } from "react-router";
 import { toastError, toastSuccess } from "../../utils/toastFunction";
 import { setLocalStorageItem } from "../../utils/localStorageFunction";
@@ -24,26 +24,25 @@ const validate = {
   password: passwordValidation,
 };
 
+const loginField = [
+  {
+    type: "email",
+    id: "email",
+    name: "email",
+    label: `Enter Email`,
+  },
+  {
+    type: "password",
+    id: "password",
+    name: "password",
+    label: "Enter Password",
+  },
+];
+
 export const useLoginData = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const error = useSelector((state) => state.user.error);
   const { role } = getCurrUserData();
-
-  const loginField = [
-    {
-      type: "email",
-      id: "email",
-      name: "email",
-      label: `Enter Email`,
-    },
-    {
-      type: "password",
-      id: "password",
-      name: "password",
-      label: "Enter Password",
-    },
-  ];
 
   useEffect(() => {
     dispatch(handleError({}));
@@ -51,6 +50,10 @@ export const useLoginData = () => {
       navigate(isStudent() ? STUDENT_DASHBOARD : TEACHER_DASHBOARD, {
         replace: true,
       });
+
+      return () => {
+        cancelFetchData(currAbortController);
+      }
   }, []);
 
   const handleSubmit = async (e) => {

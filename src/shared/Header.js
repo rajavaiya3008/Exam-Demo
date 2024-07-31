@@ -55,7 +55,7 @@ const Header = () => {
         {menuBtn && (
           <Button
             onSubmit={() => dispatch(handleMenu())}
-            customStyle={"menu-btn"}
+            customStyle="menu-btn"
           >
             {menu ? (
               <IoCloseSharp style={{ fontSize: 25 }} />

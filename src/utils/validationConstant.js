@@ -27,12 +27,28 @@ export const nameValidation = [...examValidationData("Please Enter Name","Enter 
 const opRequireMsg = 'Option Required'
 const opValidMsg = 'Enter Valid Option'
 
+const createOptionsValidation = (numOptions) => {
+  const optionsValidation = {};
+  for (let i = 1; i <= numOptions; i++) {
+    optionsValidation[`op${i}`] = examValidationData(opRequireMsg,opValidMsg);
+  }
+  return optionsValidation;
+};
+
 export const examValidation = {
   subjectName: examValidationData('Please Enter Subject','Enter Valid Subject'),
   question: examValidationData('Please Enter Question','Enter Valid Question'),
-  op1: examValidationData(opRequireMsg,opValidMsg),
-  op2: examValidationData(opRequireMsg,opValidMsg),
-  op3: examValidationData(opRequireMsg,opValidMsg),
-  op4: examValidationData(opRequireMsg,opValidMsg),
+  ...createOptionsValidation(4),
   answer: [{ required: true, message: "Answer Required" }],
 };
+
+
+// export const examValidation = {
+//   subjectName: examValidationData('Please Enter Subject','Enter Valid Subject'),
+//   question: examValidationData('Please Enter Question','Enter Valid Question'),
+//   op1: examValidationData(opRequireMsg,opValidMsg),
+//   op2: examValidationData(opRequireMsg,opValidMsg),
+//   op3: examValidationData(opRequireMsg,opValidMsg),
+//   op4: examValidationData(opRequireMsg,opValidMsg),
+//   answer: [{ required: true, message: "Answer Required" }],
+// };

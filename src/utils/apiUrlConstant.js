@@ -1,4 +1,5 @@
 export const FORGET_PASS_URL = 'users/ForgotPassword'
+export const FORGET_PASS_VERIFY = `${FORGET_PASS_URL}/Verify`
 export const LOGIN_URL = 'users/Login'
 export const RESET_PASS_URL = "users/ResetPassword"
 export const SIGNUP_URL = "users/SignUp"

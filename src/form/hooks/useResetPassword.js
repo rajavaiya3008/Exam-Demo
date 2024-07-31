@@ -1,11 +1,9 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { getCurrUserData } from "../../utils/currentUser";
-import {
-  handleError,
-} from "../../redux/slices/user";
+import { handleError } from "../../redux/slices/user";
 import { validateData } from "../../utils/validation";
-import { fetchData } from "../../redux/slices/api";
+import { cancelFetchData, currAbortController, fetchData } from "../../redux/slices/api";
 import { toastError, toastSuccess } from "../../utils/toastFunction";
 import {
   confirmPasswordValidation,
@@ -17,6 +15,8 @@ import {
   TEACHER_DASHBOARD,
 } from "../../utils/routeConstant";
 import { RESET_PASS_URL } from "../../utils/apiUrlConstant";
+import { useEffect } from "react";
+import { PASS_NOT_MATCH } from "../../utils/constant";
 
 const validate = {
   oldPassword: passwordValidation,
@@ -24,32 +24,37 @@ const validate = {
   ConfirmPassword: confirmPasswordValidation,
 };
 
+const ResetPasswordFields = [
+  {
+    type: "password",
+    id: "oldPassword",
+    name: "oldPassword",
+    label: "Old Password",
+  },
+  {
+    type: "password",
+    id: "Password",
+    name: "Password",
+    label: "Password",
+  },
+  {
+    type: "password",
+    id: "ConfirmPassword",
+    name: "ConfirmPassword",
+    label: "Confirm Password",
+  },
+];
+
 export const useResetPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const error = useSelector((state) => state.user.error);
   const { token } = getCurrUserData();
 
-  const ResetPasswordFields = [
-    {
-      type: "password",
-      id: "oldPassword",
-      name: "oldPassword",
-      label: "Old Password",
-    },
-    {
-      type: "password",
-      id: "Password",
-      name: "Password",
-      label: "Password",
-    },
-    {
-      type: "password",
-      id: "ConfirmPassword",
-      name: "ConfirmPassword",
-      label: "Confirm Password",
-    },
-  ];
+  useEffect(() => {
+    return () => {
+      cancelFetchData(currAbortController);
+    };
+  }, []);
 
   const handleReset = async (e) => {
     e.preventDefault();
@@ -59,12 +64,12 @@ export const useResetPassword = () => {
       validate.ConfirmPassword.push({
         match: true,
         comKey: resetPasswordData.Password,
-        message: "Password Do not Match",
+        message: PASS_NOT_MATCH,
       });
       const error = validateData(resetPasswordData, validate);
       if (hasObjectLength(error)) {
         dispatch(handleError(error));
-        validate.ConfirmPassword.pop()
+        validate.ConfirmPassword.pop();
         return;
       }
       const config = {

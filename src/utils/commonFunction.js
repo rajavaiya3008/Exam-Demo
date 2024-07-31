@@ -1,3 +1,4 @@
+import { NEXT, PREV } from "./constant";
 import { getCurrUserData } from "./currentUser";
 
 export const hasDuplicates = (array) => {
@@ -5,11 +6,19 @@ export const hasDuplicates = (array) => {
   }
 
 export const isNext = (navigate) => {
-  return navigate === 'next'
+  return navigate === NEXT
 }
 
 export const isPrev = (navigate) => {
-  return navigate === 'prev'
+  return navigate === PREV
+}
+
+export const isRadio = (type) => {
+  return type === 'radio'
+}
+
+export const isSelect = (type) => {
+  return type === 'select'
 }
 
 export const hasObjectLength = (obj) => {

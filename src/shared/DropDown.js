@@ -1,14 +1,12 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { hasObjectLength } from "../utils/commonFunction";
-import { handleError } from "../redux/slices/user";
 import { useGetError } from "../form/hooks/useError";
 
 const DropDown = ({ fieldData }) => {
   const {name,dropDownOptions,updateData,style} = fieldData || {}
   const dispatch = useDispatch();
-  // const error = useSelector((state) => state.user.error);
   const {error,handleError} = useGetError()
   const label = name?.[0]?.toUpperCase() + name?.substring(1);
   const selectAttribute = { id: name, name:name , label };

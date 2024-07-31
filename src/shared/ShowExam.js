@@ -11,10 +11,11 @@ import { validateData } from "../utils/validation";
 import { handleStudentError } from "../redux/slices/student";
 import { useLocation } from "react-router";
 import { EDIT_EXAM } from "../utils/routeConstant";
-import { hasDuplicates, hasObjectLength, isNext, isPrev, isStudent } from "../utils/commonFunction";
+import { hasDuplicates, hasObjectLength, isNext, isPrev, isRadio, isStudent } from "../utils/commonFunction";
 import Button from "./Button";
 import RadioBtn from "./RadioBtn";
 import { sameOptionMsg, sameQuestionMsg } from "../utils/examDataConstatnt";
+import { NEXT, PREV } from "../utils/constant";
 
 const question = {
   question: "",
@@ -83,7 +84,7 @@ const ShowExam = ({
     <div>
       <div>
         {createExamFields.map((field, i) => {
-          return (field.type === 'radio' ? <RadioBtn fieldData={field} key={i}/> : <InputField fieldData={field} key={i} />)
+          return (isRadio(field.type) ? <RadioBtn fieldData={field} key={i}/> : <InputField fieldData={field} key={i} />)
         })}
       </div>
 
@@ -93,13 +94,13 @@ const ShowExam = ({
 
       <div className="mt-2 flex gap-0">
         <Button
-          onSubmit={() => handleNavigation('prev')}
+          onSubmit={() => handleNavigation(PREV)}
           disable={prevDisable}
-          style={"mr-[-15px]"}
+          style="mr-[-15px]"
         >
           Prev
         </Button>
-        <Button onSubmit={() => handleNavigation('next')} disable={nextDisabled}>
+        <Button onSubmit={() => handleNavigation(NEXT)} disable={nextDisabled}>
           Next
         </Button>
       </div>
