@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { getCurrUserData } from "../../../utils/currentUser";
-import { fetchData } from "../../../redux/slices/api";
+import { cancelFetchData, currAbortController, fetchData } from "../../../redux/slices/api";
 import { removeLocalStorageItem } from "../../../utils/localStorageFunction";
 import { loadViewExamData } from "../../../redux/slices/teacher";
 import { EDIT_EXAM, LOGIN_PAGE } from "../../../utils/routeConstant";
@@ -40,6 +40,9 @@ export const useViewExam = () => {
       }
     };
     (!viewExam.length && fetchViewExamData())
+    return () => {
+      cancelFetchData(currAbortController)
+    }
   }, []);
 
   return {

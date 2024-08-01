@@ -18,6 +18,8 @@ import {
 } from "../../utils/routeConstant";
 import { hasObjectLength, isStudent } from "../../utils/commonFunction";
 import { USER_DATA } from "../../utils/localStorageConstant";
+import { LOGIN_SUCCESS } from "../../utils/constant";
+import { createInputField } from "../../utils/formFieldConstatnt";
 
 const validate = {
   email: emailValidation,
@@ -25,18 +27,8 @@ const validate = {
 };
 
 const loginField = [
-  {
-    type: "email",
-    id: "email",
-    name: "email",
-    label: `Enter Email`,
-  },
-  {
-    type: "password",
-    id: "password",
-    name: "password",
-    label: "Enter Password",
-  },
+  createInputField("email","email","email","Enter Email"),
+  createInputField("password","password","password","Enter Password"),
 ];
 
 export const useLoginData = () => {
@@ -76,7 +68,7 @@ export const useLoginData = () => {
         toastError(res.payload.message);
         return;
       }
-      toastSuccess("Login Successful");
+      toastSuccess(LOGIN_SUCCESS);
       setLocalStorageItem(USER_DATA, res.payload.data);
       navigate(isStudent() ? STUDENT_DASHBOARD : TEACHER_DASHBOARD, {
         replace: true,

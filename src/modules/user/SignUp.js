@@ -18,13 +18,13 @@ const SignUp = () => {
           onSubmit={handleSignup}
           fieldData={signupField}
           btnName="Signup"
-          btnStyle="w-[270px] mt-[30px]"
+          btnStyle="w-[254px] mt-[30px]"
         />
 
         <div className="text-center">
           <p>
             Do You have an Account?
-            <Link to={LOGIN_PAGE} className="text-[#7747ff]">
+            <Link to={LOGIN_PAGE} className="text-[#7747ff] ml-4">
               Login
             </Link>
           </p>

@@ -19,10 +19,10 @@ const Login = () => {
             onSubmit={handleSubmit}
             fieldData={loginField}
             btnName="Login"
-            btnStyle="w-[270px] mt-[30px]"
+            btnStyle="w-[254px] mt-[30px]"
           />
 
-          <div className="absolute bottom-[125px] right-[45px]">
+          <div className="absolute bottom-[110px] right-[34px]">
             <p>
               <Link to={FORGET_PASSWORD} className="text-[#7747ff]">
                 forget password?
@@ -33,7 +33,7 @@ const Login = () => {
           <div className="text-center">
             <p>
               Don't have an account yet?
-              <Link to={SIGNUP_PAGE} className="text-[#7747ff]">
+              <Link to={SIGNUP_PAGE} className="text-[#7747ff] ml-1">
                 Sign Up
               </Link>
             </p>

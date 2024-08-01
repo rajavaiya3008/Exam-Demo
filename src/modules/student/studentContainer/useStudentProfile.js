@@ -21,6 +21,8 @@ import { nameValidation } from "../../../utils/validationConstant";
 import { hasObjectLength } from "../../../utils/commonFunction";
 import { STUDENT, USER_DATA } from "../../../utils/localStorageConstant";
 import { useProfile } from "../../../form/hooks/useProfile";
+import { PROFILE_UPDATED } from "../../../utils/constant";
+import { createInputField } from "../../../utils/formFieldConstatnt";
 
 const validate = {
   name: nameValidation,
@@ -35,19 +37,21 @@ export const useStudentProfile = () => {
 
   const createStudentFields = [
     {
-      type: "text",
-      id: "name",
-      name: "name",
-      label: "Name",
+      ...createInputField("text","name","name","Name"),
+      // type: "text",
+      // id: "name",
+      // name: "name",
+      // label: "Name",
       data: studentProfile,
       updateData: updateProfile,
       disable: disable,
     },
     {
-      type: "text",
-      id: "email",
-      name: "email",
-      label: "Email",
+      ...createInputField("email","email","email","Email"),
+      // type: "email",
+      // id: "email",
+      // name: "email",
+      // label: "Email",
       data: studentProfile,
       updateData: updateProfile,
       disable: true,
@@ -107,7 +111,7 @@ export const useStudentProfile = () => {
       };
       const res = await dispatch(fetchData(config));
       setLocalStorageItem(STUDENT, res.payload.data);
-      toastSuccess("Profile Updated Successfully");
+      toastSuccess(PROFILE_UPDATED);
       setDisable(true);
     } catch (error) {
       console.log("error", error);
@@ -116,6 +120,7 @@ export const useStudentProfile = () => {
 
   const handleCancel = () => {
     setDisable(true);
+    dispatch(handleStudentError({}))
     dispatch(loadStudentProfile(getLocalStorageItem(STUDENT)));
   };
 

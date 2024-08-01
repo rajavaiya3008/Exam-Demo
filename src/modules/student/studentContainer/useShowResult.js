@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import { getCurrUserData } from "../../../utils/currentUser";
-import { fetchData } from "../../../redux/slices/api";
+import { cancelFetchData, currAbortController, fetchData } from "../../../redux/slices/api";
 import { removeLocalStorageItem } from "../../../utils/localStorageFunction";
 import { ALL_EXAM, LOGIN_PAGE } from "../../../utils/routeConstant";
 import { STUDENT_ALL_EXAM } from "../../../utils/apiUrlConstant";
@@ -12,7 +12,8 @@ import { USER_DATA } from "../../../utils/localStorageConstant";
 export const useShowResult = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
+  const allExamData = useSelector((state) => state.student.allExamData);
   const {id} = Object.fromEntries(searchParams.entries())
   const [result, setResult] = useState([]);
   const {token} = getCurrUserData()
@@ -30,7 +31,16 @@ export const useShowResult = () => {
         navigate(LOGIN_PAGE);
         return;
       }
-      const allExams = res.payload.data;
+      loadResult(res.payload.data)
+    };
+    !allExamData.length ? fetchAllExam() : loadResult(allExamData);
+    return () => {
+      cancelFetchData(currAbortController)
+    }
+  }, []);
+
+  const loadResult = (examData) => {
+    const allExams = examData;
       const finalResult = allExams.find((item) => {
         return item._id === id;
       });
@@ -39,9 +49,7 @@ export const useShowResult = () => {
         return;
       }
       setResult(finalResult.Result);
-    };
-    fetchAllExam();
-  }, []);
+  }
 
   const handleBack = () => {
     navigate(ALL_EXAM);

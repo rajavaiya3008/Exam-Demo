@@ -14,18 +14,15 @@ import { getCurrUserData } from "../../utils/currentUser";
 import { emailValidation } from "../../utils/validationConstant";
 import { FORGET_PASS_URL } from "../../utils/apiUrlConstant";
 import { hasObjectLength, isStudent } from "../../utils/commonFunction";
+import { EMAIL_NOT_FOUND, MAIL_SUCCESS } from "../../utils/constant";
+import { createInputField } from "../../utils/formFieldConstatnt";
 
 const validate = {
   email: emailValidation,
 };
 
 const fieldData = [
-  {
-    type: "email",
-    id: "email",
-    name: "email",
-    label: "Email",
-  },
+  createInputField("email","email","email","Email")
 ];
 
 export const useForgetData = () => {
@@ -59,11 +56,11 @@ export const useForgetData = () => {
       };
       const res = await dispatch(fetchData(config));
       if (res.payload.statusCode === 500) {
-        toastError("Email not Found Please SignUp");
+        toastError(EMAIL_NOT_FOUND);
         return;
       }
       navigate(LOGIN_PAGE);
-      toastSuccess("Mail send Successful Please Check Your Email");
+      toastSuccess(MAIL_SUCCESS);
     } catch (error) {
       console.log("error", error);
     }

@@ -22,13 +22,14 @@ import { examValidation } from "../../../utils/validationConstant";
 import { hasDuplicates, hasObjectLength, validateOptions, validationExamData } from "../../../utils/commonFunction";
 import { editData, useExamFields, sameOptionMsg, sameQuestionMsg } from "../../../utils/examDataConstatnt";
 import { ANS_INDEX, CREATE_EXAM_CONST, USER_DATA } from "../../../utils/localStorageConstant";
+import { EXAM_DELETED, EXAM_EDITED } from "../../../utils/constant";
 
 const validate = examValidation
 
 export const useEditExam = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const {id,subject:subjectName} = Object.fromEntries(searchParams.entries())
   const examData = useSelector((state) => state.teacher.createExam);
   const sameQuestions = useSelector((state) => state.teacher.questions);
@@ -113,8 +114,9 @@ export const useEditExam = () => {
         headers: { "access-token": token },
         params: { id },
       };
-      const res = await dispatch(fetchData(config));
-      toastSuccess("Exam Edited Successfully");
+      dispatch(loadViewExamData([]))
+      await dispatch(fetchData(config));
+      toastSuccess(EXAM_EDITED);
       navigate(VIEW_EXAM);
     } catch (error) {
       console.log("error", error);
@@ -134,8 +136,8 @@ export const useEditExam = () => {
           headers: { "access-token": token },
           params: { id },
         };
-        const res = await dispatch(fetchData(config));
-        toastSuccess("exam deleted successfully");
+        await dispatch(fetchData(config));
+        toastSuccess(EXAM_DELETED);
         dispatch(loadViewExamData([]))
         navigate(VIEW_EXAM);
       };

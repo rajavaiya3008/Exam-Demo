@@ -3,128 +3,93 @@ import { loadExamPaper } from "../../redux/slices/student";
 import { loadExamData } from "../../redux/slices/teacher";
 
 export const useExam = () => {
-    const dispatch = useDispatch()
-    const examPaper = useSelector(state => state.student.examPaper)
-    const createExam = useSelector(state => state.teacher.createExam)
-    const ansIndex = useSelector(state => state.teacher.ansIndex)
+  const dispatch = useDispatch();
+  const examPaper = useSelector((state) => state.student.examPaper);
+  const createExam = useSelector((state) => state.teacher.createExam);
+  const ansIndex = useSelector((state) => state.teacher.ansIndex);
 
-    const handleSubject = (data) => {
-      // state.edited = true;
-      const { name, value } = data;
-      // state.error = {};
-      const updatedPaper = {
-        ...createExam,
-        subjectName:value
-      }
-      dispatch(loadExamData(updatedPaper))
-      // state.createExam[name] = value;
-      // setLocalStorageItem(CREATE_EXAM_CONST, state.createExam);
-    }
+  const handleSubject = (data) => {
+    const { value } = data;
+    const updatedPaper = {
+      ...createExam,
+      subjectName: value,
+    };
+    dispatch(loadExamData(updatedPaper));
+  };
 
-    const handleQuestion = (data) => {
-      // state.edited = true;
-      const { name, value, queIndex } = data;
-      // state.error = {};
-      const updatedPaper = {
-        ...createExam,
-        questions: createExam.questions.map((question,index) => 
-          index === queIndex
-              ? {...question,question:value}
-              : question
-          )
-      }
-      dispatch(loadExamData(updatedPaper))
-      // createExam.questions[queIndex][name] = value;
-      // setLocalStorageItem(CREATE_EXAM_CONST, state.createExam);
-    }
+  const handleQuestion = (data) => {
+    const { value, queIndex } = data;
+    const updatedPaper = {
+      ...createExam,
+      questions: createExam.questions.map((question, index) =>
+        index === queIndex ? { ...question, question: value } : question
+      ),
+    };
+    dispatch(loadExamData(updatedPaper));
+  };
 
-    const  handleOptions = (data) => {
-      // state.edited = true;
-      const { queIndex, opIndex, value } = data;
-      // state.error = {};
-      let updatedPaper;
-      if (
-        createExam.questions[queIndex].options[opIndex] ===
+  const handleOptions = (data) => {
+    const { queIndex, opIndex, value } = data;
+    let updatedPaper;
+    if (
+      createExam.questions[queIndex].options[opIndex] ===
         createExam.questions[queIndex].answer &&
-        ansIndex[queIndex] === opIndex
-      ) {
-         updatedPaper = {
-          ...createExam,
-          questions: createExam.questions.map((question, index) =>
-              index === queIndex
-                  ? { ...question, answer: value }
-                  : question
-          )
-      }
-        // createExam.questions[queIndex].answer = value;
-      }
-      if(!updatedPaper){
-        updatedPaper = {...createExam}
-      }
-      const updatedQuestions = updatedPaper?.questions?.map((question, index) => {
-        if (index === queIndex) {
-          const updatedOptions = [...question.options];
-          updatedOptions[opIndex] = value;
-          
-          return {
-            ...question,
-            options: updatedOptions
-          };
-        }
-        return question;
-      });
+      ansIndex[queIndex] === opIndex
+    ) {
       updatedPaper = {
-        ...updatedPaper,
-        questions:updatedQuestions
-      }
-      // updatedPaper.questions[queIndex].options[opIndex] = value;
-      // updatedPaper = {
-      //   ...updatedPaper,
-      //   questions: updatedPaper.questions.map((question,index) => 
-      //   index === queIndex 
-      //       ? {...question})
-      // }
-      dispatch(loadExamData(updatedPaper))
-      // setLocalStorageItem(CREATE_EXAM_CONST, state.createExam);
-    }
-
-    const handleStudentAns = (data) => {
-        const { queIndex, ans } = data;
-        // state.error = {};
-        console.log('examPaper', examPaper)
-        const updatedPaper = {
-          ...examPaper,
-          questions: examPaper.questions.map((question, index) =>
-              index === queIndex
-                  ? { ...question, answer: ans }
-                  : question
-          )
+        ...createExam,
+        questions: createExam.questions.map((question, index) =>
+          index === queIndex ? { ...question, answer: value } : question
+        ),
       };
+    }
+    if (!updatedPaper) {
+      updatedPaper = { ...createExam };
+    }
+    const updatedQuestions = updatedPaper?.questions?.map((question, index) => {
+      if (index === queIndex) {
+        const updatedOptions = [...question.options];
+        updatedOptions[opIndex] = value;
 
-        // console.log('updatedPaper', updatedPaper)
-        // updatedPaper.questions[queIndex].answer = ans;
-        dispatch(loadExamPaper(updatedPaper))
-        // setLocalStorageItem(EXAM_PAPER, state.examPaper);
+        return {
+          ...question,
+          options: updatedOptions,
+        };
       }
+      return question;
+    });
+    updatedPaper = {
+      ...updatedPaper,
+      questions: updatedQuestions,
+    };
+    dispatch(loadExamData(updatedPaper));
+  };
 
-    const  handleAns = (Data) => {
-        // state.edited = true;
-        const { queIndex, ans } = Data;
-        // state.error = {};
-        const updatedPaper = {
-          ...createExam,
-          questions: createExam.questions.map((question, index) =>
-              index === queIndex
-                  ? { ...question, answer: ans }
-                  : question
-          )
-      }
-      dispatch(loadExamData(updatedPaper))
-        // createExam.questions[queIndex].answer = ans;
-        // setLocalStorageItem(CREATE_EXAM_CONST, state.createExam);
-      }
+  const updateExamData = (exam, queIndex, ans, dispatchAction) => {
+    const updatedPaper = {
+      ...exam,
+      questions: exam.questions.map((question, index) =>
+        index === queIndex ? { ...question, answer: ans } : question
+      ),
+    };
+    dispatch(dispatchAction(updatedPaper));
+  };
 
+  const handleStudentAns = (data) => {
+    const { queIndex, ans } = data;
+    updateExamData(examPaper, queIndex, ans, loadExamPaper);
+  };
 
+  const handleAns = (data) => {
+    const { queIndex, ans } = data;
+    updateExamData(createExam, queIndex, ans, loadExamData);
+  };
 
-    return {handleStudentAns,handleAns,handleOptions,handleQuestion,handleSubject}
-}
+  return {
+    handleStudentAns,
+    handleAns,
+    handleOptions,
+    handleQuestion,
+    handleSubject,
+  };
+};

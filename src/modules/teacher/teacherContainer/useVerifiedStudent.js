@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { getCurrUserData } from "../../../utils/currentUser";
-import { fetchData } from "../../../redux/slices/api";
+import { cancelFetchData, currAbortController, fetchData } from "../../../redux/slices/api";
 import { removeLocalStorageItem } from "../../../utils/localStorageFunction";
 import {
   handleSearchField,
@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { TEACHER_VERIFIED_STUDENT } from "../../../utils/apiUrlConstant";
 import { LOGIN_PAGE } from "../../../utils/routeConstant";
 import { USER_DATA } from "../../../utils/localStorageConstant";
+import { createInputField } from "../../../utils/formFieldConstatnt";
 
 const keys = ["name", "email", "status"];
 
@@ -22,10 +23,11 @@ export const useVerifiedStudent = () => {
   );
   const searchData = useSelector((state) => state.teacher.searchField);
   const searchField = {
-    type: "text",
-    id: "name",
-    name: "name",
-    label: "Name of Email",
+    ...createInputField("text","name","name","Name of Email"),
+    // type: "text",
+    // id: "name",
+    // name: "name",
+    // label: "Name of Email",
     data: searchData,
     updateData: handleSearchField,
   };
@@ -46,6 +48,9 @@ export const useVerifiedStudent = () => {
       dispatch(loadVerifiedStudentData(res?.payload?.data));
     };
     (verifiedStudentData.length && fetchAllStudentData())
+    return () => {
+      cancelFetchData(currAbortController)
+    }
   }, []);
 
   return {

@@ -41,10 +41,7 @@ const RadioBtn = ({ fieldData }) => {
             ansIndex: currAnsIndex,
           };
 
-          // (isStudent()?updateData(Data): dispatch(updateData(Data)))
           updateData(Data)
-
-          // dispatch(updateData(Data));
         }}
         className="border-black border"
       />

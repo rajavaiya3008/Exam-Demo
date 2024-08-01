@@ -96,7 +96,7 @@ const ShowExam = ({
         <Button
           onSubmit={() => handleNavigation(PREV)}
           disable={prevDisable}
-          style="mr-[-15px]"
+          cusStyle="mr-[-15px]"
         >
           Prev
         </Button>

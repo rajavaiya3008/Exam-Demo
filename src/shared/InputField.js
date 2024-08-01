@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { hasObjectLength } from "../utils/commonFunction";
 import { useGetError } from "../form/hooks/useError";
 
-const InputField = ({ fieldData }) => {
+const InputField = ({ fieldData,cusStyle }) => {
   const dispatch = useDispatch();
   const {error,handleError} = useGetError()
   const {
@@ -20,6 +20,7 @@ const InputField = ({ fieldData }) => {
     currQuestion,
     opIndex,
     ansIndex,
+    isSearch
   } = fieldData || {};
   const fieldAttribute = {
     label,
@@ -34,10 +35,9 @@ const InputField = ({ fieldData }) => {
   };
 
   return (
-    <div className="flex flex-col gap-2 w-[250px] mt-[10px]">
+    <div className={`flex flex-col gap-2 w-[250px] mt-[10px] ${cusStyle}`}>
       <TextField
         {...fieldAttribute}
-        defaultValue={''}
         onChange={(e) => {
           const { name, value } = e?.target || {};
           let Data = {
@@ -50,7 +50,9 @@ const InputField = ({ fieldData }) => {
           };
           if(updateData){
             updateData(Data)
-            // dispatch(updateData(Data))
+          }
+          if(isSearch){
+            dispatch(updateData(Data))
           }
           (hasObjectLength(error) && dispatch(handleError({})))
         }}

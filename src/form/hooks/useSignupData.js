@@ -12,6 +12,8 @@ import { SIGNUP_URL } from "../../utils/apiUrlConstant";
 import { getCurrUserData } from "../../utils/currentUser";
 import { useEffect } from "react";
 import { hasObjectLength, isStudent } from "../../utils/commonFunction";
+import { EMAIL_EXIST, SIGNUP_SUCCESS } from "../../utils/constant";
+import { createInputField } from "../../utils/formFieldConstatnt";
 
 const validate = {
   name: nameValidation,
@@ -21,24 +23,9 @@ const validate = {
 };
 
 const signupField = [
-  {
-    type: "text",
-    id: "name",
-    name: "name",
-    label: "Enter Name",
-  },
-  {
-    type: "email",
-    id: "email",
-    name: "email",
-    label: "Enter Email",
-  },
-  {
-    type: "password",
-    id: "password",
-    name: "password",
-    label: "Enter Password",
-  },
+  createInputField("text","name","name","Enter Name"),
+  createInputField("email","email","email","Enter Email"),
+  createInputField("password","password","password","Enter Password"),
   {
     type:'select',
     style:'mt-[10px]',
@@ -78,10 +65,10 @@ export const useSignupData = () => {
       };
       const res = await dispatch(fetchData(config));
       if (res?.payload?.statusCode !== 200) {
-        toastError("Email Already Exist Please Login");
+        toastError(EMAIL_EXIST);
         return;
       }
-      toastSuccess("Signup Successful");
+      toastSuccess(SIGNUP_SUCCESS);
       navigate(LOGIN_PAGE, { replace: true });
     } catch (error) {
       console.log("error", error);

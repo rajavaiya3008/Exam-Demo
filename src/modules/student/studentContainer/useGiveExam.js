@@ -28,6 +28,7 @@ import {
 } from "../../../utils/examPaperConstant";
 import { useExamFields } from "../../../utils/examDataConstatnt";
 import { ANS_INDEX, EXAM_PAPER, USER_DATA } from "../../../utils/localStorageConstant";
+import { EXAM_SUBMITTED, FILL_ALL_QUE } from "../../../utils/constant";
 
 const validate = {
   answer: [{ required: true, message: "Answer Required" }],
@@ -36,7 +37,7 @@ const validate = {
 export const useGiveExam = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const {id,subject} = Object.fromEntries(searchParams.entries())
   const [currQuestion, setCurrQuestion] = useState(0);
   const examData = useSelector((state) => state.student.examPaper);
@@ -90,6 +91,8 @@ export const useGiveExam = () => {
     const handleStorageChange = () => {
       const examPaper = getLocalStorageItem(EXAM_PAPER);
       const ansIndexLocal = getLocalStorageItem(ANS_INDEX);
+      console.log('examPaper', examPaper)
+      console.log('ansIndexLocal', ansIndexLocal)
       if (examPaper) {
         dispatch(loadExamPaper(examPaper));
         if (ansIndexLocal) {
@@ -106,9 +109,9 @@ export const useGiveExam = () => {
 
     return () => {
       cancelFetchData(currAbortController);
+      window.removeEventListener("storage", handleStorageChange);
       removeLocalStorageItem(EXAM_PAPER);
       removeLocalStorageItem(ANS_INDEX);
-      window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
 
@@ -123,8 +126,8 @@ export const useGiveExam = () => {
           params: { id },
         };
         dispatch(loadAllExamData([]));
-        const res = await dispatch(fetchData(config));
-        toastSuccess("Exam Submitted Successfully");
+        await dispatch(fetchData(config));
+        toastSuccess(EXAM_SUBMITTED);
         navigate(ALL_EXAM);
       } catch (error) {
         console.log("error", error);
@@ -132,7 +135,7 @@ export const useGiveExam = () => {
     };
     ansArr.length === 7
       ? submitExam()
-      : toastError("Please Fill all Questions");
+      : toastError(FILL_ALL_QUE);
   };
 
   const handleCancel = () => {

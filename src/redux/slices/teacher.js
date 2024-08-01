@@ -36,41 +36,6 @@ export const teacherSlice = createSlice({
     loadVerifiedStudentData: (state, action) => {
       state.verifiedStudentData = action.payload;
     },
-    // handleSubject: (state, action) => {
-    //   state.edited = true;
-    //   const { name, value } = action.payload;
-    //   state.error = {};
-    //   state.createExam[name] = value;
-    //   setLocalStorageItem(CREATE_EXAM_CONST, state.createExam);
-    // },
-    // handleQuestion: (state, action) => {
-    //   state.edited = true;
-    //   const { name, value, queIndex } = action.payload;
-    //   state.error = {};
-    //   state.createExam.questions[queIndex][name] = value;
-    //   setLocalStorageItem(CREATE_EXAM_CONST, state.createExam);
-    // },
-    // handleOptions: (state, action) => {
-    //   state.edited = true;
-    //   const { queIndex, opIndex, value } = action.payload;
-    //   state.error = {};
-    //   if (
-    //     state.createExam.questions[queIndex].options[opIndex] ===
-    //       state.createExam.questions[queIndex].answer &&
-    //     state.ansIndex[queIndex] === opIndex
-    //   ) {
-    //     state.createExam.questions[queIndex].answer = value;
-    //   }
-    //   state.createExam.questions[queIndex].options[opIndex] = value;
-    //   setLocalStorageItem(CREATE_EXAM_CONST, state.createExam);
-    // },
-    // handleAns: (state, action) => {
-    //   state.edited = true;
-    //   const { queIndex, ans } = action.payload;
-    //   state.error = {};
-    //   state.createExam.questions[queIndex].answer = ans;
-    //   setLocalStorageItem(CREATE_EXAM_CONST, state.createExam);
-    // },
     addNewQuestion: (state, action) => {
       state.createExam.questions.push(action.payload);
     },
@@ -123,10 +88,6 @@ export const teacherSlice = createSlice({
 export const {
   loadAllStudentData,
   loadVerifiedStudentData,
-  handleSubject,
-  handleQuestion,
-  handleOptions,
-  handleAns,
   addNewQuestion,
   handleTeacherError,
   initiateExam,

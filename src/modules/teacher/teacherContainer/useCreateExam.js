@@ -23,6 +23,7 @@ import { examValidation } from "../../../utils/validationConstant";
 import { hasDuplicates, hasObjectLength, validateOptions, validationExamData } from "../../../utils/commonFunction";
 import { useExamFields, sameOptionMsg, sameQuestionMsg } from "../../../utils/examDataConstatnt";
 import { ANS_INDEX, CREATE_EXAM_CONST } from "../../../utils/localStorageConstant";
+import { EXAM_CREATED } from "../../../utils/constant";
 
 const validate = examValidation;
 
@@ -94,8 +95,8 @@ export const useCreateExam = () => {
           data: examData,
           headers: { "access-token": token },
         };
-        const res = await dispatch(fetchData(config));
-        toastSuccess("Exam Created Successfully");
+        await dispatch(fetchData(config));
+        toastSuccess(EXAM_CREATED);
         setCurrQuestion(0);
         dispatch(loadViewExamData([]))
         dispatch(initiateQuestions());

@@ -19,7 +19,7 @@ const ShowResult = () => {
             <pre>Subject: {subjectName}</pre>
             <pre>Rank: {rank}</pre>
             <pre>Score: {score}</pre>
-            <Button onSubmit={handleBack} style='mt-[15px]'>
+            <Button onSubmit={handleBack} cusStyle='mt-[15px]'>
               Back
             </Button>
           </div>

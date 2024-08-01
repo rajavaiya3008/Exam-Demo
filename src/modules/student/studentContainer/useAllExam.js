@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { getCurrUserData } from "../../../utils/currentUser";
-import { fetchData } from "../../../redux/slices/api";
+import { cancelFetchData, currAbortController, fetchData } from "../../../redux/slices/api";
 import { removeLocalStorageItem } from "../../../utils/localStorageFunction";
 import {
   handleSearchField,
@@ -15,6 +15,7 @@ import {
 } from "../../../utils/routeConstant";
 import { STUDENT_ALL_EXAM } from "../../../utils/apiUrlConstant";
 import { USER_DATA } from "../../../utils/localStorageConstant";
+import { createInputField } from "../../../utils/formFieldConstatnt";
 
 const keys = ["subjectName", "email"];
 const btn = {
@@ -30,10 +31,12 @@ export const useAllExam = () => {
   const { token } = getCurrUserData();
 
   const searchField = {
-    type: "text",
-    id: "subjectName",
-    name: "subjectName",
-    label: "Subject Name or Email",
+    ...createInputField("text","subjectName","subjectName","Subject Name or Email"),
+    // type: "text",
+    // id: "subjectName",
+    // name: "subjectName",
+    // label: "Subject Name or Email",
+    isSearch:true,
     data: searchData,
     updateData: handleSearchField,
   };
@@ -56,6 +59,7 @@ export const useAllExam = () => {
     !allExamData.length && fetchAllExam();
 
     return () => {
+      cancelFetchData(currAbortController)
       dispatch(handleSearchField(""));
     };
   }, []);

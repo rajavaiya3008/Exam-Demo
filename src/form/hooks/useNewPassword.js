@@ -18,7 +18,8 @@ import {
 } from "../../utils/validationConstant";
 import { FORGET_PASS_VERIFY } from "../../utils/apiUrlConstant";
 import { hasObjectLength, isStudent } from "../../utils/commonFunction";
-import { PASS_NOT_MATCH } from "../../utils/constant";
+import { PASS_CHANGE, PASS_NOT_MATCH } from "../../utils/constant";
+import { createInputField } from "../../utils/formFieldConstatnt";
 
 const validate = {
   Password: passwordValidation,
@@ -26,24 +27,14 @@ const validate = {
 };
 
 const createNewPasswordField = [
-  {
-    type: "password",
-    id: "Password",
-    name: "Password",
-    label: "Password",
-  },
-  {
-    type: "password",
-    id: "ConfirmPassword",
-    name: "ConfirmPassword",
-    label: "Confirm Password",
-  },
+  createInputField("password","Password","Password","Password"),
+  createInputField("password","ConfirmPassword","ConfirmPassword","Confirm Password")
 ];
 
 export const useNewPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
- const [searchParams, setSearchParams] = useSearchParams();
+ const [searchParams] = useSearchParams();
   const {token} = Object.fromEntries(searchParams.entries())
   const { role } = getCurrUserData() || {};
 
@@ -77,9 +68,9 @@ export const useNewPassword = () => {
         data: newPasswordData,
         params: { token },
       };
-      const res = await dispatch(fetchData(config));
+      await dispatch(fetchData(config));
       validate.ConfirmPassword.pop()
-      toastSuccess("Password Change Successfully");
+      toastSuccess(PASS_CHANGE);
       navigate(LOGIN_PAGE);
     } catch (error) {
       console.log("error", error);

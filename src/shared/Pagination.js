@@ -109,13 +109,14 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
               {newBtn?.map((btn, i) => (
                 <td className="px-6 py-3 text-blue-500" key={i}>
                   <NavLink
-                    to={`${btn.path}?id=${item._id}&subject=${
-                      item?.subjectName || ""
-                    }`}
+                    to={`${btn.path}?id=${item._id}${item.subjectName ? `&subject=${item.subjectName}` : ``}`}
                   >
                     {btn.text}
                   </NavLink>
                 </td>
+                // &subject=${
+                //   item?.subjectName || ""
+                // }
               ))}
               {isStudent() && (
                 <td
@@ -128,7 +129,7 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
                       item?.Result?.length
                         ? btn.showResultBtn
                         : btn?.giveExamBtn
-                    }?id=${item._id}&subject=${item.subjectName}`}
+                    }?id=${item._id}${!item?.Result?.length ? `&subject=${item.subjectName}`: ``}`}
                   >
                     {item?.Result?.length ? "Result" : "Give"}
                   </NavLink>

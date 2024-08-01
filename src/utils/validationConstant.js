@@ -22,7 +22,7 @@ const examValidationData = (requireMsg,validMsg) => {
     { pattern: /^([a-zA-Z0-9]+\s?)*\S$/, message: validMsg },
   ]
 }
-export const nameValidation = [...examValidationData("Please Enter Name","Enter Valid Name"),{ length: 3, message: "username Must be 3 char" }]
+export const nameValidation = [...examValidationData("Please Enter Name","Enter Valid Name or Space not allowed"),{ length: 3, message: "username Must be 3 char" }]
 
 const opRequireMsg = 'Option Required'
 const opValidMsg = 'Enter Valid Option'
@@ -42,13 +42,3 @@ export const examValidation = {
   answer: [{ required: true, message: "Answer Required" }],
 };
 
-
-// export const examValidation = {
-//   subjectName: examValidationData('Please Enter Subject','Enter Valid Subject'),
-//   question: examValidationData('Please Enter Question','Enter Valid Question'),
-//   op1: examValidationData(opRequireMsg,opValidMsg),
-//   op2: examValidationData(opRequireMsg,opValidMsg),
-//   op3: examValidationData(opRequireMsg,opValidMsg),
-//   op4: examValidationData(opRequireMsg,opValidMsg),
-//   answer: [{ required: true, message: "Answer Required" }],
-// };

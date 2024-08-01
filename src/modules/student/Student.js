@@ -4,7 +4,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import { PiExamFill } from "react-icons/pi";
 import { CgProfile } from "react-icons/cg";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   ALL_EXAM,
   STUDENT_DASHBOARD,
@@ -12,6 +12,7 @@ import {
 } from "../../utils/routeConstant";
 import { removeLocalStorageItem } from "../../utils/localStorageFunction";
 import { PAGE_NO } from "../../utils/localStorageConstant";
+import { loadAllExamData } from "../../redux/slices/student";
 
 const studentRoutes = [
   {
@@ -32,12 +33,17 @@ const studentRoutes = [
 ];
 
 const Student = () => {
+  const dispatch = useDispatch()
   const location = useLocation();
   const menu = useSelector((state) => state.user.menu);
 
   useEffect(() => {
     const allExam = location.pathname.split("/")[1];
-    (allExam !== "all-exam" && removeLocalStorageItem(PAGE_NO))
+    if(allExam !== "all-exam"){
+      dispatch(loadAllExamData([]))
+      removeLocalStorageItem(PAGE_NO)
+    }
+    // (allExam !== "all-exam" && removeLocalStorageItem(PAGE_NO))
   });
 
   return (

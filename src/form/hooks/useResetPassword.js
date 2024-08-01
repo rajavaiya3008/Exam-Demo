@@ -15,8 +15,9 @@ import {
   TEACHER_DASHBOARD,
 } from "../../utils/routeConstant";
 import { RESET_PASS_URL } from "../../utils/apiUrlConstant";
-import { useEffect } from "react";
-import { PASS_NOT_MATCH } from "../../utils/constant";
+import { useEffect, useRef } from "react";
+import { CHECK_OLD_PASS, OLD_NEW_SAME, PASS_NOT_MATCH, PASS_RESET } from "../../utils/constant";
+import { createInputField } from "../../utils/formFieldConstatnt";
 
 const validate = {
   oldPassword: passwordValidation,
@@ -25,32 +26,19 @@ const validate = {
 };
 
 const ResetPasswordFields = [
-  {
-    type: "password",
-    id: "oldPassword",
-    name: "oldPassword",
-    label: "Old Password",
-  },
-  {
-    type: "password",
-    id: "Password",
-    name: "Password",
-    label: "Password",
-  },
-  {
-    type: "password",
-    id: "ConfirmPassword",
-    name: "ConfirmPassword",
-    label: "Confirm Password",
-  },
+  createInputField("password","oldPassword","oldPassword","Old Password"),
+  createInputField("password","Password","Password","Password"),
+  createInputField("password","ConfirmPassword","ConfirmPassword","Confirm Password")
 ];
 
 export const useResetPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const resetPass = useRef()
   const { token } = getCurrUserData();
 
   useEffect(() => {
+    dispatch(handleError({}))
     return () => {
       cancelFetchData(currAbortController);
     };
@@ -80,23 +68,30 @@ export const useResetPassword = () => {
       };
       const res = await dispatch(fetchData(config));
       if (res.payload.statusCode === 500) {
-        toastError("Old Password and New Password are same");
+        toastError(OLD_NEW_SAME);
         return;
       }
       if (res.payload.statusCode !== 200) {
-        toastError("Please check old password");
+        toastError(CHECK_OLD_PASS);
         return;
       }
       validate.ConfirmPassword.pop();
-      toastSuccess("Password Reset Successfully");
+      toastSuccess(PASS_RESET);
       navigate(isStudent() ? STUDENT_DASHBOARD : TEACHER_DASHBOARD);
     } catch (error) {
       console.log("error", error);
     }
   };
 
+  const clearPass = () => {
+    resetPass.current.reset()
+    dispatch(handleError({}))
+  }
+
   return {
     ResetPasswordFields,
+    resetPass,
     handleReset,
+    clearPass
   };
 };

@@ -16,7 +16,7 @@ const ViewStudentDetail = () => {
           <div>
             <p className="text-center mb-4 text-4xl">Student Detail</p>
             <CurrStudentDetail currStudentDetail={currStudentDetail} />
-            <Button onSubmit={handleBack} style='mt-[15px]'>
+            <Button onSubmit={handleBack} cusStyle='mt-[15px]'>
               Back
             </Button>
           </div>

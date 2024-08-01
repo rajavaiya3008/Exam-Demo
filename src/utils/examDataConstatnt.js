@@ -1,32 +1,28 @@
 import { useExam } from "../form/hooks/useExam";
-// import { handleStudentAns } from "../redux/slices/student";
-import {
-//   handleAns,
-//   handleOptions,
-//   handleQuestion,
-//   handleSubject,
-} from "../redux/slices/teacher";
 import { isStudent } from "./commonFunction";
 import { showExam } from "./examPaperConstant";
+import { createInputField } from "./formFieldConstatnt";
 
-const subjectField = (examData, disable,action) => {
+const subjectField = (examData, disable, action) => {
   return {
-    type: "text",
-    id: "subject",
-    name: "subjectName",
-    label: "Subject Name",
+    ...createInputField("text","subject","subjectName","Subject Name"),
+    // type: "text",
+    // id: "subject",
+    // name: "subjectName",
+    // label: "Subject Name",
     data: examData,
     disable: disable,
     updateData: !disable ? action : () => {},
   };
 };
 
-const questionField = (examData, currQuestion, disable,action) => {
+const questionField = (examData, currQuestion, disable, action) => {
   return {
-    type: "text",
-    id: "question",
-    name: "question",
-    label: `Question ${currQuestion + 1}`,
+    ...createInputField("text","question","question",`Question ${currQuestion + 1}`),
+    // type: "text",
+    // id: "question",
+    // name: "question",
+    // label: `Question ${currQuestion + 1}`,
     data: examData?.questions?.[currQuestion],
     disable: disable,
     updateData: !disable ? action : () => {},
@@ -34,11 +30,12 @@ const questionField = (examData, currQuestion, disable,action) => {
   };
 };
 
-const radioField = (examData, currQuestion, Options, option,action) => {
+const radioField = (examData, currQuestion, Options, option, action) => {
   return {
-    type: "radio",
-    name: "ans",
-    id: `op${option}`,
+    ...createInputField("radio",`op${option}`,"ans"),
+    // type: "radio",
+    // name: "ans",
+    // id: `op${option}`,
     data: Options,
     updateData: action,
     currQuestion: currQuestion,
@@ -47,12 +44,13 @@ const radioField = (examData, currQuestion, Options, option,action) => {
   };
 };
 
-const optionField = (currQuestion, Options, option, disable,action) => {
+const optionField = (currQuestion, Options, option, disable, action) => {
   return {
-    type: "text",
-    id: `op${option}`,
-    name: `op${option}`,
-    label: `Option ${option}`,
+    ...createInputField("text",`op${option}`,`op${option}`,`Option ${option}`),
+    // type: "text",
+    // id: `op${option}`,
+    // name: `op${option}`,
+    // label: `Option ${option}`,
     data: Options,
     disable: disable,
     updateData: !disable ? action : () => {},
@@ -61,30 +59,28 @@ const optionField = (currQuestion, Options, option, disable,action) => {
   };
 };
 
-// export const useExamFields = (examData, currQuestion, Options) => {
-//   const fields = [
-//     subjectField(examData, isStudent()),
-//     questionField(examData, currQuestion, isStudent()),
-//   ];
-
-//   for (let i = 1; i <= 4; i++) {
-//     fields.push(radioField(examData, currQuestion, Options, i));
-//     fields.push(optionField(currQuestion, Options, i, isStudent()));
-//   }
-
-//   return fields;
-// };
-
 export const useExamFields = (examData, currQuestion, Options) => {
-  const { handleStudentAns ,handleAns,handleOptions,handleQuestion,handleSubject} = useExam();
+  const {
+    handleStudentAns,
+    handleAns,
+    handleOptions,
+    handleQuestion,
+    handleSubject,
+  } = useExam();
   const fields = [
-    subjectField(examData, isStudent(),handleSubject),
-    questionField(examData, currQuestion, isStudent(),handleQuestion),
+    subjectField(examData, isStudent(), handleSubject),
+    questionField(examData, currQuestion, isStudent(), handleQuestion),
   ];
 
+  const handleRadioField = isStudent() ? handleStudentAns : handleAns;
+
   for (let i = 1; i <= 4; i++) {
-    fields.push(isStudent() ? radioField(examData, currQuestion, Options, i,handleStudentAns):radioField(examData, currQuestion, Options, i,handleAns));
-    fields.push(optionField(currQuestion, Options, i, isStudent(),handleOptions));
+    fields.push(
+      radioField(examData, currQuestion, Options, i, handleRadioField)
+    );
+    fields.push(
+      optionField(currQuestion, Options, i, isStudent(), handleOptions)
+    );
   }
 
   return fields;
