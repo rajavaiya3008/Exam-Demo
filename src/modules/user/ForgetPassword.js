@@ -1,6 +1,6 @@
 import React from "react";
-import { useForgetData } from "../form/hooks/useForgetData";
-import Form from "./Form";
+import { useForgetData } from "../../form/hooks/useForgetData";
+import Form from "../../shared/Form";
 
 
 const ForgetPassword = () => {

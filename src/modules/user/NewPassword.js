@@ -1,6 +1,6 @@
 import React from "react";
-import { useNewPassword } from "../form/hooks/useNewPassword";
-import Form from "./Form";
+import { useNewPassword } from "../../form/hooks/useNewPassword";
+import Form from "../../shared/Form";
 
 const NewPassword = () => {
   const { createNewPasswordField, handleChangePassword } = useNewPassword();

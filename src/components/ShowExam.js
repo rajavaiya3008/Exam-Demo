@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import InputField from "./InputField";
+import InputField from "../shared/InputField";
 import {
   addNewQuestion,
   handleTeacherError,
@@ -12,8 +12,8 @@ import { handleStudentError } from "../redux/slices/student";
 import { useLocation } from "react-router";
 import { EDIT_EXAM } from "../utils/routeConstant";
 import { hasDuplicates, hasObjectLength, isNext, isPrev, isRadio, isStudent } from "../utils/commonFunction";
-import Button from "./Button";
-import RadioBtn from "./RadioBtn";
+import Button from "../shared/Button";
+import RadioBtn from "../shared/RadioBtn";
 import { sameOptionMsg, sameQuestionMsg } from "../utils/examDataConstant";
 import { NEXT, PREV } from "../utils/constant";
 

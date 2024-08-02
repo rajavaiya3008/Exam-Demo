@@ -1,5 +1,5 @@
 import React from "react";
-import ShowExam from "../../../shared/ShowExam";
+import ShowExam from "../../../components/ShowExam";
 import { useCreateExam } from "../teacherContainer/useCreateExam";
 import { useLoading } from "../../../form/hooks/useLoading";
 import Button from "../../../shared/Button";

@@ -1,7 +1,7 @@
 import React from "react";
-import { useResetPassword } from "../form/hooks/useResetPassword";
-import Form from "./Form";
-import Button from "./Button";
+import { useResetPassword } from "../../form/hooks/useResetPassword";
+import Form from "../../shared/Form";
+import Button from "../../shared/Button";
 
 const ResetPassword = () => {
   const { ResetPasswordFields,resetPass, handleReset,clearPass } = useResetPassword();
