@@ -24,7 +24,7 @@ const SignUp = () => {
         <div className="text-center">
           <p>
             Do You have an Account?
-            <Link to={LOGIN_PAGE} className="text-[#7747ff] ml-4">
+            <Link to={LOGIN_PAGE} className="text-[#7747ff] ml-[5px]">
               Login
             </Link>
           </p>

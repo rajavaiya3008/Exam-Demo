@@ -1,5 +1,8 @@
 import { NEXT, PREV } from "./constant";
 import { getCurrUserData } from "./currentUser";
+import { PAPER_ID } from "./localStorageConstant";
+import { getLocalStorageItem, setLocalStorageItem } from "./localStorageFunction";
+import { STUDENT_RESET_PASS, TEACHER_RESET_PASS } from "./routeConstant";
 
 export const hasDuplicates = (array) => {
     return new Set(array).size !== array.length;
@@ -23,6 +26,19 @@ export const isSelect = (type) => {
 
 export const hasObjectLength = (obj) => {
   return obj && Object.keys(obj).length > 0
+}
+
+export const isResetPassword = (path) => {
+  return (path === STUDENT_RESET_PASS || path === TEACHER_RESET_PASS)
+}
+
+export const checkExam = (id) => {
+  const paperId = getLocalStorageItem(PAPER_ID)
+  if(paperId){
+    return paperId === id
+  }
+  setLocalStorageItem(PAPER_ID,id)
+  return true;
 }
 
 export const validationExamData = (examData,currQuestion) => {

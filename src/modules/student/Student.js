@@ -43,7 +43,6 @@ const Student = () => {
       dispatch(loadAllExamData([]))
       removeLocalStorageItem(PAGE_NO)
     }
-    // (allExam !== "all-exam" && removeLocalStorageItem(PAGE_NO))
   });
 
   return (

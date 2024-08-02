@@ -14,7 +14,7 @@ import { EDIT_EXAM } from "../utils/routeConstant";
 import { hasDuplicates, hasObjectLength, isNext, isPrev, isRadio, isStudent } from "../utils/commonFunction";
 import Button from "./Button";
 import RadioBtn from "./RadioBtn";
-import { sameOptionMsg, sameQuestionMsg } from "../utils/examDataConstatnt";
+import { sameOptionMsg, sameQuestionMsg } from "../utils/examDataConstant";
 import { NEXT, PREV } from "../utils/constant";
 
 const question = {

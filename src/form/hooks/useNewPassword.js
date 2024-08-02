@@ -19,7 +19,7 @@ import {
 import { FORGET_PASS_VERIFY } from "../../utils/apiUrlConstant";
 import { hasObjectLength, isStudent } from "../../utils/commonFunction";
 import { PASS_CHANGE, PASS_NOT_MATCH } from "../../utils/constant";
-import { createInputField } from "../../utils/formFieldConstatnt";
+import { createInputField } from "../../utils/formFieldConstant";
 
 const validate = {
   Password: passwordValidation,

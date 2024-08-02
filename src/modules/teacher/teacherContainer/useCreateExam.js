@@ -21,9 +21,10 @@ import {
 import { TEACHER_CREATE_EXAM } from "../../../utils/apiUrlConstant";
 import { examValidation } from "../../../utils/validationConstant";
 import { hasDuplicates, hasObjectLength, validateOptions, validationExamData } from "../../../utils/commonFunction";
-import { useExamFields, sameOptionMsg, sameQuestionMsg } from "../../../utils/examDataConstatnt";
+import { sameOptionMsg, sameQuestionMsg } from "../../../utils/examDataConstant";
 import { ANS_INDEX, CREATE_EXAM_CONST } from "../../../utils/localStorageConstant";
 import { EXAM_CREATED } from "../../../utils/constant";
+import { useExamFields } from "../../../form/hooks/useExamFields";
 
 const validate = examValidation;
 

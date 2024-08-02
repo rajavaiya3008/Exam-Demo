@@ -25,7 +25,7 @@ const Login = () => {
           <div className="absolute bottom-[110px] right-[34px]">
             <p>
               <Link to={FORGET_PASSWORD} className="text-[#7747ff]">
-                forget password?
+                Forget Password?
               </Link>
             </p>
           </div>

@@ -7,7 +7,8 @@ import { cancelFetchData, currAbortController, fetchData } from "../../../redux/
 import { removeLocalStorageItem } from "../../../utils/localStorageFunction";
 import { ALL_EXAM, LOGIN_PAGE } from "../../../utils/routeConstant";
 import { STUDENT_ALL_EXAM } from "../../../utils/apiUrlConstant";
-import { USER_DATA } from "../../../utils/localStorageConstant";
+import { PAGE_NO, USER_DATA } from "../../../utils/localStorageConstant";
+import { loadAllExamData } from "../../../redux/slices/student";
 
 export const useShowResult = () => {
   const navigate = useNavigate();
@@ -31,7 +32,9 @@ export const useShowResult = () => {
         navigate(LOGIN_PAGE);
         return;
       }
+      removeLocalStorageItem(PAGE_NO)
       loadResult(res.payload.data)
+      dispatch(loadAllExamData(res?.payload?.data))
     };
     !allExamData.length ? fetchAllExam() : loadResult(allExamData);
     return () => {
@@ -60,5 +63,3 @@ export const useShowResult = () => {
     handleBack,
   };
 };
-
-// const keys = ["subjectName", "rank", "score", "resultStatus"];

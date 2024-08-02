@@ -15,7 +15,7 @@ import { emailValidation } from "../../utils/validationConstant";
 import { FORGET_PASS_URL } from "../../utils/apiUrlConstant";
 import { hasObjectLength, isStudent } from "../../utils/commonFunction";
 import { EMAIL_NOT_FOUND, MAIL_SUCCESS } from "../../utils/constant";
-import { createInputField } from "../../utils/formFieldConstatnt";
+import { createInputField } from "../../utils/formFieldConstant";
 
 const validate = {
   email: emailValidation,

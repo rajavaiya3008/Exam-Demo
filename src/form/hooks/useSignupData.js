@@ -13,7 +13,7 @@ import { getCurrUserData } from "../../utils/currentUser";
 import { useEffect } from "react";
 import { hasObjectLength, isStudent } from "../../utils/commonFunction";
 import { EMAIL_EXIST, SIGNUP_SUCCESS } from "../../utils/constant";
-import { createInputField } from "../../utils/formFieldConstatnt";
+import { createDropDownField, createInputField } from "../../utils/formFieldConstant";
 
 const validate = {
   name: nameValidation,
@@ -26,12 +26,7 @@ const signupField = [
   createInputField("text","name","name","Enter Name"),
   createInputField("email","email","email","Enter Email"),
   createInputField("password","password","password","Enter Password"),
-  {
-    type:'select',
-    style:'mt-[10px]',
-    dropDownOptions:["student", "teacher"],
-    name:"role",
-  }
+  createDropDownField('select','mt-[10px]',["student", "teacher"],"role")
 ];
 
 export const useSignupData = () => {

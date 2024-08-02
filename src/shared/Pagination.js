@@ -114,9 +114,6 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
                     {btn.text}
                   </NavLink>
                 </td>
-                // &subject=${
-                //   item?.subjectName || ""
-                // }
               ))}
               {isStudent() && (
                 <td

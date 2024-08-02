@@ -10,8 +10,8 @@ import {
 } from "../../../redux/slices/teacher";
 import { TEACHER_ALL_STUDENT } from "../../../utils/apiUrlConstant";
 import { LOGIN_PAGE } from "../../../utils/routeConstant";
-import { USER_DATA } from "../../../utils/localStorageConstant";
-import { createInputField } from "../../../utils/formFieldConstatnt";
+import { PAGE_NO, USER_DATA } from "../../../utils/localStorageConstant";
+import { createInputField } from "../../../utils/formFieldConstant";
 
 const keys = ["name", "email", "status"];
 
@@ -24,10 +24,6 @@ export const useAllStudent = () => {
 
   const searchField = {
     ...createInputField("text","name","name","Name or Email"),
-    // type: "text",
-    // id: "name",
-    // name: "name",
-    // label: "Name or Email",
     isSearch:true,
     data: searchData,
     updateData: handleSearchField,
@@ -49,6 +45,7 @@ export const useAllStudent = () => {
       dispatch(loadAllStudentData(res?.payload?.data));
     };
     (!allStudentData.length && fetchAllStudentData())
+    removeLocalStorageItem(PAGE_NO)
     return () => {
       cancelFetchData(currAbortController)
       dispatch(handleSearchField(""));

@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import { TEACHER_VERIFIED_STUDENT } from "../../../utils/apiUrlConstant";
 import { LOGIN_PAGE } from "../../../utils/routeConstant";
 import { USER_DATA } from "../../../utils/localStorageConstant";
-import { createInputField } from "../../../utils/formFieldConstatnt";
+import { createInputField } from "../../../utils/formFieldConstant";
 
 const keys = ["name", "email", "status"];
 
@@ -24,10 +24,6 @@ export const useVerifiedStudent = () => {
   const searchData = useSelector((state) => state.teacher.searchField);
   const searchField = {
     ...createInputField("text","name","name","Name of Email"),
-    // type: "text",
-    // id: "name",
-    // name: "name",
-    // label: "Name of Email",
     data: searchData,
     updateData: handleSearchField,
   };

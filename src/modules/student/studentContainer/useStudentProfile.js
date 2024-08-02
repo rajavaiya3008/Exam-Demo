@@ -3,7 +3,6 @@ import { validateData } from "../../../utils/validation";
 import {
   handleStudentError,
   loadStudentProfile,
-  // updateProfile,
 } from "../../../redux/slices/student";
 import { getCurrUserData } from "../../../utils/currentUser";
 import { cancelFetchData, currAbortController, fetchData } from "../../../redux/slices/api";
@@ -22,7 +21,7 @@ import { hasObjectLength } from "../../../utils/commonFunction";
 import { STUDENT, USER_DATA } from "../../../utils/localStorageConstant";
 import { useProfile } from "../../../form/hooks/useProfile";
 import { PROFILE_UPDATED } from "../../../utils/constant";
-import { createInputField } from "../../../utils/formFieldConstatnt";
+import { createInputField } from "../../../utils/formFieldConstant";
 
 const validate = {
   name: nameValidation,
@@ -38,20 +37,12 @@ export const useStudentProfile = () => {
   const createStudentFields = [
     {
       ...createInputField("text","name","name","Name"),
-      // type: "text",
-      // id: "name",
-      // name: "name",
-      // label: "Name",
       data: studentProfile,
       updateData: updateProfile,
       disable: disable,
     },
     {
       ...createInputField("email","email","email","Email"),
-      // type: "email",
-      // id: "email",
-      // name: "email",
-      // label: "Email",
       data: studentProfile,
       updateData: updateProfile,
       disable: true,

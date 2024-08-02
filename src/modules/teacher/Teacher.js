@@ -49,7 +49,6 @@ const Teacher = () => {
       dispatch(loadAllStudentData([]))
       removeLocalStorageItem(PAGE_NO)
     }
-    // (allStudent !== "all-student" && removeLocalStorageItem(PAGE_NO))
   })
 
   return (

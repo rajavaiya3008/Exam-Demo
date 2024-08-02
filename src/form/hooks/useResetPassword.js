@@ -17,7 +17,7 @@ import {
 import { RESET_PASS_URL } from "../../utils/apiUrlConstant";
 import { useEffect, useRef } from "react";
 import { CHECK_OLD_PASS, OLD_NEW_SAME, PASS_NOT_MATCH, PASS_RESET } from "../../utils/constant";
-import { createInputField } from "../../utils/formFieldConstatnt";
+import { createInputField } from "../../utils/formFieldConstant";
 
 const validate = {
   oldPassword: passwordValidation,

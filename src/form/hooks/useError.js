@@ -3,12 +3,11 @@ import { handleError } from "../../redux/slices/user";
 import { handleStudentError } from "../../redux/slices/student";
 import { handleTeacherError } from "../../redux/slices/teacher";
 import { getCurrUserData } from "../../utils/currentUser";
-import { isStudent } from "../../utils/commonFunction";
+import { isResetPassword, isStudent } from "../../utils/commonFunction";
 import { useLocation } from "react-router";
-import { STUDENT_RESET_PASS, TEACHER_RESET_PASS } from "../../utils/routeConstant";
+
 export const useGetError = () => {
-    const location = useLocation();
-    const isResetPassword = (location.pathname === STUDENT_RESET_PASS || location.pathname === TEACHER_RESET_PASS)
+  const { pathname } = useLocation();
   const { role } = getCurrUserData();
   const userError = useSelector((state) => state.user.error);
   const studentError = useSelector((state) => state.student.error);
@@ -24,6 +23,12 @@ export const useGetError = () => {
   return {
     error,
     handleError:
-      errorHandlers[!role || isResetPassword ? "user" : (isStudent() ? "student" : "teacher")],
+      errorHandlers[
+        !role || isResetPassword(pathname)
+          ? "user"
+          : isStudent()
+          ? "student"
+          : "teacher"
+      ],
   };
 };

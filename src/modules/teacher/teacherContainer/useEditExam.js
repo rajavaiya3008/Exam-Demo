@@ -20,9 +20,10 @@ import { useSearchParams } from "react-router-dom";
 import { GET_EDIT_EXAM, TEACHER_DELETE_EXAM, TEACHER_EDIT_EXAM } from "../../../utils/apiUrlConstant";
 import { examValidation } from "../../../utils/validationConstant";
 import { hasDuplicates, hasObjectLength, validateOptions, validationExamData } from "../../../utils/commonFunction";
-import { editData, useExamFields, sameOptionMsg, sameQuestionMsg } from "../../../utils/examDataConstatnt";
+import { editData, sameOptionMsg, sameQuestionMsg } from "../../../utils/examDataConstant";
 import { ANS_INDEX, CREATE_EXAM_CONST, USER_DATA } from "../../../utils/localStorageConstant";
 import { EXAM_DELETED, EXAM_EDITED } from "../../../utils/constant";
+import { useExamFields } from "../../../form/hooks/useExamFields";
 
 const validate = examValidation
 

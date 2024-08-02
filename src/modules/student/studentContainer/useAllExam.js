@@ -14,8 +14,8 @@ import {
   SHOW_RESULT,
 } from "../../../utils/routeConstant";
 import { STUDENT_ALL_EXAM } from "../../../utils/apiUrlConstant";
-import { USER_DATA } from "../../../utils/localStorageConstant";
-import { createInputField } from "../../../utils/formFieldConstatnt";
+import { PAGE_NO, USER_DATA } from "../../../utils/localStorageConstant";
+import { createInputField } from "../../../utils/formFieldConstant";
 
 const keys = ["subjectName", "email"];
 const btn = {
@@ -32,10 +32,6 @@ export const useAllExam = () => {
 
   const searchField = {
     ...createInputField("text","subjectName","subjectName","Subject Name or Email"),
-    // type: "text",
-    // id: "subjectName",
-    // name: "subjectName",
-    // label: "Subject Name or Email",
     isSearch:true,
     data: searchData,
     updateData: handleSearchField,
@@ -57,6 +53,7 @@ export const useAllExam = () => {
       dispatch(loadAllExamData(res?.payload?.data));
     };
     !allExamData.length && fetchAllExam();
+    removeLocalStorageItem(PAGE_NO)
 
     return () => {
       cancelFetchData(currAbortController)

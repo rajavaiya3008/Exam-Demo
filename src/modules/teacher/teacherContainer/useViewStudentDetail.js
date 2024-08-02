@@ -38,7 +38,7 @@ export const useViewStudentDetail = () => {
           navigate(ALL_STUDENT);
           return;
         }
-        dispatch(loadCurrStudentDetail(res.payload.data[0]));
+        dispatch(loadCurrStudentDetail(res.payload.data?.[0]));
       };
       fetchStudentDetail();
     } catch (error) {

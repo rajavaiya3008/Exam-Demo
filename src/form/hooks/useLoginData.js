@@ -19,7 +19,7 @@ import {
 import { hasObjectLength, isStudent } from "../../utils/commonFunction";
 import { USER_DATA } from "../../utils/localStorageConstant";
 import { LOGIN_SUCCESS } from "../../utils/constant";
-import { createInputField } from "../../utils/formFieldConstatnt";
+import { createInputField } from "../../utils/formFieldConstant";
 
 const validate = {
   email: emailValidation,
