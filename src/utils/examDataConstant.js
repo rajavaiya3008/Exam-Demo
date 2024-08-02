@@ -1,9 +1,10 @@
+import { RADIO_TYPE, TEXT_TYPE } from "./constant";
 import { showExam } from "./examPaperConstant";
 import { createInputField } from "./formFieldConstant";
 
 export const subjectField = (examData, disable, action) => {
   return {
-    ...createInputField("text","subject","subjectName","Subject Name"),
+    ...createInputField(TEXT_TYPE,"subject","subjectName","Subject Name"),
     data: examData,
     disable: disable,
     updateData: !disable ? action : () => {},
@@ -12,7 +13,7 @@ export const subjectField = (examData, disable, action) => {
 
 export const questionField = (examData, currQuestion, disable, action) => {
   return {
-    ...createInputField("text","question","question",`Question ${currQuestion + 1}`),
+    ...createInputField(TEXT_TYPE,"question","question",`Question ${currQuestion + 1}`),
     data: examData?.questions?.[currQuestion],
     disable: disable,
     updateData: !disable ? action : () => {},
@@ -22,7 +23,7 @@ export const questionField = (examData, currQuestion, disable, action) => {
 
 export const radioField = (examData, currQuestion, Options, option, action) => {
   return {
-    ...createInputField("radio",`op${option}`,"ans"),
+    ...createInputField(RADIO_TYPE,`op${option}`,"ans"),
     data: Options,
     updateData: action,
     currQuestion: currQuestion,
@@ -33,7 +34,7 @@ export const radioField = (examData, currQuestion, Options, option, action) => {
 
 export const optionField = (currQuestion, Options, option, disable, action) => {
   return {
-    ...createInputField("text",`op${option}`,`op${option}`,`Option ${option}`),
+    ...createInputField(TEXT_TYPE,`op${option}`,`op${option}`,`Option ${option}`),
     data: Options,
     disable: disable,
     updateData: !disable ? action : () => {},
@@ -47,8 +48,8 @@ export const sameOptionMsg = "Two Options are Same Please Check";
 
 export const editData = (subjectName, questions) => {
   const { showExamData: editExamData } = showExam(subjectName, questions);
-  const ansArr = editExamData.questions.reduce((acc, curr) => {
-    const ansIndex = curr.options.findIndex((option) => option === curr.answer);
+  const ansArr = editExamData?.questions?.reduce((acc, curr) => {
+    const ansIndex = curr?.options?.findIndex((option) => option === curr?.answer);
     acc.push(ansIndex);
     return acc;
   }, []);

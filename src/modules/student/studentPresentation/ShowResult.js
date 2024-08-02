@@ -2,6 +2,7 @@ import React from "react";
 import { useShowResult } from "../studentContainer/useShowResult";
 import { useLoading } from "../../../form/hooks/useLoading";
 import Button from "../../../shared/Button";
+import Loader from "../../../shared/Loader";
 
 const ShowResult = () => {
   const { result, handleBack } = useShowResult();
@@ -10,7 +11,7 @@ const ShowResult = () => {
   return (
     <div className="flex items-center flex-col mt-[70px] overflow-hidden">
       {useLoading() ? (
-        <div className="spinner"></div>
+        <Loader loaderStyle="spinner"/>
       ) : (
         <div>
           <h2 className="text-4xl text-center">Results</h2>

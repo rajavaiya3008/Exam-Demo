@@ -9,7 +9,6 @@ import {
 } from "../../../redux/slices/teacher";
 import { useEffect, useState } from "react";
 import { validateData } from "../../../utils/validation";
-import { getCurrUserData } from "../../../utils/currentUser";
 import { cancelFetchData, currAbortController, fetchData } from "../../../redux/slices/api";
 import { useNavigate } from "react-router";
 import { VIEW_EXAM } from "../../../utils/routeConstant";
@@ -35,7 +34,6 @@ export const useCreateExam = () => {
   const [currQuestion, setCurrQuestion] = useState(0);
   const error = useSelector((state) => state.teacher.error);
   const sameQuestions = useSelector((state) => state.teacher.questions);
-  const { token } = getCurrUserData();
 
   const validateExamData = validationExamData(examData,currQuestion);
 
@@ -94,7 +92,6 @@ export const useCreateExam = () => {
           method: "post",
           url: TEACHER_CREATE_EXAM,
           data: examData,
-          headers: { "access-token": token },
         };
         await dispatch(fetchData(config));
         toastSuccess(EXAM_CREATED);

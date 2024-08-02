@@ -4,6 +4,7 @@ import InputField from "../../../shared/InputField";
 import { useVerifiedStudent } from "../teacherContainer/useVerifiedStudent";
 import { STUDENT_DETAIL } from "../../../utils/routeConstant";
 import { useLoading } from "../../../form/hooks/useLoading";
+import Loader from "../../../shared/Loader";
 
 const VerifiedStudent = () => {
   const {
@@ -22,7 +23,7 @@ const VerifiedStudent = () => {
       )}
       <div>
         {useLoading() ? (
-          <div className="spinner mt-[250px]"></div>
+          <Loader loaderStyle="spinner mt-[250px]"/>
         ) : (
           <div>
             <p className="text-center text-4xl mb-4">Verified Students</p>

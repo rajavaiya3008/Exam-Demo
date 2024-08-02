@@ -3,6 +3,7 @@ import ShowExam from "../../../shared/ShowExam";
 import { useGiveExam } from "../studentContainer/useGiveExam";
 import { useLoading } from "../../../form/hooks/useLoading";
 import Button from "../../../shared/Button";
+import Loader from "../../../shared/Loader";
 
 const GiveExam = () => {
   const {
@@ -20,7 +21,7 @@ const GiveExam = () => {
   return (
     <div className="flex justify-center mt-[70px] overflow-hidden">
       {useLoading() ? (
-        <div className="spinner"></div>
+        <Loader loaderStyle="spinner"/>
       ) : (
         <div>
           <p className="text-center text-4xl mb-6">Give Exam</p>

@@ -18,7 +18,7 @@ import {
 } from "../../utils/validationConstant";
 import { FORGET_PASS_VERIFY } from "../../utils/apiUrlConstant";
 import { hasObjectLength, isStudent } from "../../utils/commonFunction";
-import { PASS_CHANGE, PASS_NOT_MATCH } from "../../utils/constant";
+import { PASS_CHANGE, PASS_NOT_MATCH, PASS_TYPE } from "../../utils/constant";
 import { createInputField } from "../../utils/formFieldConstant";
 
 const validate = {
@@ -27,8 +27,8 @@ const validate = {
 };
 
 const createNewPasswordField = [
-  createInputField("password","Password","Password","Password"),
-  createInputField("password","ConfirmPassword","ConfirmPassword","Confirm Password")
+  createInputField(PASS_TYPE,"Password","Password","Password"),
+  createInputField(PASS_TYPE,"ConfirmPassword","ConfirmPassword","Confirm Password")
 ];
 
 export const useNewPassword = () => {

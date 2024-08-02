@@ -4,24 +4,21 @@ import {
   handleStudentError,
   loadStudentProfile,
 } from "../../../redux/slices/student";
-import { getCurrUserData } from "../../../utils/currentUser";
 import { cancelFetchData, currAbortController, fetchData } from "../../../redux/slices/api";
 import { useEffect, useState } from "react";
 import {
   getLocalStorageItem,
-  removeLocalStorageItem,
   setLocalStorageItem,
 } from "../../../utils/localStorageFunction";
 import { toastSuccess } from "../../../utils/toastFunction";
-import { useNavigate } from "react-router";
-import { LOGIN_PAGE } from "../../../utils/routeConstant";
 import { GET_STUDENT_PROFILE, SAVE_STUDENT_PROFILE } from "../../../utils/apiUrlConstant";
 import { nameValidation } from "../../../utils/validationConstant";
 import { hasObjectLength } from "../../../utils/commonFunction";
-import { STUDENT, USER_DATA } from "../../../utils/localStorageConstant";
+import { STUDENT } from "../../../utils/localStorageConstant";
 import { useProfile } from "../../../form/hooks/useProfile";
-import { PROFILE_UPDATED } from "../../../utils/constant";
+import { EMAIL_TYPE, PROFILE_UPDATED, TEXT_TYPE } from "../../../utils/constant";
 import { createInputField } from "../../../utils/formFieldConstant";
+import { useApiRes } from "../../../form/hooks/useApiRes";
 
 const validate = {
   name: nameValidation,
@@ -29,20 +26,20 @@ const validate = {
 
 export const useStudentProfile = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const {handleApiResponse} = useApiRes()
   const {updateProfile} = useProfile()
   const [disable, setDisable] = useState(true);
   const studentProfile = useSelector((state) => state.student.studentProfile);
 
   const createStudentFields = [
     {
-      ...createInputField("text","name","name","Name"),
+      ...createInputField(TEXT_TYPE,"name","name","Name"),
       data: studentProfile,
       updateData: updateProfile,
       disable: disable,
     },
     {
-      ...createInputField("email","email","email","Email"),
+      ...createInputField(EMAIL_TYPE,"email","email","Email"),
       data: studentProfile,
       updateData: updateProfile,
       disable: true,
@@ -59,13 +56,10 @@ export const useStudentProfile = () => {
         const config = {
           method: "get",
           url: GET_STUDENT_PROFILE,
-          headers: { "access-token": getCurrUserData().token },
         };
         const res = await dispatch(fetchData(config));
-        if (res?.payload?.statusCode === 401) {
-          removeLocalStorageItem(USER_DATA);
-          navigate(LOGIN_PAGE);
-          return;
+        if(handleApiResponse({statusCode:res?.payload?.statusCode})){
+          return
         }
         dispatch(loadStudentProfile(res.payload.data));
         setLocalStorageItem(STUDENT, res.payload.data);
@@ -98,7 +92,6 @@ export const useStudentProfile = () => {
         method: "put",
         url: SAVE_STUDENT_PROFILE,
         data: updatedData,
-        headers: { "access-token": getCurrUserData().token },
       };
       const res = await dispatch(fetchData(config));
       setLocalStorageItem(STUDENT, res.payload.data);

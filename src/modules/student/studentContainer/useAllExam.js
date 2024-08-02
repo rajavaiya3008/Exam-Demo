@@ -1,6 +1,4 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router";
-import { getCurrUserData } from "../../../utils/currentUser";
 import { cancelFetchData, currAbortController, fetchData } from "../../../redux/slices/api";
 import { removeLocalStorageItem } from "../../../utils/localStorageFunction";
 import {
@@ -10,12 +8,13 @@ import {
 import { useEffect } from "react";
 import {
   GIVE_EXAM,
-  LOGIN_PAGE,
   SHOW_RESULT,
 } from "../../../utils/routeConstant";
 import { STUDENT_ALL_EXAM } from "../../../utils/apiUrlConstant";
-import { PAGE_NO, USER_DATA } from "../../../utils/localStorageConstant";
+import { PAGE_NO } from "../../../utils/localStorageConstant";
 import { createInputField } from "../../../utils/formFieldConstant";
+import { useApiRes } from "../../../form/hooks/useApiRes";
+import { TEXT_TYPE } from "../../../utils/constant";
 
 const keys = ["subjectName", "email"];
 const btn = {
@@ -25,13 +24,12 @@ const btn = {
 
 export const useAllExam = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const {handleApiResponse} = useApiRes()
   const allExamData = useSelector((state) => state.student.allExamData);
   const searchData = useSelector((state) => state.student.searchField);
-  const { token } = getCurrUserData();
 
   const searchField = {
-    ...createInputField("text","subjectName","subjectName","Subject Name or Email"),
+    ...createInputField(TEXT_TYPE,"subjectName","subjectName","Subject Name or Email"),
     isSearch:true,
     data: searchData,
     updateData: handleSearchField,
@@ -42,13 +40,10 @@ export const useAllExam = () => {
       const config = {
         method: "get",
         url: STUDENT_ALL_EXAM,
-        headers: { "access-token": token },
       };
       const res = await dispatch(fetchData(config));
-      if (res?.payload?.statusCode === 401) {
-        removeLocalStorageItem(USER_DATA);
-        navigate(LOGIN_PAGE);
-        return;
+      if(handleApiResponse({statusCode:res?.payload?.statusCode})){
+        return
       }
       dispatch(loadAllExamData(res?.payload?.data));
     };

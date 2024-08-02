@@ -1,10 +1,9 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
-import { getCurrUserData } from "../../utils/currentUser";
 import { handleError } from "../../redux/slices/user";
 import { validateData } from "../../utils/validation";
 import { cancelFetchData, currAbortController, fetchData } from "../../redux/slices/api";
-import { toastError, toastSuccess } from "../../utils/toastFunction";
+import { toastSuccess } from "../../utils/toastFunction";
 import {
   confirmPasswordValidation,
   passwordValidation,
@@ -16,8 +15,9 @@ import {
 } from "../../utils/routeConstant";
 import { RESET_PASS_URL } from "../../utils/apiUrlConstant";
 import { useEffect, useRef } from "react";
-import { CHECK_OLD_PASS, OLD_NEW_SAME, PASS_NOT_MATCH, PASS_RESET } from "../../utils/constant";
+import { PASS_NOT_MATCH, PASS_RESET, PASS_TYPE } from "../../utils/constant";
 import { createInputField } from "../../utils/formFieldConstant";
+import { useApiRes } from "./useApiRes";
 
 const validate = {
   oldPassword: passwordValidation,
@@ -26,16 +26,16 @@ const validate = {
 };
 
 const ResetPasswordFields = [
-  createInputField("password","oldPassword","oldPassword","Old Password"),
-  createInputField("password","Password","Password","Password"),
-  createInputField("password","ConfirmPassword","ConfirmPassword","Confirm Password")
+  createInputField(PASS_TYPE,"oldPassword","oldPassword","Old Password"),
+  createInputField(PASS_TYPE,"Password","Password","Password"),
+  createInputField(PASS_TYPE,"ConfirmPassword","ConfirmPassword","Confirm Password")
 ];
 
 export const useResetPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {handleApiResponse} = useApiRes()
   const resetPass = useRef()
-  const { token } = getCurrUserData();
 
   useEffect(() => {
     dispatch(handleError({}))
@@ -64,16 +64,11 @@ export const useResetPassword = () => {
         method: "post",
         url: RESET_PASS_URL,
         data: resetPasswordData,
-        headers: { "access-token": `${token}` },
       };
       const res = await dispatch(fetchData(config));
-      if (res.payload.statusCode === 500) {
-        toastError(OLD_NEW_SAME);
-        return;
-      }
-      if (res.payload.statusCode !== 200) {
-        toastError(CHECK_OLD_PASS);
-        return;
+
+      if(handleApiResponse({statusCode:res.payload.statusCode,msg:res.payload.message})){
+        return
       }
       validate.ConfirmPassword.pop();
       toastSuccess(PASS_RESET);

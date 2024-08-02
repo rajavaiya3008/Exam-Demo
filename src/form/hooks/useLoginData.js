@@ -3,7 +3,7 @@ import { handleError } from "../../redux/slices/user";
 import { validateData } from "../../utils/validation";
 import { cancelFetchData, currAbortController, fetchData } from "../../redux/slices/api";
 import { useNavigate } from "react-router";
-import { toastError, toastSuccess } from "../../utils/toastFunction";
+import { toastSuccess } from "../../utils/toastFunction";
 import { setLocalStorageItem } from "../../utils/localStorageFunction";
 import {
   emailValidation,
@@ -18,8 +18,9 @@ import {
 } from "../../utils/routeConstant";
 import { hasObjectLength, isStudent } from "../../utils/commonFunction";
 import { USER_DATA } from "../../utils/localStorageConstant";
-import { LOGIN_SUCCESS } from "../../utils/constant";
+import { EMAIL_TYPE, LOGIN_SUCCESS, PASS_TYPE } from "../../utils/constant";
 import { createInputField } from "../../utils/formFieldConstant";
+import { useApiRes } from "./useApiRes";
 
 const validate = {
   email: emailValidation,
@@ -27,13 +28,14 @@ const validate = {
 };
 
 const loginField = [
-  createInputField("email","email","email","Enter Email"),
-  createInputField("password","password","password","Enter Password"),
+  createInputField(EMAIL_TYPE,"email","email","Enter Email"),
+  createInputField(PASS_TYPE,"password","password","Enter Password"),
 ];
 
 export const useLoginData = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {handleApiResponse} = useApiRes()
   const { role } = getCurrUserData();
 
   useEffect(() => {
@@ -64,9 +66,8 @@ export const useLoginData = () => {
         data: loginData,
       };
       const res = await dispatch(fetchData(config));
-      if (res.payload.statusCode === 500) {
-        toastError(res.payload.message);
-        return;
+      if(handleApiResponse({statusCode:res.payload.statusCode,msg:res.payload.message})){
+        return
       }
       toastSuccess(LOGIN_SUCCESS);
       setLocalStorageItem(USER_DATA, res.payload.data);

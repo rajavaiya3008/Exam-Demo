@@ -10,10 +10,9 @@ import {
   loadViewExamData,
 } from "../../../redux/slices/teacher";
 import { validateData } from "../../../utils/validation";
-import { getCurrUserData } from "../../../utils/currentUser";
 import { cancelFetchData, currAbortController, fetchData } from "../../../redux/slices/api";
 import { useNavigate } from "react-router";
-import { LOGIN_PAGE, VIEW_EXAM } from "../../../utils/routeConstant";
+import { VIEW_EXAM } from "../../../utils/routeConstant";
 import { toastSuccess } from "../../../utils/toastFunction";
 import { removeLocalStorageItem } from "../../../utils/localStorageFunction";
 import { useSearchParams } from "react-router-dom";
@@ -21,15 +20,17 @@ import { GET_EDIT_EXAM, TEACHER_DELETE_EXAM, TEACHER_EDIT_EXAM } from "../../../
 import { examValidation } from "../../../utils/validationConstant";
 import { hasDuplicates, hasObjectLength, validateOptions, validationExamData } from "../../../utils/commonFunction";
 import { editData, sameOptionMsg, sameQuestionMsg } from "../../../utils/examDataConstant";
-import { ANS_INDEX, CREATE_EXAM_CONST, USER_DATA } from "../../../utils/localStorageConstant";
+import { ANS_INDEX, CREATE_EXAM_CONST } from "../../../utils/localStorageConstant";
 import { EXAM_DELETED, EXAM_EDITED } from "../../../utils/constant";
 import { useExamFields } from "../../../form/hooks/useExamFields";
+import { useApiRes } from "../../../form/hooks/useApiRes";
 
 const validate = examValidation
 
 export const useEditExam = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {handleApiResponse} = useApiRes()
   const [searchParams] = useSearchParams();
   const {id,subject:subjectName} = Object.fromEntries(searchParams.entries())
   const examData = useSelector((state) => state.teacher.createExam);
@@ -37,7 +38,6 @@ export const useEditExam = () => {
   const [currQuestion, setCurrQuestion] = useState(0);
   const error = useSelector((state) => state.teacher.error);
   const edited = useSelector((state) => state.teacher.edited);
-  const { token } = getCurrUserData();
 
   const validateExamData = validationExamData(examData,currQuestion);
 
@@ -53,18 +53,11 @@ export const useEditExam = () => {
         const config = {
           method: "get",
           url: GET_EDIT_EXAM,
-          headers: { "access-token": token },
           params: { id },
         };
         const res = await dispatch(fetchData(config));
-        if (res?.payload?.statusCode === 401) {
-          removeLocalStorageItem(USER_DATA);
-          navigate(LOGIN_PAGE);
-          return;
-        }
-        if (res?.payload?.statusCode === 500) {
-          navigate(VIEW_EXAM);
-          return;
+        if(handleApiResponse({statusCode:res?.payload?.statusCode,path:VIEW_EXAM})){
+          return
         }
         const {editExamData,ansArr} = editData(subjectName,res.payload?.data?.questions)
         dispatch(loadExamData(editExamData));
@@ -78,6 +71,11 @@ export const useEditExam = () => {
     }
 
     return () => {
+      clearEditExam()
+    };
+  }, []);
+
+  const clearEditExam = () => {
       cancelFetchData(currAbortController);
       dispatch(initiateExam());
       dispatch(initiateAnsIndex([]));
@@ -85,8 +83,7 @@ export const useEditExam = () => {
       dispatch(handleEdited());
       removeLocalStorageItem(CREATE_EXAM_CONST);
       removeLocalStorageItem(ANS_INDEX);
-    };
-  }, []);
+  }
 
   const handleEditExam = async () => {
     try {
@@ -112,7 +109,6 @@ export const useEditExam = () => {
         method: "put",
         url: TEACHER_EDIT_EXAM,
         data: examData,
-        headers: { "access-token": token },
         params: { id },
       };
       dispatch(loadViewExamData([]))
@@ -134,7 +130,6 @@ export const useEditExam = () => {
         const config = {
           method: "delete",
           url: TEACHER_DELETE_EXAM,
-          headers: { "access-token": token },
           params: { id },
         };
         await dispatch(fetchData(config));

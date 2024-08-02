@@ -3,6 +3,7 @@ import InputField from "../../../shared/InputField";
 import { useStudentProfile } from "../studentContainer/useStudentProfile";
 import { useLoading } from "../../../form/hooks/useLoading";
 import Button from "../../../shared/Button";
+import Loader from "../../../shared/Loader";
 
 const StudentProfile = () => {
   const {
@@ -17,7 +18,7 @@ const StudentProfile = () => {
     <div className="flex justify-center mt-[70px] overflow-hidden">
       <div>
         {useLoading() ? (
-          <div className="spinner"></div>
+          <Loader loaderStyle="spinner"/>
         ) : (
           <div>
             <p className="text-center text-4xl mb-4">Your Profile</p>

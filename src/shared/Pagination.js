@@ -12,6 +12,7 @@ import { NEXT, PREV } from "../utils/constant";
 
 let recordsPerPage = 10;
 let sliceData;
+const navBtnStyle = "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline rounded-full"
 
 const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
   const location = useLocation();
@@ -85,11 +86,11 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
                 {key}
               </td>
             ))}
-            {newBtn?.map((btn, i) => (
-              <td className="px-6 py-3" key={i}>
+            {newBtn?.length && 
+              <td className="px-6 py-3">
                 Action
               </td>
-            ))}
+            }
             {btn?.giveExamBtn && <td className="px-6 py-3">Action</td>}
           </tr>
         </thead>
@@ -147,7 +148,7 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
               onSubmit={() => handleNavigation(PREV)}
               disable={prevDisable()}
               customStyle={
-                "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline rounded-full"
+                navBtnStyle
               }
             >
               {`<`}
@@ -159,7 +160,7 @@ const Pagination = ({ data, keys, btn, newBtn, searchKey, searchVal }) => {
               onSubmit={() => handleNavigation(NEXT)}
               disable={nextDisable()}
               customStyle={
-                "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline rounded-full"
+                navBtnStyle
               }
             >
               {`>`}

@@ -1,15 +1,13 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { RiLockPasswordFill } from "react-icons/ri";
 import { TbLogout } from "react-icons/tb";
 import { handleMenu } from "../redux/slices/user";
 import { loadViewExamData } from "../redux/slices/teacher";
 import { loadAllExamData } from "../redux/slices/student";
 import { clearLocalStorageItem } from "../utils/localStorageFunction";
-import { LOGIN_PAGE, STUDENT_RESET_PASS, TEACHER_RESET_PASS } from "../utils/routeConstant";
+import { LOGIN_PAGE } from "../utils/routeConstant";
 import Button from "./Button";
-import { isStudent } from "../utils/commonFunction";
 
 const Navbar = ({ navItems }) => {
   const navigate = useNavigate();
@@ -42,14 +40,6 @@ const Navbar = ({ navItems }) => {
               </NavLink>
             </li>
           ))}
-          <li onClick={() => dispatch(handleMenu())}>
-            <NavLink
-              to={isStudent()? STUDENT_RESET_PASS : TEACHER_RESET_PASS}
-              className="flex gap-[20px] text-[20px] items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-            >
-              <RiLockPasswordFill style={{ fontSize: 25 }} /> Reset
-            </NavLink>
-          </li>
           <li onClick={() => dispatch(handleMenu())}>
             <Button onSubmit={handleLogout} customStyle="flex gap-[20px] text-[20px] items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group w-full">
               <TbLogout style={{ fontSize: 25 }} /> Logout

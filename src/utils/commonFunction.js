@@ -1,4 +1,4 @@
-import { NEXT, PREV } from "./constant";
+import { NEXT, PREV, RADIO_TYPE, SELECT_TYPE } from "./constant";
 import { getCurrUserData } from "./currentUser";
 import { PAPER_ID } from "./localStorageConstant";
 import { getLocalStorageItem, setLocalStorageItem } from "./localStorageFunction";
@@ -17,11 +17,11 @@ export const isPrev = (navigate) => {
 }
 
 export const isRadio = (type) => {
-  return type === 'radio'
+  return type === RADIO_TYPE
 }
 
 export const isSelect = (type) => {
-  return type === 'select'
+  return type === SELECT_TYPE
 }
 
 export const hasObjectLength = (obj) => {

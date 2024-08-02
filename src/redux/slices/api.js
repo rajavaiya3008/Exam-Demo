@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { axiosInstance } from "../../utils/api";
+import { getCurrUserData } from "../../utils/currentUser";
 
 export let currAbortController = null;
 
@@ -13,9 +14,11 @@ export const fetchData = createAsyncThunk(
   "data/fetchData",
   async (config) => {
     cancelFetchData(currAbortController)
+    config.headers = { "access-token": getCurrUserData().token }
     currAbortController = new AbortController();
     const signal = currAbortController.signal;
     config.signal = signal;
+    console.log('config', config)
     try {
       let data = await axiosInstance(config);
       return data.data;

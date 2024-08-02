@@ -5,15 +5,16 @@ import {
 import { validateData } from "../../utils/validation";
 import { cancelFetchData, currAbortController, fetchData } from "../../redux/slices/api";
 import { useNavigate } from "react-router";
-import { toastError, toastSuccess } from "../../utils/toastFunction";
+import { toastSuccess } from "../../utils/toastFunction";
 import { LOGIN_PAGE, STUDENT_DASHBOARD, TEACHER_DASHBOARD } from "../../utils/routeConstant";
 import { emailValidation, nameValidation, passwordValidation } from "../../utils/validationConstant";
 import { SIGNUP_URL } from "../../utils/apiUrlConstant";
 import { getCurrUserData } from "../../utils/currentUser";
 import { useEffect } from "react";
 import { hasObjectLength, isStudent } from "../../utils/commonFunction";
-import { EMAIL_EXIST, SIGNUP_SUCCESS } from "../../utils/constant";
+import { EMAIL_TYPE, PASS_TYPE, SELECT_TYPE, SIGNUP_SUCCESS, TEXT_TYPE } from "../../utils/constant";
 import { createDropDownField, createInputField } from "../../utils/formFieldConstant";
+import { useApiRes } from "./useApiRes";
 
 const validate = {
   name: nameValidation,
@@ -23,15 +24,16 @@ const validate = {
 };
 
 const signupField = [
-  createInputField("text","name","name","Enter Name"),
-  createInputField("email","email","email","Enter Email"),
-  createInputField("password","password","password","Enter Password"),
-  createDropDownField('select','mt-[10px]',["student", "teacher"],"role")
+  createInputField(TEXT_TYPE,"name","name","Enter Name"),
+  createInputField(EMAIL_TYPE,"email","email","Enter Email"),
+  createInputField(PASS_TYPE,"password","password","Enter Password"),
+  createDropDownField(SELECT_TYPE,'mt-[10px]',["student", "teacher"],"role")
 ];
 
 export const useSignupData = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {handleApiResponse} = useApiRes()
   const {role} = getCurrUserData();
 
   useEffect(() => {
@@ -59,9 +61,8 @@ export const useSignupData = () => {
         data: signupData,
       };
       const res = await dispatch(fetchData(config));
-      if (res?.payload?.statusCode !== 200) {
-        toastError(EMAIL_EXIST);
-        return;
+      if(handleApiResponse({statusCode:res?.payload?.statusCode,msg:res.payload.message})){
+        return
       }
       toastSuccess(SIGNUP_SUCCESS);
       navigate(LOGIN_PAGE, { replace: true });

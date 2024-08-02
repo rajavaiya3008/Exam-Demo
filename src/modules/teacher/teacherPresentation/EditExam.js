@@ -3,6 +3,7 @@ import ShowExam from "../../../shared/ShowExam";
 import { useEditExam } from "../teacherContainer/useEditExam";
 import { useLoading } from "../../../form/hooks/useLoading";
 import Button from "../../../shared/Button";
+import Loader from "../../../shared/Loader";
 
 const EditExam = () => {
   const {
@@ -18,10 +19,26 @@ const EditExam = () => {
     handleCancel,
   } = useEditExam();
 
+  const editBtn = [
+    {
+      submit: handleEditExam,
+      disable: !edited,
+      name: "Submit",
+    },
+    {
+      submit: handleDeleteExam,
+      name: "Delete",
+    },
+    {
+      submit: handleCancel,
+      name: "Cancel",
+    },
+  ];
+
   return (
     <div className="flex flex-col items-center mt-[70px] overflow-hidden">
       {useLoading() ? (
-        <div className="spinner"></div>
+        <Loader loaderStyle="spinner"/>
       ) : (
         <>
           <p className="text-center mb-4 text-4xl">Edit Exam</p>
@@ -35,15 +52,11 @@ const EditExam = () => {
           />
 
           <div className="flex mt-[10px] gap-2">
-            <Button onSubmit={handleEditExam} disable={!edited}>
-              Submit
-            </Button>
-            <Button onSubmit={handleDeleteExam}>
-              Delete
-            </Button>
-            <Button onSubmit={handleCancel}>
-              Cancel
-            </Button>
+            {editBtn.map(({ submit, disable, name }, i) => (
+              <Button onSubmit={submit} disable={disable} key={i}>
+                {name}
+              </Button>
+            ))}
           </div>
         </>
       )}

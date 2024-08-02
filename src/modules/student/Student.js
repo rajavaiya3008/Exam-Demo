@@ -3,12 +3,13 @@ import Navbar from "../../shared/Navbar";
 import { Outlet, useLocation } from "react-router-dom";
 import { PiExamFill } from "react-icons/pi";
 import { CgProfile } from "react-icons/cg";
-import { RiDashboardHorizontalFill } from "react-icons/ri";
+import { RiDashboardHorizontalFill, RiLockPasswordFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import {
   ALL_EXAM,
   STUDENT_DASHBOARD,
   STUDENT_PROFILE,
+  STUDENT_RESET_PASS,
 } from "../../utils/routeConstant";
 import { removeLocalStorageItem } from "../../utils/localStorageFunction";
 import { PAGE_NO } from "../../utils/localStorageConstant";
@@ -30,6 +31,11 @@ const studentRoutes = [
     name: "Profile",
     icon: <CgProfile style={{ fontSize: 25 }} />,
   },
+  {
+    path:STUDENT_RESET_PASS,
+    name:"Reset",
+    icon: <RiLockPasswordFill style={{ fontSize: 25 }} />
+  }
 ];
 
 const Student = () => {

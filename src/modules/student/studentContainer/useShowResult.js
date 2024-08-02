@@ -2,35 +2,32 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
-import { getCurrUserData } from "../../../utils/currentUser";
 import { cancelFetchData, currAbortController, fetchData } from "../../../redux/slices/api";
 import { removeLocalStorageItem } from "../../../utils/localStorageFunction";
-import { ALL_EXAM, LOGIN_PAGE } from "../../../utils/routeConstant";
+import { ALL_EXAM } from "../../../utils/routeConstant";
 import { STUDENT_ALL_EXAM } from "../../../utils/apiUrlConstant";
-import { PAGE_NO, USER_DATA } from "../../../utils/localStorageConstant";
+import { PAGE_NO } from "../../../utils/localStorageConstant";
 import { loadAllExamData } from "../../../redux/slices/student";
+import { useApiRes } from "../../../form/hooks/useApiRes";
 
 export const useShowResult = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const {handleApiResponse} = useApiRes()
   const [searchParams] = useSearchParams();
   const allExamData = useSelector((state) => state.student.allExamData);
   const {id} = Object.fromEntries(searchParams.entries())
   const [result, setResult] = useState([]);
-  const {token} = getCurrUserData()
 
   useEffect(() => {
     const fetchAllExam = async () => {
       const config = {
         method: "get",
         url: STUDENT_ALL_EXAM,
-        headers: { "access-token": token },
       };
       const res = await dispatch(fetchData(config));
-      if (res?.payload?.statusCode === 401) {
-        removeLocalStorageItem(USER_DATA);
-        navigate(LOGIN_PAGE);
-        return;
+      if(handleApiResponse({statusCode:res?.payload?.statusCode})){
+        return
       }
       removeLocalStorageItem(PAGE_NO)
       loadResult(res.payload.data)

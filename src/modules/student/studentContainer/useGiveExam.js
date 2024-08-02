@@ -1,34 +1,39 @@
 import { useDispatch, useSelector } from "react-redux";
-import { getCurrUserData } from "../../../utils/currentUser";
 import {
   cancelExam,
   initiateExamPaper,
   loadAllExamData,
   loadExamPaper,
 } from "../../../redux/slices/student";
-import { cancelFetchData, currAbortController, fetchData } from "../../../redux/slices/api";
+import {
+  cancelFetchData,
+  currAbortController,
+  fetchData,
+} from "../../../redux/slices/api";
 import { useNavigate } from "react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { initiateAnsIndex } from "../../../redux/slices/teacher";
 import { toastError, toastSuccess } from "../../../utils/toastFunction";
 import {
   getLocalStorageItem,
   removeLocalStorageItem,
 } from "../../../utils/localStorageFunction";
-import { ALL_EXAM, LOGIN_PAGE } from "../../../utils/routeConstant";
+import { ALL_EXAM } from "../../../utils/routeConstant";
 import { useSearchParams } from "react-router-dom";
 import {
   STUDENT_EXAM_PAPER,
   STUDENT_SUBMIT_EXAM,
 } from "../../../utils/apiUrlConstant";
 import { checkExam, validateOptions } from "../../../utils/commonFunction";
+import { ansArray, showExam } from "../../../utils/examPaperConstant";
 import {
-  ansArray,
-  showExam,
-} from "../../../utils/examPaperConstant";
-import { ANS_INDEX, EXAM_PAPER, PAGE_NO, PAPER_ID, USER_DATA } from "../../../utils/localStorageConstant";
+  ANS_INDEX,
+  EXAM_PAPER,
+  PAPER_ID,
+} from "../../../utils/localStorageConstant";
 import { EXAM_SUBMITTED, FILL_ALL_QUE } from "../../../utils/constant";
 import { useExamFields } from "../../../form/hooks/useExamFields";
+import { useApiRes } from "../../../form/hooks/useApiRes";
 
 const validate = {
   answer: [{ required: true, message: "Answer Required" }],
@@ -37,20 +42,13 @@ const validate = {
 export const useGiveExam = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { handleApiResponse } = useApiRes();
   const [searchParams] = useSearchParams();
-  const {id:currId,subject} = Object.fromEntries(searchParams.entries())
-  const [id,setId] = useState(currId)
+  const { id, subject } = Object.fromEntries(searchParams.entries());
   const [currQuestion, setCurrQuestion] = useState(0);
   const examData = useSelector((state) => state.student.examPaper);
   const ansIndex = useSelector((state) => state.teacher.ansIndex);
   const error = useSelector((state) => state.student.error);
-  const { token } = getCurrUserData();
-
-  // useMemo(() => {
-    
-  //   const isCorrectExam = checkExam(id);
-  //   (!isCorrectExam && navigate(ALL_EXAM)) 
-  // },[id])
 
   const Options = validateOptions(examData, currQuestion);
 
@@ -58,11 +56,7 @@ export const useGiveExam = () => {
     answer: examData?.questions?.[currQuestion]?.answer?.trim(),
   };
 
-  const createExamFields = useExamFields(
-    examData,
-    currQuestion,
-    Options
-  );
+  const createExamFields = useExamFields(examData, currQuestion, Options);
 
   const { ansArr } = ansArray(examData);
 
@@ -71,17 +65,15 @@ export const useGiveExam = () => {
       const config = {
         method: "get",
         url: STUDENT_EXAM_PAPER,
-        headers: { "access-token": token },
         params: { id },
       };
       const res = await dispatch(fetchData(config));
-      if (res?.payload?.statusCode === 401) {
-        removeLocalStorageItem(USER_DATA);
-        navigate(LOGIN_PAGE);
-        return;
-      }
-      if (res?.payload?.statusCode === 500) {
-        navigate(ALL_EXAM);
+      if (
+        handleApiResponse({
+          statusCode: res?.payload?.statusCode,
+          path: ALL_EXAM,
+        })
+      ) {
         return;
       }
       const { showExamData } = showExam(subject, res?.payload?.data);
@@ -89,13 +81,13 @@ export const useGiveExam = () => {
     };
 
     const isCorrectExam = checkExam(id);
-    (!isCorrectExam && navigate(ALL_EXAM)) 
+    !isCorrectExam && navigate(ALL_EXAM);
 
     const examPaper = getLocalStorageItem(EXAM_PAPER);
     const ansIndexLocal = getLocalStorageItem(ANS_INDEX);
     if (examPaper) {
       dispatch(loadExamPaper(examPaper));
-      (ansIndexLocal && dispatch(initiateAnsIndex(ansIndexLocal)))
+      ansIndexLocal && dispatch(initiateAnsIndex(ansIndexLocal));
     } else {
       fetchExamPaper();
     }
@@ -117,13 +109,17 @@ export const useGiveExam = () => {
     window.addEventListener("storage", handleStorageChange);
 
     return () => {
-      cancelFetchData(currAbortController);
+      clearGiveExam();
       window.removeEventListener("storage", handleStorageChange);
-      removeLocalStorageItem(EXAM_PAPER);
-      removeLocalStorageItem(ANS_INDEX);
-      removeLocalStorageItem(PAPER_ID)
     };
   }, []);
+
+  const clearGiveExam = () => {
+    cancelFetchData(currAbortController);
+    removeLocalStorageItem(EXAM_PAPER);
+    removeLocalStorageItem(ANS_INDEX);
+    removeLocalStorageItem(PAPER_ID);
+  };
 
   const handleSubmitExam = () => {
     const submitExam = async () => {
@@ -132,7 +128,6 @@ export const useGiveExam = () => {
           method: "post",
           url: STUDENT_SUBMIT_EXAM,
           data: ansArr,
-          headers: { "access-token": token },
           params: { id },
         };
         dispatch(loadAllExamData([]));
@@ -143,9 +138,7 @@ export const useGiveExam = () => {
         console.log("error", error);
       }
     };
-    ansArr.length === 7
-      ? submitExam()
-      : toastError(FILL_ALL_QUE);
+    ansArr.length === 7 ? submitExam() : toastError(FILL_ALL_QUE);
   };
 
   const handleCancel = () => {
