@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
+  handleCurrQuestion,
   handleTeacherError,
   initiateAnsIndex,
   initiateExam,
@@ -31,15 +32,16 @@ export const useCreateExam = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const examData = useSelector((state) => state.teacher.createExam);
-  const [currQuestion, setCurrQuestion] = useState(0);
+  const currQuestion = useSelector(state => state.teacher.currQuestion)
   const error = useSelector((state) => state.teacher.error);
   const sameQuestions = useSelector((state) => state.teacher.questions);
+  const ansIndex = useSelector(state => state.teacher.ansIndex)
 
   const validateExamData = validationExamData(examData,currQuestion);
 
   const Options = validateOptions(examData,currQuestion);
 
-  const createExamFields = useExamFields(examData,currQuestion,Options)
+  const createExamFields = useExamFields(examData,currQuestion,Options,ansIndex)
 
   const optionArr = examData?.questions?.[currQuestion]?.options;
 
@@ -51,7 +53,7 @@ export const useCreateExam = () => {
       if (!createExamData) {
         dispatch(initiateExam());
         dispatch(initiateAnsIndex([]));
-        setCurrQuestion(0);
+        dispatch(handleCurrQuestion(0))
       } else {
         dispatch(loadExamData(createExamData));
         (ansIndex && dispatch(initiateAnsIndex(ansIndex)))
@@ -95,7 +97,7 @@ export const useCreateExam = () => {
         };
         await dispatch(fetchData(config));
         toastSuccess(EXAM_CREATED);
-        setCurrQuestion(0);
+        dispatch(handleCurrQuestion(0))
         dispatch(loadViewExamData([]))
         dispatch(initiateQuestions());
         navigate(VIEW_EXAM);
@@ -112,7 +114,7 @@ export const useCreateExam = () => {
     dispatch(initiateAnsIndex([]));
     removeLocalStorageItem(ANS_INDEX);
     removeLocalStorageItem(CREATE_EXAM_CONST);
-    setCurrQuestion(0);
+    dispatch(handleCurrQuestion(0))
   };
 
   return {
@@ -123,7 +125,6 @@ export const useCreateExam = () => {
     currQuestion,
     Options,
     examData,
-    setCurrQuestion,
     handleCreateExam,
     handleCancel,
   };

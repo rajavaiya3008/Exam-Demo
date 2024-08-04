@@ -26,9 +26,9 @@ const validate = {
 };
 
 const ResetPasswordFields = [
-  createInputField(PASS_TYPE,"oldPassword","oldPassword","Old Password"),
-  createInputField(PASS_TYPE,"Password","Password","Password"),
-  createInputField(PASS_TYPE,"ConfirmPassword","ConfirmPassword","Confirm Password")
+  {...createInputField(PASS_TYPE,"oldPassword","oldPassword","Old Password"),updateData:()=>{}},
+  {...createInputField(PASS_TYPE,"Password","Password","Password"),updateData:()=>{}},
+  {...createInputField(PASS_TYPE,"ConfirmPassword","ConfirmPassword","Confirm Password"),updateData:()=>{}}
 ];
 
 export const useResetPassword = () => {

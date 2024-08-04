@@ -9,20 +9,22 @@ import { TEACHER_VERIFIED_STUDENT } from "../../../utils/apiUrlConstant";
 import { createInputField } from "../../../utils/formFieldConstant";
 import { useApiRes } from "../../../form/hooks/useApiRes";
 import { TEXT_TYPE } from "../../../utils/constant";
+import { useHandleInput } from "../../../form/hooks/useHandleInput";
 
 const keys = ["name", "email", "status"];
 
 export const useVerifiedStudent = () => {
   const dispatch = useDispatch();
   const {handleApiResponse} = useApiRes()
+  const {handleInputChange} = useHandleInput()
   const verifiedStudentData = useSelector(
     (state) => state.teacher.verifiedStudentData
   );
   const searchData = useSelector((state) => state.teacher.searchField);
   const searchField = {
     ...createInputField(TEXT_TYPE,"name","name","Name of Email"),
-    data: searchData,
-    updateData: handleSearchField,
+    value:searchData["name"],
+    updateData: handleInputChange,
   };
 
   useEffect(() => {

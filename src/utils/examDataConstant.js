@@ -5,7 +5,7 @@ import { createInputField } from "./formFieldConstant";
 export const subjectField = (examData, disable, action) => {
   return {
     ...createInputField(TEXT_TYPE,"subject","subjectName","Subject Name"),
-    data: examData,
+    value:examData?.["subjectName"],
     disable: disable,
     updateData: !disable ? action : () => {},
   };
@@ -14,32 +14,28 @@ export const subjectField = (examData, disable, action) => {
 export const questionField = (examData, currQuestion, disable, action) => {
   return {
     ...createInputField(TEXT_TYPE,"question","question",`Question ${currQuestion + 1}`),
-    data: examData?.questions?.[currQuestion],
+    value:examData?.questions?.[currQuestion]?.["question"],
     disable: disable,
     updateData: !disable ? action : () => {},
     currQuestion: currQuestion,
   };
 };
 
-export const radioField = (examData, currQuestion, Options, option, action) => {
+export const radioField = (examData, currQuestion, Options, option, action,ansIndex) => {
   return {
     ...createInputField(RADIO_TYPE,`op${option}`,"ans"),
-    data: Options,
+    value:Options?.[`op${option}`],
     updateData: action,
-    currQuestion: currQuestion,
-    ans: examData?.questions?.[currQuestion]?.answer,
-    opIndex: option - 1,
+    checked:Options?.[`op${option}`] === examData?.questions?.[currQuestion]?.answer && ansIndex?.[currQuestion] === option - 1
   };
 };
 
 export const optionField = (currQuestion, Options, option, disable, action) => {
   return {
     ...createInputField(TEXT_TYPE,`op${option}`,`op${option}`,`Option ${option}`),
-    data: Options,
+    value:Options?.[`op${option}`],
     disable: disable,
     updateData: !disable ? action : () => {},
-    currQuestion: currQuestion,
-    opIndex: option - 1,
   };
 };
 

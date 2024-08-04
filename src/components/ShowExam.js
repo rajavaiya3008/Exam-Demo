@@ -6,6 +6,7 @@ import {
   handleTeacherError,
   handleSameQuestions,
   initiateQuestions,
+  handleCurrQuestion,
 } from "../redux/slices/teacher";
 import { validateData } from "../utils/validation";
 import { handleStudentError } from "../redux/slices/student";
@@ -26,7 +27,6 @@ const question = {
 const ShowExam = ({
   createExamFields,
   error,
-  setCurrQuestion,
   currQuestion,
   validateExamData,
   validate,
@@ -77,7 +77,7 @@ const ShowExam = ({
       }
     }
     dispatch(isStudent() && isPrev(navigate) ? handleStudentError({}) : handleTeacherError({}));
-    setCurrQuestion(isPrev(navigate) ? currQuestion - 1 : currQuestion + 1)
+    dispatch(handleCurrQuestion(isPrev(navigate) ? currQuestion - 1 : currQuestion + 1))
   }
 
   return (

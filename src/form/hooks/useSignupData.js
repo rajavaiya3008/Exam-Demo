@@ -24,10 +24,10 @@ const validate = {
 };
 
 const signupField = [
-  createInputField(TEXT_TYPE,"name","name","Enter Name"),
-  createInputField(EMAIL_TYPE,"email","email","Enter Email"),
-  createInputField(PASS_TYPE,"password","password","Enter Password"),
-  createDropDownField(SELECT_TYPE,'mt-[10px]',["student", "teacher"],"role")
+  {...createInputField(TEXT_TYPE,"name","name","Enter Name"),updateData:()=>{}},
+  {...createInputField(EMAIL_TYPE,"email","email","Enter Email"),updateData:()=>{}},
+  {...createInputField(PASS_TYPE,"password","password","Enter Password"),updateData:()=>{}},
+  {...createDropDownField(SELECT_TYPE,'mt-[10px]',["student", "teacher"],"role"),updateData:()=>{}}
 ];
 
 export const useSignupData = () => {

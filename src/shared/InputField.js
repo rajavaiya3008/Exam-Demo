@@ -12,15 +12,12 @@ const InputField = ({ fieldData,cusStyle }) => {
     type,
     id,
     name,
-    data,
+    value,
     placeholder,
     disable:disabled,
     variant,
     updateData,
-    currQuestion,
-    opIndex,
-    ansIndex,
-    isSearch
+    dispatchAction,
   } = fieldData || {};
   const fieldAttribute = {
     label,
@@ -28,7 +25,7 @@ const InputField = ({ fieldData,cusStyle }) => {
     name,
     id,
     disabled,
-    value: data?.[name],
+    value,
     placeholder: placeholder || label,
     variant: variant || "outlined",
     InputLabelProps:{ shrink: true }
@@ -39,21 +36,10 @@ const InputField = ({ fieldData,cusStyle }) => {
       <TextField
         {...fieldAttribute}
         onChange={(e) => {
-          const { name, value } = e?.target || {};
-          let Data = {
-            name,
-            value,
-            queIndex: currQuestion,
-            opIndex,
-            ans: data?.[id],
-            ansIndex,
-          };
           if(updateData){
-            updateData(Data)
+            updateData(e,dispatchAction)
           }
-          if(isSearch){
-            dispatch(updateData(Data))
-          }
+          // updateData(e,dispatchAction)
           (hasObjectLength(error) && dispatch(handleError({})))
         }}
       />

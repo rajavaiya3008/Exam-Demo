@@ -34,13 +34,13 @@ export const useStudentProfile = () => {
   const createStudentFields = [
     {
       ...createInputField(TEXT_TYPE,"name","name","Name"),
-      data: studentProfile,
+      value:studentProfile?.["name"],
       updateData: updateProfile,
       disable: disable,
     },
     {
       ...createInputField(EMAIL_TYPE,"email","email","Email"),
-      data: studentProfile,
+      value:studentProfile?.["email"],
       updateData: updateProfile,
       disable: true,
     },

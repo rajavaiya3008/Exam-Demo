@@ -23,7 +23,7 @@ const validate = {
 };
 
 const fieldData = [
-  createInputField(EMAIL_TYPE,"email","email","Email")
+  {...createInputField(EMAIL_TYPE,"email","email","Email"),updateData:()=>{}}
 ];
 
 export const useForgetData = () => {

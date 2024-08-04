@@ -18,7 +18,6 @@ export const fetchData = createAsyncThunk(
     currAbortController = new AbortController();
     const signal = currAbortController.signal;
     config.signal = signal;
-    console.log('config', config)
     try {
       let data = await axiosInstance(config);
       return data.data;

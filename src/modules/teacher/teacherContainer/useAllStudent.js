@@ -11,20 +11,22 @@ import { PAGE_NO } from "../../../utils/localStorageConstant";
 import { createInputField } from "../../../utils/formFieldConstant";
 import { useApiRes } from "../../../form/hooks/useApiRes";
 import { TEXT_TYPE } from "../../../utils/constant";
+import { useHandleInput } from "../../../form/hooks/useHandleInput";
 
 const keys = ["name", "email", "status"];
 
 export const useAllStudent = () => {
   const dispatch = useDispatch();
   const {handleApiResponse} = useApiRes()
+  const {handleInputChange} = useHandleInput()
   const allStudentData = useSelector((state) => state.teacher.allStudentData);
   const searchData = useSelector((state) => state.teacher.searchField);
 
   const searchField = {
     ...createInputField(TEXT_TYPE,"name","name","Name or Email"),
-    isSearch:true,
-    data: searchData,
-    updateData: handleSearchField,
+    value:searchData?.["name"],
+    updateData: handleInputChange,
+    dispatchAction:handleSearchField
   };
 
   useEffect(() => {

@@ -28,8 +28,8 @@ const validate = {
 };
 
 const loginField = [
-  createInputField(EMAIL_TYPE,"email","email","Enter Email"),
-  createInputField(PASS_TYPE,"password","password","Enter Password"),
+  {...createInputField(EMAIL_TYPE,"email","email","Enter Email"),updateData:() => {}},
+  {...createInputField(PASS_TYPE,"password","password","Enter Password"),updateData:()=>{}},
 ];
 
 export const useLoginData = () => {

@@ -20,15 +20,15 @@ import { FORGET_PASS_VERIFY } from "../../utils/apiUrlConstant";
 import { hasObjectLength, isStudent } from "../../utils/commonFunction";
 import { PASS_CHANGE, PASS_NOT_MATCH, PASS_TYPE } from "../../utils/constant";
 import { createInputField } from "../../utils/formFieldConstant";
-
+  
 const validate = {
   Password: passwordValidation,
   ConfirmPassword: confirmPasswordValidation,
 };
 
 const createNewPasswordField = [
-  createInputField(PASS_TYPE,"Password","Password","Password"),
-  createInputField(PASS_TYPE,"ConfirmPassword","ConfirmPassword","Confirm Password")
+  {...createInputField(PASS_TYPE,"Password","Password","Password"),updateData:()=>{}},
+  {...createInputField(PASS_TYPE,"ConfirmPassword","ConfirmPassword","Confirm Password"),updateData:()=>{}}
 ];
 
 export const useNewPassword = () => {

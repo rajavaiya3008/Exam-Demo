@@ -35,7 +35,7 @@ export const studentSlice = createSlice({
       state.examPaper = {};
     },
     handleSearchField: (state, action) => {
-      state.searchField.subjectName = action.payload.value;
+      state.searchField.subjectName = action.payload;
     },
     initiateExamPaper: (state) => {
       state.examPaper = initialState.examPaper;

@@ -1,15 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
 import { loadExamPaper } from "../../redux/slices/student";
-import { loadExamData } from "../../redux/slices/teacher";
+import { handleAnsIndexes, loadExamData } from "../../redux/slices/teacher";
 
 export const useExam = () => {
   const dispatch = useDispatch();
   const examPaper = useSelector((state) => state.student.examPaper);
   const createExam = useSelector((state) => state.teacher.createExam);
   const ansIndex = useSelector((state) => state.teacher.ansIndex);
+  const queIndex = useSelector(state => state.teacher.currQuestion)
 
-  const handleSubject = (data) => {
-    const { value } = data;
+  const handleSubject = (e) => {
+    const { value } = e.target;
     const updatedPaper = {
       ...createExam,
       subjectName: value,
@@ -17,8 +18,8 @@ export const useExam = () => {
     dispatch(loadExamData(updatedPaper));
   };
 
-  const handleQuestion = (data) => {
-    const { value, queIndex } = data;
+  const handleQuestion = (e) => {
+    const { value } = e.target;
     const updatedPaper = {
       ...createExam,
       questions: createExam.questions.map((question, index) =>
@@ -28,8 +29,10 @@ export const useExam = () => {
     dispatch(loadExamData(updatedPaper));
   };
 
-  const handleOptions = (data) => {
-    const { queIndex, opIndex, value } = data;
+  const handleOptions = (e) => {
+    const { value,name } = e.target;
+    const splitStr = name.match(/\d+/)
+    const opIndex = Number(splitStr[0]) - 1;
     let updatedPaper;
     if (
       createExam.questions[queIndex].options[opIndex] ===
@@ -75,13 +78,33 @@ export const useExam = () => {
     dispatch(dispatchAction(updatedPaper));
   };
 
-  const handleStudentAns = (data) => {
-    const { queIndex, ans } = data;
+  const handleStudentAns = (e) => {
+    const { value:ans,id } = e.target;
+    console.log('ans RRR', ans)
+    // console.log('value', value)
+    const splitStr = id.match(/\d+/)
+    const opIndex = Number(splitStr[0]) - 1;
+    dispatch(
+      handleAnsIndexes({
+        currQuestion: queIndex,
+        ansIndex: opIndex,
+      })
+    );
     updateExamData(examPaper, queIndex, ans, loadExamPaper);
   };
 
-  const handleAns = (data) => {
-    const { queIndex, ans } = data;
+  const handleAns = (e) => {
+    const { value:ans,id } = e.target;
+    console.log('id RRR', id)
+    console.log('ans RRR', ans)
+    const splitStr = id.match(/\d+/)
+    const opIndex = Number(splitStr[0]) - 1;
+    dispatch(
+      handleAnsIndexes({
+        currQuestion: queIndex,
+        ansIndex: opIndex,
+      })
+    );
     updateExamData(createExam, queIndex, ans, loadExamData);
   };
 

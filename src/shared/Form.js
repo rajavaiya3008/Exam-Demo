@@ -7,6 +7,7 @@ import { isSelect } from "../utils/commonFunction";
 
 const Form = ({ onSubmit,formRef, fieldData, btnName, btnStyle }) => {
   const disable = useLoading();
+  
   return (
     <>
       <form onSubmit={onSubmit} ref={formRef}>

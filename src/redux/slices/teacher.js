@@ -15,6 +15,7 @@ const initialState = {
     ],
     notes: ["Exams"],
   },
+  currQuestion:0,
   questions: [],
   viewExam: [],
   currStudentDetail: {},
@@ -63,7 +64,7 @@ export const teacherSlice = createSlice({
       state.questions = [];
     },
     handleSearchField: (state, action) => {
-      state.searchField.name = action.payload.value;
+      state.searchField.name = action.payload;
     },
     handleEdited: (state) => {
       state.edited = false;
@@ -82,6 +83,9 @@ export const teacherSlice = createSlice({
       state.createExam = action.payload;
       setLocalStorageItem(CREATE_EXAM_CONST, state.createExam)
     },
+    handleCurrQuestion: (state,action) => {
+      state.currQuestion = action.payload
+    }
   },
 });
 
@@ -101,6 +105,7 @@ export const {
   handleAnsIndexes,
   initiateAnsIndex,
   loadExamData,
+  handleCurrQuestion
 } = teacherSlice.actions;
 
 export default teacherSlice.reducer;

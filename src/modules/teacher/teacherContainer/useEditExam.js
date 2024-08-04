@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  handleCurrQuestion,
   handleEdited,
   handleTeacherError,
   initiateAnsIndex,
@@ -35,9 +36,10 @@ export const useEditExam = () => {
   const {id,subject:subjectName} = Object.fromEntries(searchParams.entries())
   const examData = useSelector((state) => state.teacher.createExam);
   const sameQuestions = useSelector((state) => state.teacher.questions);
-  const [currQuestion, setCurrQuestion] = useState(0);
+  const currQuestion = useSelector(state => state.teacher.currQuestion)
   const error = useSelector((state) => state.teacher.error);
   const edited = useSelector((state) => state.teacher.edited);
+  const ansIndex = useSelector(state => state.teacher.ansIndex)
 
   const validateExamData = validationExamData(examData,currQuestion);
 
@@ -45,7 +47,7 @@ export const useEditExam = () => {
 
   const optionArr = examData?.questions?.[currQuestion]?.options;
 
-  const createExamFields = useExamFields(examData,currQuestion,Options)
+  const createExamFields = useExamFields(examData,currQuestion,Options,ansIndex)
 
   useEffect(() => {
     try {
@@ -60,6 +62,7 @@ export const useEditExam = () => {
           return
         }
         const {editExamData,ansArr} = editData(subjectName,res.payload?.data?.questions)
+        dispatch(handleCurrQuestion(0));
         dispatch(loadExamData(editExamData));
         dispatch(initiateAnsIndex(ansArr));
         dispatch(handleEdited());
@@ -155,7 +158,6 @@ export const useEditExam = () => {
     validate,
     examData,
     error,
-    setCurrQuestion,
     handleEditExam,
     handleDeleteExam,
     handleCancel,

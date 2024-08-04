@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router";
-import { removeLocalStorageItem } from "../../utils/localStorageFunction";
-import { USER_DATA } from "../../utils/localStorageConstant";
+import { clearLocalStorageItem } from "../../utils/localStorageFunction";
 import { LOGIN_PAGE } from "../../utils/routeConstant";
 import { toastError } from "../../utils/toastFunction";
 
@@ -8,7 +7,7 @@ export const useApiRes = () => {
   const navigate = useNavigate();
   const handleApiResponse = ({ statusCode, path, msg }) => {
     if (statusCode === 401) {
-      removeLocalStorageItem(USER_DATA);
+      clearLocalStorageItem();
       navigate(LOGIN_PAGE);
       return true;
     }

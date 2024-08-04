@@ -12,7 +12,7 @@ import {
 } from "../../../redux/slices/api";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
-import { initiateAnsIndex } from "../../../redux/slices/teacher";
+import { handleCurrQuestion, initiateAnsIndex } from "../../../redux/slices/teacher";
 import { toastError, toastSuccess } from "../../../utils/toastFunction";
 import {
   getLocalStorageItem,
@@ -45,7 +45,7 @@ export const useGiveExam = () => {
   const { handleApiResponse } = useApiRes();
   const [searchParams] = useSearchParams();
   const { id, subject } = Object.fromEntries(searchParams.entries());
-  const [currQuestion, setCurrQuestion] = useState(0);
+  const currQuestion = useSelector(state => state.teacher.currQuestion)
   const examData = useSelector((state) => state.student.examPaper);
   const ansIndex = useSelector((state) => state.teacher.ansIndex);
   const error = useSelector((state) => state.student.error);
@@ -56,7 +56,7 @@ export const useGiveExam = () => {
     answer: examData?.questions?.[currQuestion]?.answer?.trim(),
   };
 
-  const createExamFields = useExamFields(examData, currQuestion, Options);
+  const createExamFields = useExamFields(examData, currQuestion, Options,ansIndex);
 
   const { ansArr } = ansArray(examData);
 
@@ -79,6 +79,7 @@ export const useGiveExam = () => {
       const { showExamData } = showExam(subject, res?.payload?.data);
       dispatch(loadExamPaper(showExamData));
     };
+    dispatch(handleCurrQuestion(0))
 
     const isCorrectExam = checkExam(id);
     !isCorrectExam && navigate(ALL_EXAM);
@@ -156,7 +157,6 @@ export const useGiveExam = () => {
     validateExamData,
     validate,
     error,
-    setCurrQuestion,
     handleSubmitExam,
     handleCancel,
   };
