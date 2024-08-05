@@ -1,7 +1,7 @@
 import React from "react";
-import CurrStudentDetail from "../../../shared/CurrStudentDetail";
+import CurrStudentDetail from "../../../components/CurrStudentDetail";
 import { useViewStudentDetail } from "../teacherContainer/useViewStudentDetail";
-import { useLoading } from "../../../form/hooks/useLoading";
+import { useLoading } from "../../../hooks/useLoading";
 import Button from "../../../shared/Button";
 import Loader from "../../../shared/Loader";
 

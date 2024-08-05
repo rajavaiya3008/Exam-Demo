@@ -1,25 +1,25 @@
 import { useDispatch } from "react-redux";
-import { handleError } from "../../redux/slices/user";
-import { validateData } from "../../utils/validation";
-import { cancelFetchData, currAbortController, fetchData } from "../../redux/slices/api";
+import { handleError } from "../redux/slices/user";
+import { validateData } from "../utils/validation";
+import { cancelFetchData, currAbortController, fetchData } from "../redux/slices/api";
 import { useNavigate } from "react-router";
-import { toastSuccess } from "../../utils/toastFunction";
-import { setLocalStorageItem } from "../../utils/localStorageFunction";
+import { toastSuccess } from "../utils/toastFunction";
+import { setLocalStorageItem } from "../utils/localStorageFunction";
 import {
   emailValidation,
   passwordValidation,
-} from "../../utils/validationConstant";
-import { LOGIN_URL } from "../../utils/apiUrlConstant";
-import { getCurrUserData } from "../../utils/currentUser";
+} from "../utils/validationConstant";
+import { LOGIN_URL } from "../utils/apiUrlConstant";
+import { getCurrUserData } from "../utils/currentUser";
 import { useEffect } from "react";
 import {
   STUDENT_DASHBOARD,
   TEACHER_DASHBOARD,
-} from "../../utils/routeConstant";
-import { hasObjectLength, isStudent } from "../../utils/commonFunction";
-import { USER_DATA } from "../../utils/localStorageConstant";
-import { EMAIL_TYPE, LOGIN_SUCCESS, PASS_TYPE } from "../../utils/constant";
-import { createInputField } from "../../utils/formFieldConstant";
+} from "../utils/routeConstant";
+import { hasObjectLength, isStudent } from "../utils/commonFunction";
+import { USER_DATA } from "../utils/localStorageConstant";
+import { EMAIL_TYPE, LOGIN_SUCCESS, PASS_TYPE } from "../utils/constant";
+import { createInputField } from "../utils/formFieldConstant";
 import { useApiRes } from "./useApiRes";
 
 const validate = {

@@ -1,5 +1,5 @@
 import React from "react";
-import { useResetPassword } from "../../form/hooks/useResetPassword";
+import { useResetPassword } from "../../hooks/useResetPassword";
 import Form from "../../shared/Form";
 import Button from "../../shared/Button";
 

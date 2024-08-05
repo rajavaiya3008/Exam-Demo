@@ -23,7 +23,7 @@ export const studentSlice = createSlice({
     loadExamPaper: (state, action) => {
       state.error = initialState.error;
       state.examPaper = action.payload;
-      setLocalStorageItem(EXAM_PAPER, action.payload)
+      setLocalStorageItem(EXAM_PAPER, state.examPaper)
     },
     handleStudentError: (state, action) => {
       state.error = action.payload;

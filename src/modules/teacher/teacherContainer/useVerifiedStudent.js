@@ -7,9 +7,9 @@ import {
 import { useEffect } from "react";
 import { TEACHER_VERIFIED_STUDENT } from "../../../utils/apiUrlConstant";
 import { createInputField } from "../../../utils/formFieldConstant";
-import { useApiRes } from "../../../form/hooks/useApiRes";
+import { useApiRes } from "../../../hooks/useApiRes";
 import { TEXT_TYPE } from "../../../utils/constant";
-import { useHandleInput } from "../../../form/hooks/useHandleInput";
+import { useHandleInput } from "../../../hooks/useHandleInput";
 
 const keys = ["name", "email", "status"];
 

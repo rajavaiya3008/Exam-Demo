@@ -1,5 +1,5 @@
 import React from "react";
-import { useForgetData } from "../../form/hooks/useForgetData";
+import { useForgetData } from "../../hooks/useForgetData";
 import Form from "../../shared/Form";
 
 

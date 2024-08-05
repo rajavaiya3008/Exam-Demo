@@ -2,7 +2,7 @@ import React from "react";
 import Pagination from "../../../shared/Pagination";
 import InputField from "../../../shared/InputField";
 import { useAllExam } from "../studentContainer/useAllExam";
-import { useLoading } from "../../../form/hooks/useLoading";
+import { useLoading } from "../../../hooks/useLoading";
 import { Outlet } from "react-router";
 import Loader from "../../../shared/Loader";
 

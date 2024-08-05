@@ -1,5 +1,5 @@
 import React from "react";
-import Pagination from "./Pagination";
+import Pagination from "../shared/Pagination";
 
 const keys = ["subjectName", "rank", "score", "resultStatus"];
 

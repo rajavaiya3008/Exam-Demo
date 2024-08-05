@@ -1,5 +1,5 @@
 import React from "react";
-import { useNewPassword } from "../../form/hooks/useNewPassword";
+import { useNewPassword } from "../../hooks/useNewPassword";
 import Form from "../../shared/Form";
 
 const NewPassword = () => {

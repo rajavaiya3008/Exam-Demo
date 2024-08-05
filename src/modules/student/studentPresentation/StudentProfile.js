@@ -1,7 +1,7 @@
 import React from "react";
 import InputField from "../../../shared/InputField";
 import { useStudentProfile } from "../studentContainer/useStudentProfile";
-import { useLoading } from "../../../form/hooks/useLoading";
+import { useLoading } from "../../../hooks/useLoading";
 import Button from "../../../shared/Button";
 import Loader from "../../../shared/Loader";
 

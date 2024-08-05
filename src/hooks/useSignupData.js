@@ -1,19 +1,19 @@
 import { useDispatch } from "react-redux";
 import {
   handleError,
-} from "../../redux/slices/user";
-import { validateData } from "../../utils/validation";
-import { cancelFetchData, currAbortController, fetchData } from "../../redux/slices/api";
+} from "../redux/slices/user";
+import { validateData } from "../utils/validation";
+import { cancelFetchData, currAbortController, fetchData } from "../redux/slices/api";
 import { useNavigate } from "react-router";
-import { toastSuccess } from "../../utils/toastFunction";
-import { LOGIN_PAGE, STUDENT_DASHBOARD, TEACHER_DASHBOARD } from "../../utils/routeConstant";
-import { emailValidation, nameValidation, passwordValidation } from "../../utils/validationConstant";
-import { SIGNUP_URL } from "../../utils/apiUrlConstant";
-import { getCurrUserData } from "../../utils/currentUser";
+import { toastSuccess } from "../utils/toastFunction";
+import { LOGIN_PAGE, STUDENT_DASHBOARD, TEACHER_DASHBOARD } from "../utils/routeConstant";
+import { emailValidation, nameValidation, passwordValidation } from "../utils/validationConstant";
+import { SIGNUP_URL } from "../utils/apiUrlConstant";
+import { getCurrUserData } from "../utils/currentUser";
 import { useEffect } from "react";
-import { hasObjectLength, isStudent } from "../../utils/commonFunction";
-import { EMAIL_TYPE, PASS_TYPE, SELECT_TYPE, SIGNUP_SUCCESS, TEXT_TYPE } from "../../utils/constant";
-import { createDropDownField, createInputField } from "../../utils/formFieldConstant";
+import { hasObjectLength, isStudent } from "../utils/commonFunction";
+import { EMAIL_TYPE, PASS_TYPE, SELECT_TYPE, SIGNUP_SUCCESS, TEXT_TYPE } from "../utils/constant";
+import { createDropDownField, createInputField } from "../utils/formFieldConstant";
 import { useApiRes } from "./useApiRes";
 
 const validate = {

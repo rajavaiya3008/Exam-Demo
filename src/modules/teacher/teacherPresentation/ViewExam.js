@@ -1,7 +1,7 @@
 import React from "react";
 import Pagination from "../../../shared/Pagination";
 import { useViewExam } from "../teacherContainer/useViewExam";
-import { useLoading } from "../../../form/hooks/useLoading";
+import { useLoading } from "../../../hooks/useLoading";
 import Loader from "../../../shared/Loader";
 
 const ViewExam = () => {

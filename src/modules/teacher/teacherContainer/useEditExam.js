@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleCurrQuestion,
@@ -23,8 +23,8 @@ import { hasDuplicates, hasObjectLength, validateOptions, validationExamData } f
 import { editData, sameOptionMsg, sameQuestionMsg } from "../../../utils/examDataConstant";
 import { ANS_INDEX, CREATE_EXAM_CONST } from "../../../utils/localStorageConstant";
 import { EXAM_DELETED, EXAM_EDITED } from "../../../utils/constant";
-import { useExamFields } from "../../../form/hooks/useExamFields";
-import { useApiRes } from "../../../form/hooks/useApiRes";
+import { useExamFields } from "../../../hooks/useExamFields";
+import { useApiRes } from "../../../hooks/useApiRes";
 
 const validate = examValidation
 

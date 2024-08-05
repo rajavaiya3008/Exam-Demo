@@ -3,7 +3,7 @@ import Pagination from "../../../shared/Pagination";
 import InputField from "../../../shared/InputField";
 import { useVerifiedStudent } from "../teacherContainer/useVerifiedStudent";
 import { STUDENT_DETAIL } from "../../../utils/routeConstant";
-import { useLoading } from "../../../form/hooks/useLoading";
+import { useLoading } from "../../../hooks/useLoading";
 import Loader from "../../../shared/Loader";
 
 const VerifiedStudent = () => {

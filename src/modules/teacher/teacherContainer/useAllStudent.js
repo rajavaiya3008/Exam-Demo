@@ -9,9 +9,9 @@ import {
 import { TEACHER_ALL_STUDENT } from "../../../utils/apiUrlConstant";
 import { PAGE_NO } from "../../../utils/localStorageConstant";
 import { createInputField } from "../../../utils/formFieldConstant";
-import { useApiRes } from "../../../form/hooks/useApiRes";
+import { useApiRes } from "../../../hooks/useApiRes";
 import { TEXT_TYPE } from "../../../utils/constant";
-import { useHandleInput } from "../../../form/hooks/useHandleInput";
+import { useHandleInput } from "../../../hooks/useHandleInput";
 
 const keys = ["name", "email", "status"];
 

@@ -1,25 +1,25 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
-import { getCurrUserData } from "../../utils/currentUser";
-import { handleError } from "../../redux/slices/user";
-import { validateData } from "../../utils/validation";
-import { cancelFetchData, currAbortController, fetchData } from "../../redux/slices/api";
+import { getCurrUserData } from "../utils/currentUser";
+import { handleError } from "../redux/slices/user";
+import { validateData } from "../utils/validation";
+import { cancelFetchData, currAbortController, fetchData } from "../redux/slices/api";
 import {
   LOGIN_PAGE,
   STUDENT_DASHBOARD,
   TEACHER_DASHBOARD,
-} from "../../utils/routeConstant";
-import { toastSuccess } from "../../utils/toastFunction";
+} from "../utils/routeConstant";
+import { toastSuccess } from "../utils/toastFunction";
 import { useEffect } from "react";
 import {
   confirmPasswordValidation,
   passwordValidation,
-} from "../../utils/validationConstant";
-import { FORGET_PASS_VERIFY } from "../../utils/apiUrlConstant";
-import { hasObjectLength, isStudent } from "../../utils/commonFunction";
-import { PASS_CHANGE, PASS_NOT_MATCH, PASS_TYPE } from "../../utils/constant";
-import { createInputField } from "../../utils/formFieldConstant";
+} from "../utils/validationConstant";
+import { FORGET_PASS_VERIFY } from "../utils/apiUrlConstant";
+import { hasObjectLength, isStudent } from "../utils/commonFunction";
+import { PASS_CHANGE, PASS_NOT_MATCH, PASS_TYPE } from "../utils/constant";
+import { createInputField } from "../utils/formFieldConstant";
   
 const validate = {
   Password: passwordValidation,

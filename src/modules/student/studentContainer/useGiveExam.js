@@ -11,8 +11,11 @@ import {
   fetchData,
 } from "../../../redux/slices/api";
 import { useNavigate } from "react-router";
-import { useEffect, useState } from "react";
-import { handleCurrQuestion, initiateAnsIndex } from "../../../redux/slices/teacher";
+import { useEffect } from "react";
+import {
+  handleCurrQuestion,
+  initiateAnsIndex,
+} from "../../../redux/slices/teacher";
 import { toastError, toastSuccess } from "../../../utils/toastFunction";
 import {
   getLocalStorageItem,
@@ -32,8 +35,8 @@ import {
   PAPER_ID,
 } from "../../../utils/localStorageConstant";
 import { EXAM_SUBMITTED, FILL_ALL_QUE } from "../../../utils/constant";
-import { useExamFields } from "../../../form/hooks/useExamFields";
-import { useApiRes } from "../../../form/hooks/useApiRes";
+import { useExamFields } from "../../../hooks/useExamFields";
+import { useApiRes } from "../../../hooks/useApiRes";
 
 const validate = {
   answer: [{ required: true, message: "Answer Required" }],
@@ -45,7 +48,7 @@ export const useGiveExam = () => {
   const { handleApiResponse } = useApiRes();
   const [searchParams] = useSearchParams();
   const { id, subject } = Object.fromEntries(searchParams.entries());
-  const currQuestion = useSelector(state => state.teacher.currQuestion)
+  const currQuestion = useSelector((state) => state.teacher.currQuestion);
   const examData = useSelector((state) => state.student.examPaper);
   const ansIndex = useSelector((state) => state.teacher.ansIndex);
   const error = useSelector((state) => state.student.error);
@@ -56,7 +59,12 @@ export const useGiveExam = () => {
     answer: examData?.questions?.[currQuestion]?.answer?.trim(),
   };
 
-  const createExamFields = useExamFields(examData, currQuestion, Options,ansIndex);
+  const createExamFields = useExamFields(
+    examData,
+    currQuestion,
+    Options,
+    ansIndex
+  );
 
   const { ansArr } = ansArray(examData);
 
@@ -79,7 +87,7 @@ export const useGiveExam = () => {
       const { showExamData } = showExam(subject, res?.payload?.data);
       dispatch(loadExamPaper(showExamData));
     };
-    dispatch(handleCurrQuestion(0))
+    dispatch(handleCurrQuestion(0));
 
     const isCorrectExam = checkExam(id);
     !isCorrectExam && navigate(ALL_EXAM);
@@ -92,9 +100,26 @@ export const useGiveExam = () => {
     } else {
       fetchExamPaper();
     }
-    const handleStorageChange = () => {
-      const examPaper = getLocalStorageItem(EXAM_PAPER);
-      const ansIndexLocal = getLocalStorageItem(ANS_INDEX);
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      clearGiveExam();
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
+  const handleStorageChange = (e) => {
+    const { key, newValue } = e;
+    console.log("newValue", newValue);
+
+    // const examPaper = getLocalStorageItem(EXAM_PAPER);
+    const ansIndexLocal = getLocalStorageItem(ANS_INDEX);
+    // const decodedValue = JSON.parse(newValue.replace(/\\"/g, '"'));
+
+    const examPaper = JSON.parse(newValue);
+    console.log('examPaper', examPaper)
+    if (key === EXAM_PAPER) {
       if (examPaper) {
         dispatch(loadExamPaper(examPaper));
         if (ansIndexLocal) {
@@ -105,15 +130,25 @@ export const useGiveExam = () => {
           navigate(ALL_EXAM);
         }
       }
-    };
+    }
+  };
 
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      clearGiveExam();
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
+  // const handleStorageChange = (e) => {
+  //   console.log('event in Give Exam', e)
+  //   const {key,newValue} = e
+  //   const examPaper = getLocalStorageItem(EXAM_PAPER);
+  //   const ansIndexLocal = getLocalStorageItem(ANS_INDEX);
+  //   if (examPaper) {
+  //     dispatch(loadExamPaper(examPaper));
+  //     if (ansIndexLocal) {
+  //       dispatch(initiateAnsIndex(ansIndexLocal));
+  //     } else {
+  //       dispatch(initiateExamPaper());
+  //       dispatch(initiateAnsIndex(ansIndex));
+  //       navigate(ALL_EXAM);
+  //     }
+  //   }
+  // };
 
   const clearGiveExam = () => {
     cancelFetchData(currAbortController);

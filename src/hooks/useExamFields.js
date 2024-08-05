@@ -1,5 +1,5 @@
-import { isStudent } from "../../utils/commonFunction";
-import { optionField, questionField, radioField, subjectField } from "../../utils/examDataConstant";
+import { isStudent } from "../utils/commonFunction";
+import { optionField, questionField, radioField, subjectField } from "../utils/examDataConstant";
 import { useExam } from "./useExam";
 
 export const useExamFields = (examData, currQuestion, Options,ansIndex) => {

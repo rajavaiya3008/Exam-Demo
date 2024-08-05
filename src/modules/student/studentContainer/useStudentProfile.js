@@ -15,10 +15,10 @@ import { GET_STUDENT_PROFILE, SAVE_STUDENT_PROFILE } from "../../../utils/apiUrl
 import { nameValidation } from "../../../utils/validationConstant";
 import { hasObjectLength } from "../../../utils/commonFunction";
 import { STUDENT } from "../../../utils/localStorageConstant";
-import { useProfile } from "../../../form/hooks/useProfile";
+import { useProfile } from "../../../hooks/useProfile";
 import { EMAIL_TYPE, PROFILE_UPDATED, TEXT_TYPE } from "../../../utils/constant";
 import { createInputField } from "../../../utils/formFieldConstant";
-import { useApiRes } from "../../../form/hooks/useApiRes";
+import { useApiRes } from "../../../hooks/useApiRes";
 
 const validate = {
   name: nameValidation,

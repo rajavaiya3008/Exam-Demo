@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import { loadExamPaper } from "../../redux/slices/student";
-import { handleAnsIndexes, loadExamData } from "../../redux/slices/teacher";
+import { loadExamPaper } from "../redux/slices/student";
+import { handleAnsIndexes, loadExamData } from "../redux/slices/teacher";
 
 export const useExam = () => {
   const dispatch = useDispatch();
@@ -80,8 +80,6 @@ export const useExam = () => {
 
   const handleStudentAns = (e) => {
     const { value:ans,id } = e.target;
-    console.log('ans RRR', ans)
-    // console.log('value', value)
     const splitStr = id.match(/\d+/)
     const opIndex = Number(splitStr[0]) - 1;
     dispatch(
@@ -95,8 +93,6 @@ export const useExam = () => {
 
   const handleAns = (e) => {
     const { value:ans,id } = e.target;
-    console.log('id RRR', id)
-    console.log('ans RRR', ans)
     const splitStr = id.match(/\d+/)
     const opIndex = Number(splitStr[0]) - 1;
     dispatch(

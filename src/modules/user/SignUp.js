@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useSignupData } from "../../form/hooks/useSignupData";
+import { useSignupData } from "../../hooks/useSignupData";
 import { LOGIN_PAGE } from "../../utils/routeConstant";
 import Form from "../../shared/Form";
 

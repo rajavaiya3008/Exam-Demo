@@ -1,22 +1,22 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
-import { handleError } from "../../redux/slices/user";
-import { validateData } from "../../utils/validation";
-import { cancelFetchData, currAbortController, fetchData } from "../../redux/slices/api";
-import { toastSuccess } from "../../utils/toastFunction";
+import { handleError } from "../redux/slices/user";
+import { validateData } from "../utils/validation";
+import { cancelFetchData, currAbortController, fetchData } from "../redux/slices/api";
+import { toastSuccess } from "../utils/toastFunction";
 import {
   confirmPasswordValidation,
   passwordValidation,
-} from "../../utils/validationConstant";
-import { hasObjectLength, isStudent } from "../../utils/commonFunction";
+} from "../utils/validationConstant";
+import { hasObjectLength, isStudent } from "../utils/commonFunction";
 import {
   STUDENT_DASHBOARD,
   TEACHER_DASHBOARD,
-} from "../../utils/routeConstant";
-import { RESET_PASS_URL } from "../../utils/apiUrlConstant";
+} from "../utils/routeConstant";
+import { RESET_PASS_URL } from "../utils/apiUrlConstant";
 import { useEffect, useRef } from "react";
-import { PASS_NOT_MATCH, PASS_RESET, PASS_TYPE } from "../../utils/constant";
-import { createInputField } from "../../utils/formFieldConstant";
+import { PASS_NOT_MATCH, PASS_RESET, PASS_TYPE } from "../utils/constant";
+import { createInputField } from "../utils/formFieldConstant";
 import { useApiRes } from "./useApiRes";
 
 const validate = {

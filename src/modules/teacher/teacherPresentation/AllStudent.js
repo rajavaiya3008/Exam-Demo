@@ -2,7 +2,7 @@ import React from "react";
 import Pagination from "../../../shared/Pagination";
 import InputField from "../../../shared/InputField";
 import { useAllStudent } from "../teacherContainer/useAllStudent";
-import { useLoading } from "../../../form/hooks/useLoading";
+import { useLoading } from "../../../hooks/useLoading";
 import { STUDENT_DETAIL } from "../../../utils/routeConstant";
 import Loader from "../../../shared/Loader";
 

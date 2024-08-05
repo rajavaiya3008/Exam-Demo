@@ -4,7 +4,7 @@ import { cancelFetchData, currAbortController, fetchData } from "../../../redux/
 import { loadViewExamData } from "../../../redux/slices/teacher";
 import { EDIT_EXAM } from "../../../utils/routeConstant";
 import { TEACHER_VIEW_EXAM } from "../../../utils/apiUrlConstant";
-import { useApiRes } from "../../../form/hooks/useApiRes";
+import { useApiRes } from "../../../hooks/useApiRes";
 
 const keys = ["subjectName", "email"];
 const newBtn = [{

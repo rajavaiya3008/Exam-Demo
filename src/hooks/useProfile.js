@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { loadStudentProfile } from "../../redux/slices/student";
+import { loadStudentProfile } from "../redux/slices/student";
 
 export const useProfile = () => {
     const dispatch = useDispatch()

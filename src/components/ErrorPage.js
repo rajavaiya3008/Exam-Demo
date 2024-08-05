@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router";
 import { getCurrUserData } from "../utils/currentUser";
 import { LOGIN_PAGE, STUDENT_DASHBOARD, TEACHER_DASHBOARD } from "../utils/routeConstant";
-import Button from "./Button";
+import Button from "../shared/Button";
 import { isStudent } from "../utils/commonFunction";
 
 const ErrorPage = () => {

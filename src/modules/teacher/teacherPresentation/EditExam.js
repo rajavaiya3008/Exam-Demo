@@ -1,7 +1,7 @@
 import React from "react";
 import ShowExam from "../../../components/ShowExam";
 import { useEditExam } from "../teacherContainer/useEditExam";
-import { useLoading } from "../../../form/hooks/useLoading";
+import { useLoading } from "../../../hooks/useLoading";
 import Button from "../../../shared/Button";
 import Loader from "../../../shared/Loader";
 

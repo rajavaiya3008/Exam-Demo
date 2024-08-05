@@ -8,7 +8,7 @@ import { ALL_EXAM } from "../../../utils/routeConstant";
 import { STUDENT_ALL_EXAM } from "../../../utils/apiUrlConstant";
 import { PAGE_NO } from "../../../utils/localStorageConstant";
 import { loadAllExamData } from "../../../redux/slices/student";
-import { useApiRes } from "../../../form/hooks/useApiRes";
+import { useApiRes } from "../../../hooks/useApiRes";
 
 export const useShowResult = () => {
   const navigate = useNavigate();

@@ -1,6 +1,6 @@
 import React from "react";
 import { useShowResult } from "../studentContainer/useShowResult";
-import { useLoading } from "../../../form/hooks/useLoading";
+import { useLoading } from "../../../hooks/useLoading";
 import Button from "../../../shared/Button";
 import Loader from "../../../shared/Loader";
 

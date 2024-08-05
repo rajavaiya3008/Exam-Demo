@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
-import { clearLocalStorageItem } from "../../utils/localStorageFunction";
-import { LOGIN_PAGE } from "../../utils/routeConstant";
-import { toastError } from "../../utils/toastFunction";
+import { clearLocalStorageItem } from "../utils/localStorageFunction";
+import { LOGIN_PAGE } from "../utils/routeConstant";
+import { toastError } from "../utils/toastFunction";
 
 export const useApiRes = () => {
   const navigate = useNavigate();

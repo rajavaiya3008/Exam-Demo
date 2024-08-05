@@ -2,7 +2,7 @@ import { TextField } from "@mui/material";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { hasObjectLength } from "../utils/commonFunction";
-import { useGetError } from "../form/hooks/useError";
+import { useGetError } from "../hooks/useError";
 
 const InputField = ({ fieldData,cusStyle }) => {
   const dispatch = useDispatch();
@@ -39,7 +39,6 @@ const InputField = ({ fieldData,cusStyle }) => {
           if(updateData){
             updateData(e,dispatchAction)
           }
-          // updateData(e,dispatchAction)
           (hasObjectLength(error) && dispatch(handleError({})))
         }}
       />

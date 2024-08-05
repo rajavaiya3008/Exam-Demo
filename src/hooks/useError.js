@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux";
-import { handleError } from "../../redux/slices/user";
-import { handleStudentError } from "../../redux/slices/student";
-import { handleTeacherError } from "../../redux/slices/teacher";
-import { getCurrUserData } from "../../utils/currentUser";
-import { isResetPassword, isStudent } from "../../utils/commonFunction";
+import { handleError } from "../redux/slices/user";
+import { handleStudentError } from "../redux/slices/student";
+import { handleTeacherError } from "../redux/slices/teacher";
+import { getCurrUserData } from "../utils/currentUser";
+import { isResetPassword, isStudent } from "../utils/commonFunction";
 import { useLocation } from "react-router";
 
 export const useGetError = () => {

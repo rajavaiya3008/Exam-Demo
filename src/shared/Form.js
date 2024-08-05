@@ -1,5 +1,5 @@
 import React from "react";
-import { useLoading } from "../form/hooks/useLoading";
+import { useLoading } from "../hooks/useLoading";
 import InputField from "./InputField";
 import Button from "./Button";
 import DropDown from "./DropDown";

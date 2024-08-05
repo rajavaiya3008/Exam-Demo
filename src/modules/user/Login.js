@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useLoginData } from "../../form/hooks/useLoginData";
+import { useLoginData } from "../../hooks/useLoginData";
 import { FORGET_PASSWORD, SIGNUP_PAGE } from "../../utils/routeConstant";
 import Form from "../../shared/Form";
 

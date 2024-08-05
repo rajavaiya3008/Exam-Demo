@@ -9,7 +9,7 @@ import { ALL_STUDENT } from "../../../utils/routeConstant";
 import { loadCurrStudentDetail } from "../../../redux/slices/teacher";
 import { useEffect } from "react";
 import { TEACHER_VIEW_STUDENT_DETAIL } from "../../../utils/apiUrlConstant";
-import { useApiRes } from "../../../form/hooks/useApiRes";
+import { useApiRes } from "../../../hooks/useApiRes";
 
 export const useViewStudentDetail = () => {
   const dispatch = useDispatch();

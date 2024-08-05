@@ -8,7 +8,7 @@ import {
   loadExamData,
   loadViewExamData,
 } from "../../../redux/slices/teacher";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { validateData } from "../../../utils/validation";
 import { cancelFetchData, currAbortController, fetchData } from "../../../redux/slices/api";
 import { useNavigate } from "react-router";
@@ -24,7 +24,7 @@ import { hasDuplicates, hasObjectLength, validateOptions, validationExamData } f
 import { sameOptionMsg, sameQuestionMsg } from "../../../utils/examDataConstant";
 import { ANS_INDEX, CREATE_EXAM_CONST } from "../../../utils/localStorageConstant";
 import { EXAM_CREATED } from "../../../utils/constant";
-import { useExamFields } from "../../../form/hooks/useExamFields";
+import { useExamFields } from "../../../hooks/useExamFields";
 
 const validate = examValidation;
 
@@ -46,8 +46,24 @@ export const useCreateExam = () => {
   const optionArr = examData?.questions?.[currQuestion]?.options;
 
   useEffect(() => {
-    const handleStorageChange = () => {
-      const createExamData = getLocalStorageItem(CREATE_EXAM_CONST);
+    const handleStorageChange = (e) => {
+      const {key} = e
+      if(key === CREATE_EXAM_CONST){
+        loadCreateExam()
+      }
+    };
+
+    loadCreateExam();
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      cancelFetchData(currAbortController);
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
+  const loadCreateExam = () => {
+    const createExamData = getLocalStorageItem(CREATE_EXAM_CONST);
       const ansIndex = getLocalStorageItem(ANS_INDEX);
 
       if (!createExamData) {
@@ -58,16 +74,7 @@ export const useCreateExam = () => {
         dispatch(loadExamData(createExamData));
         (ansIndex && dispatch(initiateAnsIndex(ansIndex)))
       }
-    };
-
-    handleStorageChange();
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      cancelFetchData(currAbortController);
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
+  }
 
   const handleCreateExam = () => {
     if (
